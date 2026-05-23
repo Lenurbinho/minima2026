@@ -1,0 +1,1 @@
+const lastUpdate = "23/05/2026 à 17:00";
