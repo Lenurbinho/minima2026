@@ -47,10 +47,6 @@
   }
   .date-badge .wa-link a:hover { color: var(--u20); }
   .wa-dot { width: 6px; height: 6px; background: #38bdf8; border-radius: 50%; display: inline-block; }
-
-<button id="btn-export-excel" class="btn-excel" onclick="exporterExcel()">
-  📥 Exporter les 3 tableaux en Excel
-</button>
  
  /* ── Tabs ── */
   .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -157,6 +153,9 @@
           <span class="wa-dot"></span>
           Source :&nbsp;<a href="https://worldathletics.org" target="_blank" rel="noopener">World Athletics</a>
         </div>
+		<button id="btn-export-excel" class="btn-excel" onclick="exporterExcel()">
+  📥 Exporter les 3 tableaux en Excel
+</button>
       </div>
 
     </div>
@@ -217,7 +216,6 @@
     </div>
     <div id="u20-table"></div>
   </div>
-
 </div>
 
 <!-- ══ Données dynamiques générées par le script Python ══ -->
@@ -461,18 +459,17 @@ renderU18();
 renderU20();
 
 // ══════════════════════════════════════════════════════════════════════════════
-// 📥 EXPORT EXCEL MODERNE (PAYSAGE, MULTI-FEUILLES)
+// 📥 EXPORT EXCEL : MISE EN PAGE AUTOMATIQUE (HAUTEURS, LARGEURS & MARGES)
 // ══════════════════════════════════════════════════════════════════════════════
 async function exporterExcel() {
   const btn = document.getElementById('btn-export-excel');
   const texteOriginal = btn.innerHTML;
-  btn.innerHTML = '⏳ Création du fichier en cours...';
+  btn.innerHTML = '⏳ Création du fichier...';
   btn.disabled = true;
 
   try {
     const wb = new ExcelJS.Workbook();
     
-    // Définition de tes 3 championnats (noms des onglets Excel)
     const championnats = [
       { id: 'ce', nom: 'Europe Senior' },
       { id: 'u18', nom: 'Minima U18' },
@@ -480,55 +477,65 @@ async function exporterExcel() {
     ];
 
     for (const champ of championnats) {
-      // On cherche le tableau HTML correspondant
       const conteneur = document.getElementById(champ.id + '-table');
       if (!conteneur) continue;
       const table = conteneur.querySelector('table');
       if (!table) continue;
 
-      // Création de l'onglet (feuille) en format Paysage
       const ws = wb.addWorksheet(champ.nom, {
         pageSetup: { orientation: 'landscape', paperSize: 9 }
       });
 
-      // Lecture des lignes du tableau HTML
       const trs = table.querySelectorAll('tr');
       trs.forEach((tr, index) => {
         const cellules = tr.querySelectorAll('th, td');
         const donneesLigne = [];
+        let nbLignesMax = 1;
 
+        // 1. LECTURE ET FORMATAGE DU TEXTE
         cellules.forEach(cell => {
-          // Astuce : Séparer les athlètes par des sauts de ligne pour plus de lisibilité
           const puces = cell.querySelectorAll('.athlete-chip');
+          let texte = "";
+          
           if (puces.length > 0) {
             let texteAthletes = [];
             puces.forEach(p => texteAthletes.push(p.innerText.trim().replace(/\s+/g, ' ')));
-            donneesLigne.push(texteAthletes.join('\n')); // \n = saut de ligne Excel
+            texte = texteAthletes.join('\n'); // Un athlète par ligne
           } else {
-            donneesLigne.push(cell.innerText.trim());
+            texte = cell.innerText.trim();
+          }
+          donneesLigne.push(texte);
+
+          // Compter le nombre de lignes dans la cellule la plus remplie
+          const nbLignes = texte.split('\n').length;
+          if (nbLignes > nbLignesMax) {
+            nbLignesMax = nbLignes;
           }
         });
 
-        const nouvelleLigne = ws.addRow(donneesLigne);
+        const row = ws.addRow(donneesLigne);
 
-        // --- STYLISATION DE LA LIGNE ---
+        // 2. GESTION DES HAUTEURS ET MARGES (5 pixels = ~3.75 points)
         if (index === 0) {
-          // Ligne d'en-tête (Bleu foncé de la FFA, texte blanc, gras)
-          nouvelleLigne.font = { bold: true, color: { argb: 'FFFFFFFF' } };
-          nouvelleLigne.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0A0E1A' } };
-          nouvelleLigne.alignment = { vertical: 'middle', horizontal: 'center' };
-          nouvelleLigne.height = 25;
+          row.height = 20 + 7.5; // Hauteur de base + marge 5px haut/bas
+          row.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+          row.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0A0E1A' } };
+          row.alignment = { vertical: 'middle', horizontal: 'center' };
         } else {
-          // Ligne de données (Texte centré verticalement, retour à la ligne auto)
-          nouvelleLigne.alignment = { vertical: 'middle', wrapText: true };
-          // Alternance de couleurs gris très clair une ligne sur deux (Zebra)
+          // Hauteur auto : 15 points par ligne de texte + 7.5 points de marge totale
+          row.height = (nbLignesMax * 15) + 7.5;
+          row.alignment = { vertical: 'middle', wrapText: true };
+          
+          // Simulation d'une marge à gauche (indentation) sur la première colonne (Épreuves)
+          row.getCell(1).alignment = { vertical: 'middle', wrapText: true, indent: 1 };
+          
           if (index % 2 === 0) {
-            nouvelleLigne.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
+            row.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
           }
         }
 
-        // Ajout de bordures discrètes sur chaque cellule
-        nouvelleLigne.eachCell(cellule => {
+        // Bordures
+        row.eachCell(cellule => {
           cellule.border = {
             top: {style:'thin', color: {argb:'FFCBD5E1'}},
             left: {style:'thin', color: {argb:'FFCBD5E1'}},
@@ -538,23 +545,31 @@ async function exporterExcel() {
         });
       });
 
-      // --- LARGEUR DES COLONNES ---
-      ws.columns.forEach((col, i) => {
-        if (i === 0) col.width = 25; // Colonne Épreuve
-        else if (i % 2 !== 0) col.width = 15; // Colonnes Minima (H/F)
-        else col.width = 45; // Colonnes Noms des Athlètes
+      // 3. GESTION AUTOMATIQUE DE LA LARGEUR DES COLONNES
+      ws.columns.forEach(col => {
+        let maxChar = 0;
+        col.eachCell({ includeEmpty: true }, cell => {
+          if (cell.value) {
+            // Cherche le texte le plus long parmi toutes les lignes de la cellule
+            const lignesTexte = cell.value.toString().split('\n');
+            lignesTexte.forEach(l => {
+              if (l.length > maxChar) maxChar = l.length;
+            });
+          }
+        });
+        // La largeur prend le texte le plus long + 3 caractères (pour la marge de ~5 pixels de chaque côté)
+        // Avec un minimum forcé à 12 pour que les colonnes vides ne soient pas écrasées
+        col.width = Math.max(maxChar + 3, 12);
       });
     }
 
-    // Déclenchement du téléchargement
     const buffer = await wb.xlsx.writeBuffer();
     saveAs(new Blob([buffer]), 'Minima_FFA_2026.xlsx');
 
   } catch (erreur) {
     console.error("Erreur Excel:", erreur);
-    alert("Une erreur est survenue lors de la création du fichier.");
+    alert("Une erreur est survenue lors de la création du fichier Excel.");
   } finally {
-    // Remise à zéro du bouton
     btn.innerHTML = texteOriginal;
     btn.disabled = false;
   }
