@@ -48,20 +48,6 @@
   .date-badge .wa-link a:hover { color: var(--u20); }
   .wa-dot { width: 6px; height: 6px; background: #38bdf8; border-radius: 50%; display: inline-block; }
 
-  /* ── Bouton Recherche minima ── */
-  .btn-recherche {
-    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-    color: #fff; border: none; border-radius: 8px;
-    padding: 11px 18px; font-family: 'Syne', sans-serif;
-    font-weight: 700; font-size: 12px; letter-spacing: .5px;
-    cursor: pointer; transition: all .2s; white-space: nowrap;
-    box-shadow: 0 2px 12px #2563eb33;
-  }
-  .btn-recherche:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); box-shadow: 0 4px 18px #2563eb44; }
-  .btn-recherche:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
-  .btn-recherche.success { background: linear-gradient(135deg, #065f46, #10b981); box-shadow: 0 2px 12px #10b98133; }
-  .btn-recherche.error   { background: linear-gradient(135deg, #7f1d1d, #e94560); box-shadow: 0 2px 12px #e9456033; }
-
   /* ── Tabs ── */
   .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
   .tab { padding: 8px 18px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 600; font-size: 12px; transition: all .2s; letter-spacing: .5px; }
@@ -131,11 +117,6 @@
     </div>
 
     <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
-
-      <!-- ── Bouton déclencheur ── -->
-      <button class="btn-recherche" id="btn-recherche" onclick="lancerRechercheMinima()">
-        🔍 Recherche minima
-      </button>
 
       <!-- ── Badge dernière mise à jour ── -->
       <div class="date-badge">
@@ -214,139 +195,6 @@
 <script src="achievements.js"></script>
 
 <script>
-// ══════════════════════════════════════════════════════════════════════════════
-// ⚙️  CONFIGURATION GITHUB — À REMPLIR UNE SEULE FOIS
-// ══════════════════════════════════════════════════════════════════════════════
-const GITHUB_CONFIG = {
-  owner:    "VOTRE_USERNAME_GITHUB",   // ex : "dupont-thomas"
-  repo:     "VOTRE_NOM_DE_REPO",       // ex : "minima-ffa-2026"
-  token:    "VOTRE_TOKEN_GITHUB",      // Fine-grained PAT — scope : Actions (read & write)
-  workflow: "update-minima.yml",
-  branch:   "main"                     // Branche principale (main ou master)
-};
-
-// ══════════════════════════════════════════════════════════════════════════════
-// 🔘 BOUTON "RECHERCHE MINIMA" — GitHub Actions API
-// ══════════════════════════════════════════════════════════════════════════════
-
-async function lancerRechercheMinima() {
-  const btn = document.getElementById('btn-recherche');
-
-  // Vérification basique de la config
-  if (GITHUB_CONFIG.token === "VOTRE_TOKEN_GITHUB") {
-    alert("⚠️ Configure d'abord GITHUB_CONFIG dans index.html\n(owner, repo, token)");
-    return;
-  }
-
-  btn.disabled = true;
-  btn.className = 'btn-recherche';
-  btn.textContent = '🚀 Lancement…';
-
-  try {
-    // 1. Déclencher le workflow via l'API GitHub
-    const dispatchRes = await fetch(
-      `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/actions/workflows/${GITHUB_CONFIG.workflow}/dispatches`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
-          'Accept':        'application/vnd.github+json',
-          'Content-Type':  'application/json',
-          'X-GitHub-Api-Version': '2022-11-28'
-        },
-        body: JSON.stringify({ ref: GITHUB_CONFIG.branch })
-      }
-    );
-
-    if (!dispatchRes.ok) {
-      const err = await dispatchRes.text();
-      throw new Error(`GitHub API ${dispatchRes.status} — ${err}`);
-    }
-
-    btn.textContent = '⏳ Scraping en cours…';
-
-    // 2. Attendre 8 s (délai avant que le run apparaisse dans l'API)
-    await sleep(8000);
-    await pollWorkflowStatus(btn);
-
-  } catch (e) {
-    btn.disabled  = false;
-    btn.className = 'btn-recherche error';
-    btn.textContent = '❌ Erreur — réessayer';
-    console.error('Erreur lancerRechercheMinima :', e);
-    alert('Erreur : ' + e.message);
-  }
-}
-
-async function pollWorkflowStatus(btn) {
-  const MAX_ATTEMPTS = 40;   // 40 × 15 s = 10 minutes max
-  let   attempts     = 0;
-  let   lastRunId    = null;
-
-  const poll = async () => {
-    attempts++;
-    try {
-      const res  = await fetch(
-        `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/actions/runs?event=workflow_dispatch&per_page=3`,
-        {
-          headers: {
-            'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
-            'Accept':        'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28'
-          }
-        }
-      );
-
-      if (!res.ok) throw new Error(`Polling GitHub API : ${res.status}`);
-
-      const data = await res.json();
-      const run  = data.workflow_runs?.[0];
-
-      if (!run) {
-        btn.textContent = `⏳ En attente du démarrage… (${attempts * 15}s)`;
-      } else {
-        // Mémoriser l'ID du run pour éviter de lire un ancien run
-        if (!lastRunId) lastRunId = run.id;
-
-        if (run.status === 'completed') {
-          if (run.conclusion === 'success') {
-            btn.className   = 'btn-recherche success';
-            btn.textContent = '✅ Données mises à jour !';
-            // Rechargement de la page après 2,5 s pour lire le nouveau achievements.js
-            setTimeout(() => location.reload(), 2500);
-            return;
-          } else {
-            throw new Error(`Workflow terminé avec statut « ${run.conclusion} ».\nVoir l'onglet Actions sur GitHub.`);
-          }
-        }
-
-        const elapsed = attempts * 15;
-        const label   = run.status === 'in_progress' ? 'Scraping World Athletics' : 'En file d\'attente';
-        btn.textContent = `⏳ ${label}… (${elapsed}s)`;
-      }
-
-      if (attempts < MAX_ATTEMPTS) {
-        setTimeout(poll, 15000);
-      } else {
-        btn.disabled  = false;
-        btn.className = 'btn-recherche error';
-        btn.textContent = '⌛ Timeout — réessayer';
-        alert('Le workflow a dépassé 10 minutes. Vérifiez l\'onglet Actions sur GitHub.');
-      }
-
-    } catch (e) {
-      btn.disabled  = false;
-      btn.className = 'btn-recherche error';
-      btn.textContent = '❌ Erreur — réessayer';
-      console.error('Erreur pollWorkflowStatus :', e);
-      alert('Erreur de suivi : ' + e.message);
-    }
-  };
-
-  await poll();
-}
-
-const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ══════════════════════════════════════════════════════════════════════════════
 // DATA STRUCTURES
