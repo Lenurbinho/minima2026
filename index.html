@@ -1,0 +1,585 @@
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minima FFA 2026 – CE · U18 · U20</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;800&display=swap');
+
+  :root {
+    --navy: #0a0e1a; --deep: #111827; --card: #161d2e; --border: #1e2d45;
+    --ce: #e94560; --u18: #a855f7; --u20: #10b981; --gold: #f59e0b;
+    --text: #e2e8f0; --muted: #64748b;
+    --pending: #fbbf2422; --done: #10b98122; --done-border: #10b98166;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--navy); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      radial-gradient(circle at 20% 50%, #1e2d4520 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, #a855f710 0%, transparent 40%),
+      radial-gradient(circle at 60% 80%, #10b98108 0%, transparent 40%);
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
+
+  /* ── Header ── */
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; gap: 16px; flex-wrap: wrap; }
+  .logo { font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 4px; }
+  .title { font-size: 24px; font-weight: 800; line-height: 1; }
+  .title span.ce { color: var(--ce); } .title span.u18 { color: var(--u18); } .title span.u20 { color: var(--u20); }
+
+  /* ── Badge mise à jour ── */
+  .date-badge {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 16px; font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--muted); text-align: right;
+  }
+  .date-badge strong { display: block; font-size: 15px; color: var(--gold); letter-spacing: .5px; }
+  .date-badge .wa-link {
+    font-size: 10px; margin-top: 5px; color: var(--muted);
+    display: flex; align-items: center; gap: 5px; justify-content: flex-end;
+  }
+  .date-badge .wa-link a {
+    color: #38bdf8; text-decoration: none; transition: color .15s;
+  }
+  .date-badge .wa-link a:hover { color: var(--u20); }
+  .wa-dot { width: 6px; height: 6px; background: #38bdf8; border-radius: 50%; display: inline-block; }
+
+  /* ── Bouton Recherche minima ── */
+  .btn-recherche {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    color: #fff; border: none; border-radius: 8px;
+    padding: 11px 18px; font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 12px; letter-spacing: .5px;
+    cursor: pointer; transition: all .2s; white-space: nowrap;
+    box-shadow: 0 2px 12px #2563eb33;
+  }
+  .btn-recherche:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); box-shadow: 0 4px 18px #2563eb44; }
+  .btn-recherche:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-recherche.success { background: linear-gradient(135deg, #065f46, #10b981); box-shadow: 0 2px 12px #10b98133; }
+  .btn-recherche.error   { background: linear-gradient(135deg, #7f1d1d, #e94560); box-shadow: 0 2px 12px #e9456033; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab { padding: 8px 18px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 600; font-size: 12px; transition: all .2s; letter-spacing: .5px; }
+  .tab.active-ce  { background: #e9456022; border-color: var(--ce);  color: var(--ce);  }
+  .tab.active-u18 { background: #a855f722; border-color: var(--u18); color: var(--u18); }
+  .tab.active-u20 { background: #10b98122; border-color: var(--u20); color: var(--u20); }
+  .tab:hover { opacity: .85; }
+
+  /* ── Panel ── */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn .25s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── Champ header ── */
+  .champ-header { border-radius: 12px; padding: 16px 20px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .champ-header.ce  { background: linear-gradient(135deg,#e9456015 0%,#0a0e1a 100%); border: 1px solid #e9456040; }
+  .champ-header.u18 { background: linear-gradient(135deg,#a855f715 0%,#0a0e1a 100%); border: 1px solid #a855f740; }
+  .champ-header.u20 { background: linear-gradient(135deg,#10b98115 0%,#0a0e1a 100%); border: 1px solid #10b98140; }
+  .champ-title { font-size: 16px; font-weight: 800; }
+  .champ-meta  { font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); margin-top: 2px; }
+  .champ-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill { padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: 600; font-family: 'Space Mono', monospace; }
+  .pill-ce   { background: #e9456022; color: var(--ce);  border: 1px solid #e9456044; }
+  .pill-u18  { background: #a855f722; color: var(--u18); border: 1px solid #a855f744; }
+  .pill-u20  { background: #10b98122; color: var(--u20); border: 1px solid #10b98144; }
+  .pill-warn { background: #f59e0b22; color: var(--gold); border: 1px solid #f59e0b44; }
+
+  /* ── Filter bar ── */
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+  .filter-bar select, .filter-bar input { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 10px; font-family: 'Syne', sans-serif; font-size: 12px; cursor: pointer; }
+  .filter-bar select:focus, .filter-bar input:focus { outline: none; border-color: var(--gold); }
+  .filter-label { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  /* ── Table ── */
+  .table-wrap { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead tr { background: var(--deep); }
+  thead th { padding: 10px 12px; text-align: left; font-weight: 600; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border)88; transition: background .15s; }
+  tbody tr:hover { background: #ffffff06; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: 9px 12px; vertical-align: middle; }
+  td.event { font-weight: 700; color: var(--text); }
+  td.minima-a { font-family: 'Space Mono', monospace; font-size: 11px; }
+  td.minima-b { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
+  td.athlete-cell { min-width: 160px; }
+
+  /* ── Athlete chip ── */
+  .athlete-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--done); border: 1px solid var(--done-border); border-radius: 6px; padding: 3px 8px; margin: 2px; font-size: 11px; font-weight: 600; white-space: nowrap; cursor: help; }
+  .athlete-chip .perf { font-family: 'Space Mono', monospace; color: var(--u20); font-size: 10px; }
+  .athlete-chip .when { font-size: 9px; color: var(--muted); }
+  .empty-cell { background: var(--pending); border-radius: 4px; padding: 4px 8px; font-size: 10px; color: #f59e0b88; font-family: 'Space Mono', monospace; display: inline-block; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width:5px; height:5px; }
+  ::-webkit-scrollbar-track { background: var(--deep); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius:3px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <div>
+      <div class="logo">FFA · Équipe de France 2026</div>
+      <div class="title">Minima &amp; Bilans<br><span class="ce">CE</span> · <span class="u18">U18</span> · <span class="u20">U20</span></div>
+    </div>
+
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+
+      <!-- ── Bouton déclencheur ── -->
+      <button class="btn-recherche" id="btn-recherche" onclick="lancerRechercheMinima()">
+        🔍 Recherche minima
+      </button>
+
+      <!-- ── Badge dernière mise à jour ── -->
+      <div class="date-badge">
+        Dernière mise à jour<br>
+        <strong id="lastSync">—</strong>
+        <div class="wa-link">
+          <span class="wa-dot"></span>
+          Source :&nbsp;<a href="https://worldathletics.org" target="_blank" rel="noopener">World Athletics</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active-ce"  onclick="switchTab('ce')"  id="tab-ce" >🏟️ CE Birmingham</div>
+    <div class="tab"            onclick="switchTab('u18')" id="tab-u18">🟣 CE U18 Rieti</div>
+    <div class="tab"            onclick="switchTab('u20')" id="tab-u20">🟢 CM U20 Eugene</div>
+  </div>
+
+  <div class="panel active" id="panel-ce">
+    <div class="champ-header ce">
+      <div>
+        <div class="champ-title" style="color:var(--ce)">🏟️ Championnats d'Europe – Birmingham (GBR)</div>
+        <div class="champ-meta">10-16 Août 2026 · Séniors · Sélection publiée à partir du 28/07/2026</div>
+      </div>
+      <div class="champ-pills">
+        <span class="pill pill-ce">01/04 → 26/07/2026</span>
+        <span class="pill pill-warn">ChF Elite Albi 24-26/07 OBLIGATOIRE</span>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <span class="filter-label">Filtrer :</span>
+      <select id="ce-gender" onchange="renderCE()">
+        <option value="all">♂ + ♀</option>
+        <option value="m">♂ Hommes</option>
+        <option value="f">♀ Femmes</option>
+      </select>
+      <input type="text" id="ce-search" placeholder="Rechercher épreuve…" oninput="renderCE()" style="width:160px">
+    </div>
+    <div id="ce-table"></div>
+  </div>
+
+  <div class="panel" id="panel-u18">
+    <div class="champ-header u18">
+      <div>
+        <div class="champ-title" style="color:var(--u18)">🟣 Championnats d'Europe U18 – Rieti (ITA)</div>
+        <div class="champ-meta">16-19 Juillet 2026 · Nés 2009/2010 · Sélection publiée à partir du 07/07/2026</div>
+      </div>
+      <div class="champ-pills">
+        <span class="pill pill-u18">01/04 → 05/07/2026</span>
+        <span class="pill pill-warn">Épreuve réf. Montgeron 4-5/07</span>
+      </div>
+    </div>
+    <div id="u18-table"></div>
+  </div>
+
+  <div class="panel" id="panel-u20">
+    <div class="champ-header u20">
+      <div>
+        <div class="champ-title" style="color:var(--u20)">🟢 Championnats du Monde U20 – Eugene, USA</div>
+        <div class="champ-meta">5-9 Août 2026 · Nés 2007-2010 · Sélection publiée à partir du 21/07/2026</div>
+      </div>
+      <div class="champ-pills">
+        <span class="pill pill-u20">Cat.1 : 01/04 → 05/07</span>
+        <span class="pill pill-warn">Cat.2&3 : → 21/06/2026</span>
+      </div>
+    </div>
+    <div id="u20-table"></div>
+  </div>
+
+</div>
+
+<!-- ══ Données dynamiques générées par le script Python ══ -->
+<script src="last_update.js"></script>
+<script src="achievements.js"></script>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// ⚙️  CONFIGURATION GITHUB — À REMPLIR UNE SEULE FOIS
+// ══════════════════════════════════════════════════════════════════════════════
+const GITHUB_CONFIG = {
+  owner:    "VOTRE_USERNAME_GITHUB",   // ex : "dupont-thomas"
+  repo:     "VOTRE_NOM_DE_REPO",       // ex : "minima-ffa-2026"
+  token:    "VOTRE_TOKEN_GITHUB",      // Fine-grained PAT — scope : Actions (read & write)
+  workflow: "update-minima.yml",
+  branch:   "main"                     // Branche principale (main ou master)
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// 🔘 BOUTON "RECHERCHE MINIMA" — GitHub Actions API
+// ══════════════════════════════════════════════════════════════════════════════
+
+async function lancerRechercheMinima() {
+  const btn = document.getElementById('btn-recherche');
+
+  // Vérification basique de la config
+  if (GITHUB_CONFIG.token === "VOTRE_TOKEN_GITHUB") {
+    alert("⚠️ Configure d'abord GITHUB_CONFIG dans index.html\n(owner, repo, token)");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.className = 'btn-recherche';
+  btn.textContent = '🚀 Lancement…';
+
+  try {
+    // 1. Déclencher le workflow via l'API GitHub
+    const dispatchRes = await fetch(
+      `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/actions/workflows/${GITHUB_CONFIG.workflow}/dispatches`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
+          'Accept':        'application/vnd.github+json',
+          'Content-Type':  'application/json',
+          'X-GitHub-Api-Version': '2022-11-28'
+        },
+        body: JSON.stringify({ ref: GITHUB_CONFIG.branch })
+      }
+    );
+
+    if (!dispatchRes.ok) {
+      const err = await dispatchRes.text();
+      throw new Error(`GitHub API ${dispatchRes.status} — ${err}`);
+    }
+
+    btn.textContent = '⏳ Scraping en cours…';
+
+    // 2. Attendre 8 s (délai avant que le run apparaisse dans l'API)
+    await sleep(8000);
+    await pollWorkflowStatus(btn);
+
+  } catch (e) {
+    btn.disabled  = false;
+    btn.className = 'btn-recherche error';
+    btn.textContent = '❌ Erreur — réessayer';
+    console.error('Erreur lancerRechercheMinima :', e);
+    alert('Erreur : ' + e.message);
+  }
+}
+
+async function pollWorkflowStatus(btn) {
+  const MAX_ATTEMPTS = 40;   // 40 × 15 s = 10 minutes max
+  let   attempts     = 0;
+  let   lastRunId    = null;
+
+  const poll = async () => {
+    attempts++;
+    try {
+      const res  = await fetch(
+        `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/actions/runs?event=workflow_dispatch&per_page=3`,
+        {
+          headers: {
+            'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
+            'Accept':        'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28'
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error(`Polling GitHub API : ${res.status}`);
+
+      const data = await res.json();
+      const run  = data.workflow_runs?.[0];
+
+      if (!run) {
+        btn.textContent = `⏳ En attente du démarrage… (${attempts * 15}s)`;
+      } else {
+        // Mémoriser l'ID du run pour éviter de lire un ancien run
+        if (!lastRunId) lastRunId = run.id;
+
+        if (run.status === 'completed') {
+          if (run.conclusion === 'success') {
+            btn.className   = 'btn-recherche success';
+            btn.textContent = '✅ Données mises à jour !';
+            // Rechargement de la page après 2,5 s pour lire le nouveau achievements.js
+            setTimeout(() => location.reload(), 2500);
+            return;
+          } else {
+            throw new Error(`Workflow terminé avec statut « ${run.conclusion} ».\nVoir l'onglet Actions sur GitHub.`);
+          }
+        }
+
+        const elapsed = attempts * 15;
+        const label   = run.status === 'in_progress' ? 'Scraping World Athletics' : 'En file d\'attente';
+        btn.textContent = `⏳ ${label}… (${elapsed}s)`;
+      }
+
+      if (attempts < MAX_ATTEMPTS) {
+        setTimeout(poll, 15000);
+      } else {
+        btn.disabled  = false;
+        btn.className = 'btn-recherche error';
+        btn.textContent = '⌛ Timeout — réessayer';
+        alert('Le workflow a dépassé 10 minutes. Vérifiez l\'onglet Actions sur GitHub.');
+      }
+
+    } catch (e) {
+      btn.disabled  = false;
+      btn.className = 'btn-recherche error';
+      btn.textContent = '❌ Erreur — réessayer';
+      console.error('Erreur pollWorkflowStatus :', e);
+      alert('Erreur de suivi : ' + e.message);
+    }
+  };
+
+  await poll();
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DATA STRUCTURES
+// ══════════════════════════════════════════════════════════════════════════════
+
+const DATA = {
+  ce: {
+    events: [
+      {ev:"100m",         minA_m:"10.05",minB_m:"10.15",  minA_f:"11.00",minB_f:"11.18"},
+      {ev:"200m",         minA_m:"20.20",minB_m:"20.45",  minA_f:"22.50",minB_f:"22.85"},
+      {ev:"400m",         minA_m:"45.00",minB_m:"45.25",  minA_f:"50.20",minB_f:"51.20"},
+      {ev:"800m",         minA_m:"1:43.00",minB_m:"1:44.80",minA_f:"1:58.00",minB_f:"1:59.80"},
+      {ev:"1500m",        minA_m:"3:30.50",minB_m:"3:33.50",minA_f:"3:58.00",minB_f:"4:03.50"},
+      {ev:"5000m",        minA_m:"12:56.00",minB_m:"–",   minA_f:"14:40.00",minB_f:"–"},
+      {ev:"10000m",       minA_m:"27:30.00",minB_m:"–",   minA_f:"30:50.00",minB_f:"–"},
+      {ev:"Marathon",     minA_m:"2:06:30",minB_m:"–",    minA_f:"2:23:30",minB_f:"–"},
+      {ev:"100m Haies",   minA_m:"–",minB_m:"–",           minA_f:"12.60",minB_f:"12.88"},
+      {ev:"110m Haies",   minA_m:"13.20",minB_m:"13.40",   minA_f:"–",minB_f:"–"},
+      {ev:"400m Haies",   minA_m:"48.20",minB_m:"49.00",   minA_f:"54.30",minB_f:"55.30"},
+      {ev:"3000m Steeple",minA_m:"8:11.00",minB_m:"8:20.00",minA_f:"9:12.00",minB_f:"9:28.00"},
+      {ev:"Hauteur",      minA_m:"2.27",minB_m:"2.24",     minA_f:"1.94",minB_f:"1.92"},
+      {ev:"Perche",       minA_m:"5.82",minB_m:"5.70",     minA_f:"4.70",minB_f:"4.60"},
+      {ev:"Longueur",     minA_m:"8.20",minB_m:"8.05",     minA_f:"6.77",minB_f:"6.70"},
+      {ev:"Triple Saut",  minA_m:"17.20",minB_m:"16.80",   minA_f:"14.45",minB_f:"14.20"},
+      {ev:"Poids",        minA_m:"21.30",minB_m:"20.80",   minA_f:"19.00",minB_f:"18.20"},
+      {ev:"Disque",       minA_m:"68.50",minB_m:"65.50",   minA_f:"65.50",minB_f:"61.00"},
+      {ev:"Marteau",      minA_m:"80.00",minB_m:"77.00",   minA_f:"73.50",minB_f:"71.50"},
+      {ev:"Javelot",      minA_m:"85.00",minB_m:"83.00",   minA_f:"65.50",minB_f:"60.80"},
+      {ev:"Décathlon",    minA_m:"8400",minB_m:"8200",      minA_f:"–",minB_f:"–"},
+      {ev:"Heptathlon",   minA_m:"–",minB_m:"–",            minA_f:"6570",minB_f:"6250"},
+      {ev:"20km Marche",  minA_m:"1:20:00",minB_m:"–",     minA_f:"1:29:00",minB_f:"–"},
+      {ev:"Semi-M. Marche",minA_m:"1:24:30",minB_m:"–",    minA_f:"1:34:00",minB_f:"–"},
+      {ev:"35km Marche",  minA_m:"2:26:00",minB_m:"–",     minA_f:"2:43:00",minB_f:"–"},
+      {ev:"Mar. Marche",  minA_m:"3:02:00",minB_m:"–",     minA_f:"3:27:30",minB_f:"–"},
+    ]
+  },
+  u18: {
+    events: [
+      {ev:"100m",          min_m:"10.65",ea_m:"10.78",min_f:"11.75",ea_f:"11.88"},
+      {ev:"200m",          min_m:"21.55",ea_m:"21.88",min_f:"24.10",ea_f:"24.48"},
+      {ev:"400m",          min_m:"48.30",ea_m:"48.92",min_f:"54.80",ea_f:"55.52"},
+      {ev:"800m",          min_m:"1:51.50",ea_m:"1:52.35",min_f:"2:06.50",ea_f:"2:07.55"},
+      {ev:"1500m",         min_m:"3:51.00",ea_m:"3:54.00",min_f:"4:24.00",ea_f:"4:27.50"},
+      {ev:"3000m",         min_m:"8:21.00",ea_m:"8:29.00",min_f:"9:37.50",ea_f:"9:46.00"},
+      {ev:"100m Haies",    min_m:"–",ea_m:"–",         min_f:"13.60",ea_f:"13.80"},
+      {ev:"110m Haies",    min_m:"13.80",ea_m:"14.00", min_f:"–",ea_f:"–"},
+      {ev:"400m Haies",    min_m:"53.50",ea_m:"54.25", min_f:"60.40",ea_f:"61.20"},
+      {ev:"2000m Steeple", min_m:"5:52.00",ea_m:"5:57.00",min_f:"6:50.00",ea_f:"6:56.00"},
+      {ev:"Hauteur",       min_m:"2.05",ea_m:"2.02",   min_f:"1.79",ea_f:"1.76"},
+      {ev:"Perche",        min_m:"4.85",ea_m:"4.75",   min_f:"3.90",ea_f:"3.80"},
+      {ev:"Longueur",      min_m:"7.30",ea_m:"7.18",   min_f:"6.05",ea_f:"5.93"},
+      {ev:"Triple Saut",   min_m:"14.80",ea_m:"14.54", min_f:"12.70",ea_f:"12.44"},
+      {ev:"Poids",         min_m:"18.40",ea_m:"17.96", min_f:"15.85",ea_f:"15.41"},
+      {ev:"Disque",        min_m:"56.50",ea_m:"54.88", min_f:"45.60",ea_f:"44.08"},
+      {ev:"Marteau",       min_m:"69.50",ea_m:"67.46", min_f:"63.80",ea_f:"61.76"},
+      {ev:"Javelot",       min_m:"68.50",ea_m:"66.50", min_f:"50.00",ea_f:"48.00"},
+      {ev:"Décathlon",     min_m:"7000",ea_m:"6800",   min_f:"–",ea_f:"–"},
+      {ev:"Heptathlon",    min_m:"–",ea_m:"–",         min_f:"5400",ea_f:"5200"},
+      {ev:"5000m Marche",  min_m:"21:45",ea_m:"22:15", min_f:"23:45",ea_f:"24:15"},
+    ]
+  },
+  u20: {
+    events: [
+      {ev:"100m",            minA_m:"10.20",minB_m:"10.35",cat:"1",minA_f:"11.30",minB_f:"11.50"},
+      {ev:"200m",            minA_m:"20.50",minB_m:"20.95",cat:"1",minA_f:"23.20",minB_f:"23.65"},
+      {ev:"400m",            minA_m:"45.95",minB_m:"46.80",cat:"1",minA_f:"52.65",minB_f:"53.65"},
+      {ev:"800m",            minA_m:"1:46.80",minB_m:"1:47.50",cat:"1",minA_f:"2:02.40",minB_f:"2:05.20"},
+      {ev:"1500m",           minA_m:"3:37.50",minB_m:"3:41.80",cat:"1",minA_f:"4:10.50",minB_f:"4:19.00"},
+      {ev:"3000m",           minA_m:"7:47.00",minB_m:"8:04.00",cat:"2",minA_f:"–",minB_f:"–"},
+      {ev:"5000m",           minA_m:"13:30.00",minB_m:"14:04.00",cat:"1",minA_f:"15:48.00",minB_f:"16:10.00"},
+      {ev:"3000m Steeple ♂", minA_m:"8:40.00",minB_m:"8:52.00",cat:"1",minA_f:"–",minB_f:"–"},
+      {ev:"3000m Steeple ♀", minA_m:"–",minB_m:"–",cat:"2",minA_f:"9:50.00",minB_f:"10:22.00"},
+      {ev:"100m Haies",      minA_m:"–",minB_m:"–",cat:"1",minA_f:"13.10",minB_f:"13.55"},
+      {ev:"110m Haies",      minA_m:"13.35",minB_m:"13.55",cat:"1",minA_f:"–",minB_f:"–"},
+      {ev:"400m Haies",      minA_m:"50.30",minB_m:"51.20",cat:"1",minA_f:"58.00",minB_f:"58.90"},
+      {ev:"Hauteur",         minA_m:"2.20",minB_m:"2.15",cat:"1",minA_f:"1.88",minB_f:"1.82"},
+      {ev:"Perche",          minA_m:"5.45",minB_m:"5.25",cat:"1",minA_f:"4.35",minB_f:"4.15"},
+      {ev:"Longueur",        minA_m:"7.85",minB_m:"7.65",cat:"1",minA_f:"6.45",minB_f:"6.30"},
+      {ev:"Triple Saut",     minA_m:"16.20",minB_m:"15.80",cat:"1",minA_f:"13.40",minB_f:"13.20"},
+      {ev:"Poids",           minA_m:"20.20",minB_m:"19.20",cat:"1",minA_f:"16.25",minB_f:"15.30"},
+      {ev:"Disque",          minA_m:"61.00",minB_m:"58.50",cat:"1",minA_f:"53.50",minB_f:"51.50"},
+      {ev:"Marteau",         minA_m:"76.00",minB_m:"71.00",cat:"1",minA_f:"62.60",minB_f:"61.00"},
+      {ev:"Javelot",         minA_m:"75.50",minB_m:"71.50",cat:"1",minA_f:"56.00",minB_f:"52.00"},
+      {ev:"Décathlon",       minA_m:"7550",minB_m:"7350",cat:"3",minA_f:"–",minB_f:"–"},
+      {ev:"Heptathlon",      minA_m:"–",minB_m:"–",cat:"3",minA_f:"5750",minB_f:"5400"},
+      {ev:"5000m Marche",    minA_m:"19:20",minB_m:"20:10",cat:"1",minA_f:"21:50",minB_f:"22:40"},
+    ]
+  }
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DATA HARMONIZATION (PYTHON -> HTML)
+// ══════════════════════════════════════════════════════════════════════════════
+
+const EVENT_MAPPING = {
+  "100mH": "100m Haies",
+  "110mH": "110m Haies",
+  "400mH": "400m Haies",
+  "Triple": "Triple Saut",
+  "Semi-marathon Marche": "Semi-M. Marche"
+};
+
+let uiData = { ce: {}, u18: {}, u20: {} };
+
+function prepareLocalData() {
+  if (typeof achievements === 'undefined') {
+    document.getElementById('lastSync').innerHTML = "<span style='color:var(--ce)'>Fichier manquant</span>";
+    console.error("achievements.js introuvable. Vérifiez qu'il est dans le même dossier.");
+    return;
+  }
+
+  // Renommage des épreuves pour correspondre aux clés du tableau HTML
+  for (const champ in achievements) {
+    for (const gender in achievements[champ]) {
+      for (const ev in achievements[champ][gender]) {
+        let htmlEventName = EVENT_MAPPING[ev] || ev;
+        if (!uiData[champ][htmlEventName]) uiData[champ][htmlEventName] = {};
+        uiData[champ][htmlEventName][gender] = achievements[champ][gender][ev];
+      }
+    }
+  }
+
+  // Affichage du timestamp depuis last_update.js (généré par run_headless.py)
+  const syncEl = document.getElementById('lastSync');
+  if (typeof lastUpdate !== 'undefined') {
+    syncEl.innerHTML = `<span style='color:var(--u20)'>${lastUpdate}</span>`;
+  } else {
+    syncEl.innerHTML = "<span style='color:var(--muted)'>jamais mise à jour</span>";
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════════════════════════
+
+function renderCE() {
+  const gf = document.getElementById('ce-gender').value;
+  const sf = document.getElementById('ce-search').value.toLowerCase();
+  const evs = DATA.ce.events.filter(e => e.ev.toLowerCase().includes(sf));
+  let html = '<div class="table-wrap"><table>';
+  html += `<thead><tr>
+    <th>Épreuve</th>
+    ${gf!=='f'?'<th>Min. A ♂</th><th>Min. B ♂</th><th style="min-width:200px">Athlète(s) ♂</th>':''}
+    ${gf!=='m'?'<th>Min. A ♀</th><th>Min. B ♀</th><th style="min-width:200px">Athlète(s) ♀</th>':''}
+  </tr></thead><tbody>`;
+  evs.forEach(e => {
+    const ach = uiData.ce[e.ev] || {};
+    html += `<tr>
+      <td class="event">${e.ev}</td>
+      ${gf!=='f'?`<td class="minima-a" style="color:var(--ce)">${e.minA_m}</td>
+                  <td class="minima-b">${e.minB_m}</td>
+                  <td class="athlete-cell">${renderAthletes(ach.m,'ce')}</td>`:''}
+      ${gf!=='m'?`<td class="minima-a" style="color:var(--ce)">${e.minA_f}</td>
+                  <td class="minima-b">${e.minB_f}</td>
+                  <td class="athlete-cell">${renderAthletes(ach.f,'ce')}</td>`:''}
+    </tr>`;
+  });
+  html += '</tbody></table></div>';
+  document.getElementById('ce-table').innerHTML = html;
+}
+
+function renderU18() {
+  const evs = DATA.u18.events;
+  let html = '<div class="table-wrap"><table>';
+  html += `<thead><tr><th>Épreuve</th><th>Min. FFA ♂</th><th>Min. EA ♂</th><th style="min-width:180px">Athlètes ♂ (nés 09/10)</th><th>Min. FFA ♀</th><th>Min. EA ♀</th><th style="min-width:180px">Athlètes ♀ (nés 09/10)</th></tr></thead><tbody>`;
+  evs.forEach(e => {
+    const ach = uiData.u18[e.ev] || {};
+    html += `<tr>
+      <td class="event">${e.ev}</td>
+      <td class="minima-a" style="color:var(--u18)">${e.min_m}</td>
+      <td class="minima-b">${e.ea_m}</td>
+      <td class="athlete-cell">${renderAthletes(ach.m,'u18')}</td>
+      <td class="minima-a" style="color:var(--u18)">${e.min_f}</td>
+      <td class="minima-b">${e.ea_f}</td>
+      <td class="athlete-cell">${renderAthletes(ach.f,'u18')}</td>
+    </tr>`;
+  });
+  html += '</tbody></table></div>';
+  document.getElementById('u18-table').innerHTML = html;
+}
+
+function renderU20() {
+  const evs = DATA.u20.events;
+  const catBg  = {'1':'#10b98122','2':'#f59e0b22','3':'#f9731622'};
+  const catFg  = {'1':'#10b981','2':'#f59e0b','3':'#f97316'};
+  let html = '<div class="table-wrap"><table>';
+  html += `<thead><tr><th>Épreuve</th><th>Cat.</th><th>Min. A ♂</th><th>Min. B ♂</th><th style="min-width:180px">Athlètes ♂</th><th>Min. A ♀</th><th>Min. B ♀</th><th style="min-width:180px">Athlètes ♀</th></tr></thead><tbody>`;
+  evs.forEach(e => {
+    const ach = uiData.u20[e.ev] || {};
+    html += `<tr>
+      <td class="event">${e.ev}</td>
+      <td style="background:${catBg[e.cat]};border-radius:4px;padding:4px 8px;font-size:10px;font-family:'Space Mono',monospace;color:${catFg[e.cat]};white-space:nowrap">Cat.${e.cat}</td>
+      <td class="minima-a" style="color:var(--u20)">${e.minA_m}</td>
+      <td class="minima-b">${e.minB_m}</td>
+      <td class="athlete-cell">${renderAthletes(ach.m,'u20')}</td>
+      <td class="minima-a" style="color:var(--u20)">${e.minA_f}</td>
+      <td class="minima-b">${e.minB_f}</td>
+      <td class="athlete-cell">${renderAthletes(ach.f,'u20')}</td>
+    </tr>`;
+  });
+  html += '</tbody></table></div>';
+  document.getElementById('u20-table').innerHTML = html;
+}
+
+function renderAthletes(list, champ) {
+  if (!list || list.length === 0)
+    return `<span class="empty-cell">— en attente —</span>`;
+  const dot = champ==='ce'?'var(--ce)':champ==='u18'?'var(--u18)':'var(--u20)';
+  return list.map(a =>
+    `<span class="athlete-chip" title="${a.place || ''}">
+      <span style="width:6px;height:6px;background:${dot};border-radius:50%;display:inline-block"></span>
+      ${a.name} <span class="perf">${a.perf}</span><span class="when">${a.date ? ' · '+a.date : ''}</span>
+    </span>`
+  ).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════════════════════════════════════════════
+function switchTab(t) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(tab => tab.className = 'tab');
+  document.getElementById('panel-'+t).classList.add('active');
+  document.getElementById('tab-'+t).className = `tab active-${t}`;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════════
+prepareLocalData();
+renderCE();
+renderU18();
+renderU20();
+</script>
+</body>
+</html>
