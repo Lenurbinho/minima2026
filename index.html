@@ -105,26 +105,7 @@
   ::-webkit-scrollbar { width:5px; height:5px; }
   ::-webkit-scrollbar-track { background: var(--deep); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius:3px; }
-  
-  /* ── Bouton Export Excel ── */
-  .btn-excel {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #fff; border: none; border-radius: 8px;
-    padding: 10px 18px; font-family: 'Syne', sans-serif;
-    font-weight: 700; font-size: 14px; letter-spacing: 0.5px;
-    cursor: pointer; transition: all 0.2s; 
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    display: inline-flex; align-items: center; gap: 8px;
-    margin: 15px auto; display: block;
-  }
-  .btn-excel:hover { 
-    transform: translateY(-2px); 
-    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4); 
-  }
-  .btn-excel:disabled { opacity: 0.7; cursor: wait; transform: none; }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -149,9 +130,7 @@
 
     </div>
   </div>
-<button id="btn-export-excel" class="btn-excel" onclick="exporterExcel()">
-  📥 Exporter les 3 tableaux en Excel
-</button>
+
   <div class="tabs">
     <div class="tab active-ce"  onclick="switchTab('ce')"  id="tab-ce" >🏟️ CE Birmingham</div>
     <div class="tab"            onclick="switchTab('u18')" id="tab-u18">🟣 CE U18 Rieti</div>
@@ -214,7 +193,6 @@
 <!-- ══ Données dynamiques générées par le script Python ══ -->
 <script src="last_update.js"></script>
 <script src="achievements.js"></script>
-
 
 <script>
 
@@ -450,107 +428,6 @@ prepareLocalData();
 renderCE();
 renderU18();
 renderU20();
-</script>
-<script>
-// ══════════════════════════════════════════════════════════════════════════════
-// 📥 EXPORT EXCEL MODERNE (PAYSAGE, MULTI-FEUILLES)
-// ══════════════════════════════════════════════════════════════════════════════
-async function exporterExcel() {
-  const btn = document.getElementById('btn-export-excel');
-  const texteOriginal = btn.innerHTML;
-  btn.innerHTML = '⏳ Création du fichier en cours...';
-  btn.disabled = true;
-
-  try {
-    const wb = new ExcelJS.Workbook();
-    
-    // Définition de tes 3 championnats (noms des onglets Excel)
-    const championnats = [
-      { id: 'ce', nom: 'Europe Senior' },
-      { id: 'u18', nom: 'Minima U18' },
-      { id: 'u20', nom: 'Minima U20' }
-    ];
-
-    for (const champ of championnats) {
-      // On cherche le tableau HTML correspondant
-      const conteneur = document.getElementById(champ.id + '-table');
-      if (!conteneur) continue;
-      const table = conteneur.querySelector('table');
-      if (!table) continue;
-
-      // Création de l'onglet (feuille) en format Paysage
-      const ws = wb.addWorksheet(champ.nom, {
-        pageSetup: { orientation: 'landscape', paperSize: 9 }
-      });
-
-      // Lecture des lignes du tableau HTML
-      const trs = table.querySelectorAll('tr');
-      trs.forEach((tr, index) => {
-        const cellules = tr.querySelectorAll('th, td');
-        const donneesLigne = [];
-
-        cellules.forEach(cell => {
-          // Astuce : Séparer les athlètes par des sauts de ligne pour plus de lisibilité
-          const puces = cell.querySelectorAll('.athlete-chip');
-          if (puces.length > 0) {
-            let texteAthletes = [];
-            puces.forEach(p => texteAthletes.push(p.innerText.trim().replace(/\s+/g, ' ')));
-            donneesLigne.push(texteAthletes.join('\n')); // \n = saut de ligne Excel
-          } else {
-            donneesLigne.push(cell.innerText.trim());
-          }
-        });
-
-        const nouvelleLigne = ws.addRow(donneesLigne);
-
-        // --- STYLISATION DE LA LIGNE ---
-        if (index === 0) {
-          // Ligne d'en-tête (Bleu foncé de la FFA, texte blanc, gras)
-          nouvelleLigne.font = { bold: true, color: { argb: 'FFFFFFFF' } };
-          nouvelleLigne.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0A0E1A' } };
-          nouvelleLigne.alignment = { vertical: 'middle', horizontal: 'center' };
-          nouvelleLigne.height = 25;
-        } else {
-          // Ligne de données (Texte centré verticalement, retour à la ligne auto)
-          nouvelleLigne.alignment = { vertical: 'middle', wrapText: true };
-          // Alternance de couleurs gris très clair une ligne sur deux (Zebra)
-          if (index % 2 === 0) {
-            nouvelleLigne.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
-          }
-        }
-
-        // Ajout de bordures discrètes sur chaque cellule
-        nouvelleLigne.eachCell(cellule => {
-          cellule.border = {
-            top: {style:'thin', color: {argb:'FFCBD5E1'}},
-            left: {style:'thin', color: {argb:'FFCBD5E1'}},
-            bottom: {style:'thin', color: {argb:'FFCBD5E1'}},
-            right: {style:'thin', color: {argb:'FFCBD5E1'}}
-          };
-        });
-      });
-
-      // --- LARGEUR DES COLONNES ---
-      ws.columns.forEach((col, i) => {
-        if (i === 0) col.width = 25; // Colonne Épreuve
-        else if (i % 2 !== 0) col.width = 15; // Colonnes Minima (H/F)
-        else col.width = 45; // Colonnes Noms des Athlètes
-      });
-    }
-
-    // Déclenchement du téléchargement
-    const buffer = await wb.xlsx.writeBuffer();
-    saveAs(new Blob([buffer]), 'Minima_FFA_2026.xlsx');
-
-  } catch (erreur) {
-    console.error("Erreur Excel:", erreur);
-    alert("Une erreur est survenue lors de la création du fichier.");
-  } finally {
-    // Remise à zéro du bouton
-    btn.innerHTML = texteOriginal;
-    btn.disabled = false;
-  }
-}
 </script>
 </body>
 </html>
