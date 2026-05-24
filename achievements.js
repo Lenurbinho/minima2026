@@ -145,6 +145,14 @@ const achievements = {
           "place": "Kirani James Athletic Stadium, St. George's (GRN)"
         }
       ],
+      "800m": [
+        {
+          "name": "Léa Eid",
+          "perf": "2:05.13",
+          "date": "23 MAY 2026",
+          "place": "Boudewijnstadion, Bruxelles (BEL)"
+        }
+      ],
       "3000m": [
         {
           "name": "Alice Penciu-jurin",
@@ -189,6 +197,12 @@ const achievements = {
           "place": "Estadio Enrique Lopez Cuenca, Nerja (ESP)"
         },
         {
+          "name": "Nadim Mameche",
+          "perf": "13:55.50",
+          "date": "23 MAY 2026",
+          "place": "Boudewijnstadion, Bruxelles (BEL)"
+        },
+        {
           "name": "Eugene Niox-chateau",
           "perf": "14:02.80",
           "date": "17 APR 2026",
@@ -205,6 +219,14 @@ const achievements = {
       ]
     },
     "f": {
+      "800m": [
+        {
+          "name": "Anaise Meier",
+          "perf": "2:02.97",
+          "date": "23 MAY 2026",
+          "place": "Boudewijnstadion, Bruxelles (BEL)"
+        }
+      ],
       "100mH": [
         {
           "name": "Zola Ndouma-mona",
