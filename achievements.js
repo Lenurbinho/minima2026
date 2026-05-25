@@ -15,14 +15,20 @@ const achievements = {
           "perf": "13.38",
           "date": "17 MAY 2026",
           "place": "Stade Charles Costa, Orange (FRA)"
+        },
+        {
+          "name": "Raphaël Mohamed",
+          "perf": "13.40",
+          "date": "24 MAY 2026",
+          "place": "Boudewijnstadion, Bruxelles (BEL)"
         }
       ],
       "Triple": [
         {
           "name": "Melvin Raffin",
-          "perf": "16.90",
-          "date": "15 MAY 2026",
-          "place": "Princess Noura University, Riyadh (KSA)"
+          "perf": "17.04",
+          "date": "24 MAY 2026",
+          "place": "Municipal Sports Center, Alexandria (GRE)"
         }
       ],
       "Disque": [
