@@ -31,14 +31,6 @@ const achievements = {
           "place": "Municipal Sports Center, Alexandria (GRE)"
         }
       ],
-      "Disque": [
-        {
-          "name": "Lolassonn Djouhan",
-          "perf": "65.75",
-          "date": "25 APR 2026",
-          "place": "Stade M. Chevalier, Cannes (FRA)"
-        }
-      ],
       "Marteau": [
         {
           "name": "Yann Chaussinand",
@@ -63,14 +55,6 @@ const achievements = {
           "perf": "12.76",
           "date": "17 MAY 2026",
           "place": "Stade Bachelard, Grenoble (FRA)"
-        }
-      ],
-      "Marteau": [
-        {
-          "name": "Rose Loga",
-          "perf": "75.19",
-          "date": "24 APR 2026",
-          "place": "Nyayo National Stadium, Nairobi (KEN)"
         }
       ]
     }
