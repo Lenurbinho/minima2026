@@ -33,7 +33,7 @@ def resource_path(relative_path):
 PERIODES_MINIMA = {
     "ce":  (datetime(2026, 4, 20), datetime(2026, 7, 26)),
     "u20": (datetime(2026, 4, 1), datetime(2026, 7, 19)),
-    "u18": (datetime(2026, 1, 1), datetime(2026, 7, 5))
+    "u18": (datetime(2026, 4, 1), datetime(2026, 7, 5))
 }
 
 # ==========================================
