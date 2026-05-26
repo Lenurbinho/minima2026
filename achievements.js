@@ -85,14 +85,6 @@ const achievements = {
           "place": "Stade de Petite Ile, Petite Ile (FRA)"
         }
       ],
-      "200m": [
-        {
-          "name": "Dylan Telo",
-          "perf": "21.33",
-          "date": "01 FEB 2026",
-          "place": "Stadium Jean-Pellez, Aubière (FRA) (i)"
-        }
-      ],
       "800m": [
         {
           "name": "Yannis Le Ruyet",
@@ -107,22 +99,6 @@ const achievements = {
           "perf": "8:14.83",
           "date": "17 MAY 2026",
           "place": "Stade L. Lagrange, Toulon (FRA)"
-        }
-      ],
-      "Hauteur": [
-        {
-          "name": "Yannis Dombele",
-          "perf": "2.09",
-          "date": "17 JAN 2026",
-          "place": "Salle Georges Hébert, Hirson (FRA) (i)"
-        }
-      ],
-      "Perche": [
-        {
-          "name": "Jonas Bestory",
-          "perf": "5.01",
-          "date": "21 FEB 2026",
-          "place": "Stade couvert Jesse Owens, Val-de-Reuil (FRA) (i)"
         }
       ],
       "Longueur": [
@@ -166,30 +142,6 @@ const achievements = {
           "date": "17 MAY 2026",
           "place": "Stade des Frères Lauvaux, Chalons-en-Champagne (FRA)"
         }
-      ],
-      "Hauteur": [
-        {
-          "name": "Elina Redon",
-          "perf": "1.80",
-          "date": "21 FEB 2026",
-          "place": "Stade couvert Jesse Owens, Val-de-Reuil (FRA) (i)"
-        }
-      ],
-      "Perche": [
-        {
-          "name": "Isild Drouet",
-          "perf": "4.35",
-          "date": "28 FEB 2026",
-          "place": "Stadium Jean-Pellez, Aubière (FRA) (i)"
-        }
-      ],
-      "Triple": [
-        {
-          "name": "Suzanne Cornelie-lenoir",
-          "perf": "12.75",
-          "date": "22 FEB 2026",
-          "place": "Stade couvert Jesse Owens, Val-de-Reuil (FRA) (i)"
-        }
       ]
     }
   },
@@ -225,6 +177,20 @@ const achievements = {
       ]
     },
     "f": {
+      "200m": [
+        {
+          "name": "Beatrice Tassin",
+          "perf": "23.48",
+          "date": "25 MAY 2026",
+          "place": "Stade Annexe Stade de France, St-Denis (FRA)"
+        },
+        {
+          "name": "Rose Djagbre",
+          "perf": "23.62",
+          "date": "25 MAY 2026",
+          "place": "Stade Annexe Stade de France, St-Denis (FRA)"
+        }
+      ],
       "800m": [
         {
           "name": "Anaise Meier",
@@ -244,9 +210,9 @@ const achievements = {
       "Triple": [
         {
           "name": "Amayelle Sy De Vaucher",
-          "perf": "13.15",
-          "date": "17 MAY 2026",
-          "place": "Parc Départemental de Parilly, Vénissieux (FRA)"
+          "perf": "13.43",
+          "date": "25 MAY 2026",
+          "place": "Stade Annexe Stade de France, St-Denis (FRA)"
         }
       ],
       "Poids": [
