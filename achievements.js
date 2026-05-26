@@ -116,6 +116,20 @@ const achievements = {
           "date": "17 MAY 2026",
           "place": "Stade L. Lagrange, Toulon (FRA)"
         }
+      ],
+      "5000m Marche": [
+        {
+          "name": "Matteo Henault",
+          "perf": "21:14.22",
+          "date": "17 MAY 2026",
+          "place": "Stade Roger Collas, Coulaines (FRA)"
+        },
+        {
+          "name": "Gabin Vanhille",
+          "perf": "21:16.23",
+          "date": "17 MAY 2026",
+          "place": "Stade J-P. David, Mantes-la-Jolie (FRA)"
+        }
       ]
     },
     "f": {
@@ -166,14 +180,6 @@ const achievements = {
           "date": "17 APR 2026",
           "place": "Cougar Athletic Stadium, Azusa, CA (USA)"
         }
-      ],
-      "400mH": [
-        {
-          "name": "Kristen Colly",
-          "perf": "51.34",
-          "date": "17 MAY 2026",
-          "place": "Stade Jean Delbert, Montreuil (FRA)"
-        }
       ]
     },
     "f": {
@@ -207,6 +213,14 @@ const achievements = {
           "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)"
         }
       ],
+      "Hauteur": [
+        {
+          "name": "Charlotte Sorin",
+          "perf": "1.82",
+          "date": "17 MAY 2026",
+          "place": "Stade Jean Delbert, Montreuil (FRA)"
+        }
+      ],
       "Triple": [
         {
           "name": "Amayelle Sy De Vaucher",
@@ -215,26 +229,16 @@ const achievements = {
           "place": "Stade Annexe Stade de France, St-Denis (FRA)"
         }
       ],
-      "Poids": [
-        {
-          "name": "Zola Ndouma-mona",
-          "perf": "15.17",
-          "date": "25 APR 2026",
-          "place": "Drake Stadium, Des Moines, IA (USA)"
-        }
-      ],
-      "Javelot": [
-        {
-          "name": "Leana Monzie",
-          "perf": "51.50",
-          "date": "17 MAY 2026",
-          "place": "Stade Les Pins, Bischwiller (FRA)"
-        }
-      ],
       "Heptathlon": [
         {
           "name": "Lalie Pouzancre-hoyer",
           "perf": "5581",
+          "date": "15 MAY 2026",
+          "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)"
+        },
+        {
+          "name": "Zola Ndouma-mona",
+          "perf": "5521",
           "date": "15 MAY 2026",
           "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)"
         }
