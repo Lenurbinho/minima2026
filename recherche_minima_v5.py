@@ -89,14 +89,14 @@ MINIMA_FFA = {
             "1500m": (231.00, None), "3000m": (501.00, None), "110mH": (13.80, None), "400mH": (53.50, None),
             "2000m Steeple": (352.00, None), "Hauteur": (2.05, None), "Perche": (4.85, None), "Longueur": (7.30, None),
             "Triple": (14.80, None), "Poids": (18.40, None), "Disque": (56.50, None), "Marteau": (69.50, None),
-            "Javelot": (68.50, None), "Decathlon": (6900, None), "10000m Marche": (2640.00, None)
+            "Javelot": (68.50, None), "Decathlon": (7000, None), "5000m Marche": (1305.00, None)
         },
         "f": {
             "100m": (11.75, None), "200m": (24.10, None), "400m": (54.80, None), "800m": (126.50, None),
             "1500m": (264.00, None), "3000m": (577.50, None), "100mH": (13.60, None), "400mH": (60.40, None),
             "2000m Steeple": (410.00, None), "Hauteur": (1.79, None), "Perche": (3.90, None), "Longueur": (6.05, None),
             "Triple": (12.70, None), "Poids": (15.85, None), "Disque": (45.60, None), "Marteau": (63.80, None),
-            "Javelot": (50.00, None), "Heptathlon": (5300, None), "5000m Marche": (1440.00, None)
+            "Javelot": (50.00, None), "Heptathlon": (5400, None), "5000m Marche": (1425.00, None)
         }
     }
 }
