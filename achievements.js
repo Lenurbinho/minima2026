@@ -63,6 +63,12 @@ const achievements = {
     "m": {
       "100m": [
         {
+          "name": "Andrea Jolevot",
+          "perf": "10.62",
+          "date": "23 MAY 2026",
+          "place": "Stade Michel Lecointre, Nantes (FRA)"
+        },
+        {
           "name": "Maidis Gorrillot",
           "perf": "10.65",
           "date": "03 MAY 2026",
