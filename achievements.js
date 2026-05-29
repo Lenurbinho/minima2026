@@ -5,7 +5,7 @@ const achievements = {
         {
           "name": "Yanis Meziane",
           "perf": "1:44.17",
-          "date": "16 MAY 2026",
+          "date": "16 mai 2026",
           "place": "China Textile City Sports Centre, Shaoxing/Keqiao (CHN)"
         }
       ],
@@ -13,13 +13,19 @@ const achievements = {
         {
           "name": "Thomas Wilkes",
           "perf": "13.38",
-          "date": "17 MAY 2026",
+          "date": "17 mai 2026",
           "place": "Stade Charles Costa, Orange (FRA)"
+        },
+        {
+          "name": "Romain Lecoeur",
+          "perf": "13.38",
+          "date": "29 mai 2026",
+          "place": "Zdzisław Krzyszkowiak Stadium, Bydgoszcz (POL)"
         },
         {
           "name": "Raphaël Mohamed",
           "perf": "13.40",
-          "date": "24 MAY 2026",
+          "date": "24 mai 2026",
           "place": "Boudewijnstadion, Bruxelles (BEL)"
         }
       ],
@@ -27,7 +33,7 @@ const achievements = {
         {
           "name": "Melvin Raffin",
           "perf": "17.04",
-          "date": "24 MAY 2026",
+          "date": "24 mai 2026",
           "place": "Municipal Sports Center, Alexandria (GRE)"
         }
       ],
@@ -35,7 +41,7 @@ const achievements = {
         {
           "name": "Yann Chaussinand",
           "perf": "81.07",
-          "date": "28 MAY 2026",
+          "date": "28 mai 2026",
           "place": "Fana Stadion, Bergen (NOR)"
         }
       ],
@@ -43,7 +49,7 @@ const achievements = {
         {
           "name": "Aurélien Quinion",
           "perf": "1:24:01",
-          "date": "08 MAY 2026",
+          "date": "08 mai 2026",
           "place": "Kolonáda, Poděbrady (CZE)"
         }
       ]
@@ -53,7 +59,7 @@ const achievements = {
         {
           "name": "Sacha Alessandrini",
           "perf": "12.76",
-          "date": "17 MAY 2026",
+          "date": "17 mai 2026",
           "place": "Stade Bachelard, Grenoble (FRA)"
         }
       ]
@@ -65,13 +71,13 @@ const achievements = {
         {
           "name": "Andrea Jolevot",
           "perf": "10.62",
-          "date": "23 MAY 2026",
+          "date": "23 mai 2026",
           "place": "Stade Michel Lecointre, Nantes (FRA)"
         },
         {
           "name": "Maidis Gorrillot",
           "perf": "10.65",
-          "date": "03 MAY 2026",
+          "date": "03 mai 2026",
           "place": "Stade de Petite Ile, Petite Ile (FRA)"
         }
       ],
@@ -79,7 +85,7 @@ const achievements = {
         {
           "name": "Yannis Le Ruyet",
           "perf": "1:51.45",
-          "date": "17 MAY 2026",
+          "date": "17 mai 2026",
           "place": "Stade Bachelard, Grenoble (FRA)"
         }
       ],
@@ -87,7 +93,7 @@ const achievements = {
         {
           "name": "Meziane Benhammou",
           "perf": "8:14.83",
-          "date": "17 MAY 2026",
+          "date": "17 mai 2026",
           "place": "Stade L. Lagrange, Toulon (FRA)"
         }
       ],
@@ -95,7 +101,7 @@ const achievements = {
         {
           "name": "Maidis Gorrillot",
           "perf": "7.60",
-          "date": "28 APR 2026",
+          "date": "28 avr 2026",
           "place": "Pilditch Stadium, Pretoria (RSA)"
         }
       ],
@@ -103,7 +109,7 @@ const achievements = {
         {
           "name": "Jayden Metainville",
           "perf": "15.40",
-          "date": "17 MAY 2026",
+          "date": "17 mai 2026",
           "place": "Stade L. Lagrange, Toulon (FRA)"
         }
       ],
@@ -111,13 +117,13 @@ const achievements = {
         {
           "name": "Matteo Henault",
           "perf": "21:14.22",
-          "date": "17 MAY 2026",
+          "date": "17 mai 2026",
           "place": "Stade Roger Collas, Coulaines (FRA)"
         },
         {
           "name": "Gabin Vanhille",
           "perf": "21:16.23",
-          "date": "17 MAY 2026",
+          "date": "17 mai 2026",
           "place": "Stade J-P. David, Mantes-la-Jolie (FRA)"
         }
       ]
@@ -127,7 +133,7 @@ const achievements = {
         {
           "name": "Melodie Peux",
           "perf": "23.99",
-          "date": "05 APR 2026",
+          "date": "05 avr 2026",
           "place": "Kirani James Athletic Stadium, St. George's (GRN)"
         }
       ],
@@ -135,7 +141,7 @@ const achievements = {
         {
           "name": "Léa Eid",
           "perf": "2:05.13",
-          "date": "23 MAY 2026",
+          "date": "23 mai 2026",
           "place": "Boudewijnstadion, Bruxelles (BEL)"
         }
       ],
@@ -143,7 +149,7 @@ const achievements = {
         {
           "name": "Alice Penciu-jurin",
           "perf": "9:20.26",
-          "date": "17 MAY 2026",
+          "date": "17 mai 2026",
           "place": "Stade des Frères Lauvaux, Chalons-en-Champagne (FRA)"
         }
       ]
@@ -155,19 +161,19 @@ const achievements = {
         {
           "name": "Alois Abraham",
           "perf": "13:48.94",
-          "date": "20 MAY 2026",
+          "date": "20 mai 2026",
           "place": "Estadio Enrique Lopez Cuenca, Nerja (ESP)"
         },
         {
           "name": "Nadim Mameche",
           "perf": "13:55.50",
-          "date": "23 MAY 2026",
+          "date": "23 mai 2026",
           "place": "Boudewijnstadion, Bruxelles (BEL)"
         },
         {
           "name": "Eugene Niox-chateau",
           "perf": "14:02.80",
-          "date": "17 APR 2026",
+          "date": "17 avr 2026",
           "place": "Cougar Athletic Stadium, Azusa, CA (USA)"
         }
       ]
@@ -177,13 +183,13 @@ const achievements = {
         {
           "name": "Beatrice Tassin",
           "perf": "23.48",
-          "date": "25 MAY 2026",
+          "date": "25 mai 2026",
           "place": "Stade Annexe Stade de France, St-Denis (FRA)"
         },
         {
           "name": "Rose Djagbre",
           "perf": "23.62",
-          "date": "25 MAY 2026",
+          "date": "25 mai 2026",
           "place": "Stade Annexe Stade de France, St-Denis (FRA)"
         }
       ],
@@ -191,7 +197,7 @@ const achievements = {
         {
           "name": "Anaise Meier",
           "perf": "2:02.97",
-          "date": "23 MAY 2026",
+          "date": "23 mai 2026",
           "place": "Boudewijnstadion, Bruxelles (BEL)"
         }
       ],
@@ -199,7 +205,7 @@ const achievements = {
         {
           "name": "Zola Ndouma-mona",
           "perf": "13.35",
-          "date": "14 MAY 2026",
+          "date": "14 mai 2026",
           "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)"
         }
       ],
@@ -207,7 +213,7 @@ const achievements = {
         {
           "name": "Charlotte Sorin",
           "perf": "1.82",
-          "date": "17 MAY 2026",
+          "date": "17 mai 2026",
           "place": "Stade Jean Delbert, Montreuil (FRA)"
         }
       ],
@@ -215,7 +221,7 @@ const achievements = {
         {
           "name": "Amayelle Sy De Vaucher",
           "perf": "13.43",
-          "date": "25 MAY 2026",
+          "date": "25 mai 2026",
           "place": "Stade Annexe Stade de France, St-Denis (FRA)"
         }
       ],
@@ -223,13 +229,13 @@ const achievements = {
         {
           "name": "Lalie Pouzancre-hoyer",
           "perf": "5581",
-          "date": "15 MAY 2026",
+          "date": "15 mai 2026",
           "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)"
         },
         {
           "name": "Zola Ndouma-mona",
           "perf": "5521",
-          "date": "15 MAY 2026",
+          "date": "15 mai 2026",
           "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)"
         }
       ]
