@@ -34,9 +34,9 @@ const achievements = {
       "Marteau": [
         {
           "name": "Yann Chaussinand",
-          "perf": "79.91",
-          "date": "17 MAY 2026",
-          "place": "Stade Jean Delbert, Montreuil (FRA)"
+          "perf": "81.07",
+          "date": "28 MAY 2026",
+          "place": "Fana Stadion, Bergen (NOR)"
         }
       ],
       "Semi-marathon Marche": [
