@@ -143,6 +143,23 @@ def parse_wa_date(date_str):
     except Exception:
         return None
 
+MOIS_FR = {
+    "JAN": "jan", "FEB": "fév", "MAR": "mar", "APR": "avr",
+    "MAY": "mai", "JUN": "juin", "JUL": "juil", "AUG": "août",
+    "SEP": "sep", "OCT": "oct", "NOV": "nov", "DEC": "déc"
+}
+
+def translate_date_fr(date_str):
+    """Traduit une date WA (ex: 17 MAY 2026) en français (ex: 17 mai 2026)."""
+    if not date_str:
+        return date_str
+    parts = date_str.strip().split()
+    if len(parts) == 3:
+        mois_en = parts[1].upper()
+        if mois_en in MOIS_FR:
+            return f"{parts[0]} {MOIS_FR[mois_en]} {parts[2]}"
+    return date_str
+
 def is_perf_in_period(date_str, champ):
     """Vérifie si la date de performance est comprise dans la période définie."""
     if champ not in PERIODES_MINIMA:
@@ -347,7 +364,7 @@ def fetch_wa_event(champ, gender, event):
                 athletes.append({
                     "name": name_clean, 
                     "perf": perf_text, 
-                    "date": date_text, 
+                    "date": translate_date_fr(date_text), 
                     "place": venue_text
                 })
         
