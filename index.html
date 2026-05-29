@@ -25,6 +25,23 @@
 
   .wrapper { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
 
+  @media (max-width: 700px) {
+    .header { flex-direction: column; align-items: flex-start; }
+    .title { font-size: 18px; }
+    .date-badge { width: 100%; text-align: left; }
+    .date-badge .wa-link { justify-content: flex-start; }
+    .tabs { gap: 4px; }
+    .tab { padding: 7px 10px; font-size: 11px; }
+    .champ-header { flex-direction: column; }
+    .champ-pills { flex-direction: column; gap: 4px; }
+    .table-wrap { font-size: 11px; }
+    thead th { font-size: 9px; padding: 7px 6px; }
+    td { padding: 6px 6px; }
+    .athlete-chip { font-size: 10px; padding: 2px 5px; }
+    .filter-bar { flex-direction: column; align-items: flex-start; }
+    .btn-excel { font-size: 12px; padding: 8px 14px; }
+  }
+
   /* ── Header ── */
   .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; gap: 16px; flex-wrap: wrap; }
   .logo { font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 4px; }
@@ -152,6 +169,9 @@
         <div class="wa-link">
           <span class="wa-dot"></span>
           Source :&nbsp;<a href="https://worldathletics.org" target="_blank" rel="noopener">World Athletics</a>
+        </div>
+		<div style="font-size:10px;color:#475569;font-style:italic;margin-top:6px;text-align:right;">
+          Alexandre BRUNEL – Groupe d'animation FFA
         </div>
 		<button id="btn-export-excel" class="btn-excel" onclick="exporterExcel()">
   📥 Exporter les 3 tableaux en Excel
