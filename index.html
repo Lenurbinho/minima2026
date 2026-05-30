@@ -887,75 +887,546 @@ renderCE();
 renderU18();
 renderU20();
 
-/* ─ Export Excel ─ */
+   /* ═══════════════════════════════════════════════════════════════
+   EXPORT EXCEL — Document de référence complet, prêt à l'impression
+   • 1 onglet récapitulatif + 3 onglets championnat
+   • Athlètes formatés : nom gras + perf colorée + lieu/date en dessous
+   • Mise en page paysage A4, marges optimisées, en-têtes/pieds de page
+   • Bande couleur + icône de couloir en décoration
+═══════════════════════════════════════════════════════════════ */
 async function exporterExcel() {
   const btn = document.getElementById('btn-export-excel');
   const orig = btn.innerHTML;
-  btn.innerHTML = '⏳ Création…';
+  btn.innerHTML = '⏳ Génération…';
   btn.disabled = true;
+ 
   try {
     const wb = new ExcelJS.Workbook();
-    const sheets = [
-      {id:'ce', nom:'Europe Senior'},
-      {id:'u18', nom:'Minima U18'},
-      {id:'u20', nom:'Minima U20'}
-    ];
-    for (const sh of sheets) {
-      const ct = document.getElementById(sh.id + '-table');
-      if (!ct) continue;
-      const tbl = ct.querySelector('table');
-      if (!tbl) continue;
-      const ws = wb.addWorksheet(sh.nom, { pageSetup:{ orientation:'landscape', paperSize:9 } });
-      tbl.querySelectorAll('tr').forEach((tr, idx) => {
-        const cells = tr.querySelectorAll('th, td');
-        const row_data = [];
-        let maxLines = 1;
-        cells.forEach(cell => {
-          const chips = cell.querySelectorAll('.athlete-chip');
-          let txt = '';
-          if (chips.length > 0) {
-            let lines = [];
-            chips.forEach(p => lines.push(p.innerText.trim().replace(/\s+/g,' ')));
-            txt = lines.join('\n');
-          } else { txt = cell.innerText.trim(); }
-          row_data.push(txt);
-          const n = txt.split('\n').length;
-          if (n > maxLines) maxLines = n;
-        });
-        const row = ws.addRow(row_data);
-        if (idx === 0) {
-          row.height = 27;
-          row.font = {bold:true, color:{argb:'FFFFFFFF'}};
-          row.fill = {type:'pattern', pattern:'solid', fgColor:{argb:'FF1a1714'}};
-          row.alignment = {vertical:'middle', horizontal:'center'};
-        } else {
-          row.height = maxLines * 15 + 7;
-          row.alignment = {vertical:'middle', wrapText:true};
-          row.getCell(1).alignment = {vertical:'middle', wrapText:true, indent:1};
-          if (idx % 2 === 0) row.fill = {type:'pattern', pattern:'solid', fgColor:{argb:'FFF7F5F0'}};
-        }
-        row.eachCell(c => {
-          c.border = {
-            top:{style:'thin',color:{argb:'FFE2DDD4'}},
-            left:{style:'thin',color:{argb:'FFE2DDD4'}},
-            bottom:{style:'thin',color:{argb:'FFE2DDD4'}},
-            right:{style:'thin',color:{argb:'FFE2DDD4'}}
-          };
-        });
+    wb.creator = 'Alexandre BRUNEL – Groupe d\'animation FFA';
+    wb.created = new Date();
+    const dateMAJ = (typeof lastUpdate !== 'undefined') ? lastUpdate : '—';
+ 
+    /* ── Palette couleurs (ARGB) ── */
+    const PAL = {
+      ce:        'FFD4292F',
+      ce_light:  'FFFDF0F0',
+      ce_mid:    'FFF5C0C2',
+      ce_dark:   'FF6B0A0D',
+      u18:       'FF6B3FC0',
+      u18_light: 'FFF4F0FC',
+      u18_mid:   'FFD4C4F0',
+      u18_dark:  'FF2E0870',
+      u20:       'FF1A7A4A',
+      u20_light: 'FFEEF7F2',
+      u20_mid:   'FFAADCC1',
+      u20_dark:  'FF0A3D20',
+      ink:       'FF1A1714',
+      ink2:      'FF4A4540',
+      ink3:      'FF8A847A',
+      bg:        'FFF7F5F0',
+      bg2:       'FFFAF9F6',
+      white:     'FFFFFFFF',
+      amber:     'FFC47B00',
+      amber_bg:  'FFFDF5E6',
+      amber_mid: 'FFFDE8B0',
+      border:    'FFE2DDD4',
+      border2:   'FFCCC7BC',
+      warn_bg:   'FFFDE8B0',
+      warn_fg:   'FF7A4500',
+      orange:    'FFE8A020',
+      blue:      'FF1A6AAA',
+    };
+ 
+    /* ── Helpers ── */
+    const fill  = (argb) => ({type:'pattern', pattern:'solid', fgColor:{argb}});
+    const font  = (o)    => Object.assign({name:'Calibri', size:10}, o);
+    const align = (h,v,w)=> ({horizontal:h||'left', vertical:v||'middle', wrapText:!!w});
+ 
+    const borderFull = (col) => {
+      const s = {style:'thin', color:{argb: col||PAL.border}};
+      return {top:s, left:s, bottom:s, right:s};
+    };
+    const borderAccent = (accentColor) => ({
+      left:   {style:'medium', color:{argb:accentColor}},
+      top:    {style:'thin',   color:{argb:PAL.border}},
+      bottom: {style:'thin',   color:{argb:PAL.border}},
+      right:  {style:'thin',   color:{argb:PAL.border}},
+    });
+ 
+    /* ── Formatage cellule athlète ──
+       Construit une valeur rich-text : nom gras, perf colorée, lieu/date en petits
+    ── */
+    function athleteRichText(list, accentArgb) {
+      if (!list || !list.length) return { richText:[{text:'— en attente —', font:font({size:9, italic:true, color:{argb:PAL.ink3}})}] };
+      const pieces = [];
+      list.forEach((a, i) => {
+        if (i > 0) pieces.push({text:'\n', font:font({size:4})});
+        /* Nom */
+        pieces.push({text: a.name, font: font({size:10, bold:true, color:{argb:PAL.ink}})});
+        /* Performance */
+        pieces.push({text: '   ' + a.perf, font: font({size:10, bold:true, color:{argb:accentArgb}})});
+        /* Date */
+        if (a.date) pieces.push({text: '   ' + a.date, font: font({size:8, italic:false, color:{argb:PAL.ink3}})});
+        /* Lieu */
+        if (a.place) pieces.push({text: '\n' + a.place, font: font({size:8, italic:true, color:{argb:PAL.ink3}})});
       });
-      ws.columns.forEach(col => {
-        let max = 0;
-        col.eachCell({includeEmpty:true}, c => {
-          if (c.value) c.value.toString().split('\n').forEach(l => { if (l.length > max) max = l.length; });
-        });
-        col.width = Math.max(max + 3, 12);
+      return { richText: pieces };
+    }
+ 
+    /* Hauteur de ligne adaptée au contenu athlète */
+    function lineH(list, base) {
+      if (!list || !list.length) return base || 18;
+      const linesPerAth = list.map(a => 1 + (a.place ? 1 : 0));
+      const total = linesPerAth.reduce((s,n) => s+n, 0);
+      return Math.max(base||18, total * 16 + 6);
+    }
+ 
+    /* Applique les styles d'une ligne de données */
+    function styleDataRow(row, bg, accentCol, numCols) {
+      row.eachCell({includeEmpty:true}, (cell, col) => {
+        cell.fill   = fill(bg);
+        cell.border = col === 1 ? borderAccent(accentCol) : borderFull();
+        cell.alignment = align(col===1?'left':'center','top',true);
+        cell.font = font({size:10, color:{argb:PAL.ink}});
       });
     }
+ 
+    /* Ligne séparateur discret entre groupes */
+    function addSpacer(ws, ncols) {
+      const r = ws.addRow(Array(ncols).fill(''));
+      r.height = 5;
+      r.eachCell({includeEmpty:true}, c => { c.fill = fill(PAL.bg2); });
+    }
+ 
+    /* En-tête & pied de page communs */
+    function pageSetupChamp(ws, titleL, titleR) {
+      ws.headerFooter = {
+        oddHeader: `&L&"Calibri,Bold"&12${titleL}&R&"Calibri,Regular"&9${titleR}`,
+        oddFooter: `&L&"Calibri,Italic"&8Alexandre BRUNEL — Groupe d'animation FFA&C&"Calibri,Regular"&8Source : worldathletics.org   ·   Mis à jour le ${dateMAJ}&R&"Calibri,Regular"&8Page &P / &N`,
+      };
+    }
+ 
+    /* ══════════════════════════════════════════════════════════════
+       ONGLET RÉCAPITULATIF — Vue d'ensemble des 3 championnats
+    ══════════════════════════════════════════════════════════════ */
+    (function buildRecap() {
+      const ws = wb.addWorksheet('Récapitulatif', {
+        pageSetup: {
+          orientation:'landscape', paperSize:9,
+          fitToPage:true, fitToWidth:1, fitToHeight:0,
+          margins:{left:0.5, right:0.5, top:0.7, bottom:0.7, header:0.3, footer:0.3}
+        }
+      });
+      pageSetupChamp(ws, 'Minima FFA 2026 — Tableau de bord', 'Équipe de France · CE · U18 · U20');
+ 
+      /* 6 colonnes : A=vide marge, B=info, C=D=E=F fusionnées valeur */
+      ws.columns = [{width:2},{width:32},{width:4},{width:30},{width:30},{width:30}];
+ 
+      /* Titre principal */
+      ws.mergeCells('A1:F1');
+      const titre = ws.getCell('A1');
+      titre.value  = 'MINIMA FFA 2026 — ÉQUIPE DE FRANCE';
+      titre.font   = font({size:20, bold:true, color:{argb:PAL.white}});
+      titre.fill   = fill(PAL.ink);
+      titre.alignment = align('center','middle');
+      ws.getRow(1).height = 40;
+ 
+      /* Sous-titre */
+      ws.mergeCells('A2:F2');
+      const st = ws.getCell('A2');
+      st.value = `Document généré le ${dateMAJ}   ·   Source : World Athletics   ·   Alexandre BRUNEL — Groupe d'animation FFA`;
+      st.font  = font({size:9, italic:true, color:{argb:PAL.ink3}});
+      st.fill  = fill(PAL.bg);
+      st.alignment = align('center','middle');
+      ws.getRow(2).height = 18;
+ 
+      /* Bande décorative 6 couleurs (couloirs) */
+      const laneColors = [PAL.ce, PAL.orange, PAL.u20, PAL.blue, PAL.u18, 'FFC0392B'];
+      ws.mergeCells('A3:F3');
+      ws.getCell('A3').fill = fill(PAL.ce); // fallback — la bande est simulée sur une ligne
+      ws.getRow(3).height = 6;
+      // On colore chaque colonne individuellement pour simuler les couloirs
+      ['A3','B3','C3','D3','E3','F3'].forEach((addr,i) => {
+        ws.getCell(addr).fill = fill(laneColors[i]);
+      });
+ 
+      ws.getRow(4).height = 16;
+ 
+      /* ── Bloc CE ── */
+      const championnats = [
+        {
+          key:'ce', label:'🏟  CHAMPIONNATS D\'EUROPE — BIRMINGHAM (GBR)',
+          date:'10-16 août 2026', cat:'Séniors',
+          periode:'Période minima : 01/05 → 26/07/2026',
+          info:'ChF Élite Albi (24-26/07) OBLIGATOIRE · Sélection publiée à partir du 28/07',
+          pal: PAL.ce, pal_light: PAL.ce_light, pal_mid: PAL.ce_mid, pal_dark: PAL.ce_dark,
+        },
+        {
+          key:'u18', label:'🟣  CHAMPIONNATS D\'EUROPE U18 — RIETI (ITA)',
+          date:'16-19 juillet 2026', cat:'Nés 2009/2010',
+          periode:'Période minima : 01/04 → 05/07/2026',
+          info:'Épreuve de référence : Montgeron 4-5/07 · Sélection publiée à partir du 07/07',
+          pal: PAL.u18, pal_light: PAL.u18_light, pal_mid: PAL.u18_mid, pal_dark: PAL.u18_dark,
+        },
+        {
+          key:'u20', label:'🟢  CHAMPIONNATS DU MONDE U20 — EUGENE (USA)',
+          date:'5-9 août 2026', cat:'Nés 2007-2010',
+          periode:'Cat.1 & Cat.2 : 01/04 → 05/07  ·  Cat.3 (combinés) : → 21/06',
+          info:'Sélection publiée à partir du 21/07/2026',
+          pal: PAL.u20, pal_light: PAL.u20_light, pal_mid: PAL.u20_mid, pal_dark: PAL.u20_dark,
+        }
+      ];
+ 
+      championnats.forEach(ch => {
+        /* En-tête championnat */
+        ws.mergeCells(`A${ws.lastRow.number+1}:F${ws.lastRow.number+1}`);
+        const rH = ws.lastRow;
+        rH.getCell(1).value     = ch.label;
+        rH.getCell(1).font      = font({size:13, bold:true, color:{argb:PAL.white}});
+        rH.getCell(1).fill      = fill(ch.pal);
+        rH.getCell(1).alignment = align('left','middle');
+        rH.height = 28;
+ 
+        /* Date + catégorie */
+        const rD = ws.addRow(['', `${ch.date}   ·   ${ch.cat}`,'','','','']);
+        ws.mergeCells(`B${rD.number}:F${rD.number}`);
+        rD.getCell(2).font      = font({size:10, bold:true, color:{argb:ch.pal_dark}});
+        rD.getCell(2).fill      = fill(ch.pal_mid);
+        rD.getCell(1).fill      = fill(ch.pal_mid);
+        rD.getCell(2).alignment = align('left','middle');
+        rD.height = 20;
+ 
+        /* Période */
+        const rP = ws.addRow(['', ch.periode,'','','','']);
+        ws.mergeCells(`B${rP.number}:F${rP.number}`);
+        rP.getCell(2).font = font({size:9, italic:true, color:{argb:ch.pal_dark}});
+        rP.getCell(2).fill = fill(ch.pal_light);
+        rP.getCell(1).fill = fill(ch.pal_light);
+        rP.height = 16;
+ 
+        /* Info sélection */
+        const rI = ws.addRow(['', ch.info,'','','','']);
+        ws.mergeCells(`B${rI.number}:F${rI.number}`);
+        rI.getCell(2).font = font({size:9, color:{argb:ch.pal_dark}});
+        rI.getCell(2).fill = fill(ch.pal_light);
+        rI.getCell(1).fill = fill(ch.pal_light);
+        rI.height = 16;
+ 
+        /* Compte des qualifiés */
+        let countM = 0, countF = 0;
+        const data = ch.key === 'ce' ? DATA.ce.events : ch.key === 'u18' ? DATA.u18.events : DATA.u20.events;
+        data.forEach(e => {
+          const ach = uiData[ch.key][e.ev] || {};
+          if (ach.m && ach.m.length) countM += ach.m.length;
+          if (ach.f && ach.f.length) countF += ach.f.length;
+        });
+        const rC = ws.addRow(['', `Athlètes masculins qualifiés : ${countM}`, '', `Athlètes féminines qualifiées : ${countF}`, '', '']);
+        rC.getCell(1).fill = fill(ch.pal_light);
+        rC.getCell(2).font = font({size:10, bold:true, color:{argb:PAL.ink}});
+        rC.getCell(2).fill = fill(ch.pal_light);
+        rC.getCell(4).font = font({size:10, bold:true, color:{argb:PAL.ink}});
+        rC.getCell(4).fill = fill(ch.pal_light);
+        ['C','E','F'].forEach(col => ws.getCell(`${col}${rC.number}`).fill = fill(ch.pal_light));
+        rC.height = 20;
+ 
+        const rSp = ws.addRow(['','','','','','']);
+        rSp.height = 10;
+      });
+ 
+      /* Pied récap */
+      const lr = ws.lastRow.number + 1;
+      ws.mergeCells(`A${lr}:F${lr}`);
+      const rf = ws.getCell(`A${lr}`);
+      rf.value = 'Pour le détail des performances, consultez les onglets dédiés à chaque championnat.';
+      rf.font  = font({size:9, italic:true, color:{argb:PAL.ink3}});
+      rf.alignment = align('center','middle');
+      ws.getRow(lr).height = 18;
+    })();
+ 
+    /* ══════════════════════════════════════════════════════════════
+       BUILDER GÉNÉRIQUE D'ONGLET CHAMPIONNAT (utilisé pour CE, U18, U20)
+    ══════════════════════════════════════════════════════════════ */
+    function buildChampSheet(config) {
+      const {
+        sheetName, titleLine1, titleLine2, infoLine, legendLine,
+        columns, headers, headerGroups,
+        events, champKey, accentPal, accentLight, accentMid, accentDark,
+        getRowValues, getAthleteGender,
+      } = config;
+ 
+      const ws = wb.addWorksheet(sheetName, {
+        pageSetup: {
+          orientation:'landscape', paperSize:9,
+          fitToPage:true, fitToWidth:1, fitToHeight:0,
+          margins:{left:0.45, right:0.45, top:0.75, bottom:0.65, header:0.3, footer:0.3}
+        }
+      });
+      pageSetupChamp(ws, sheetName, 'Minima FFA 2026 · Équipe de France');
+      ws.columns = columns;
+ 
+      const ncols = columns.length;
+ 
+      /* ── L1 : titre principal ── */
+      ws.mergeCells(`A1:${String.fromCharCode(64+ncols)}1`);
+      const c1 = ws.getCell('A1');
+      c1.value     = titleLine1;
+      c1.font      = font({size:15, bold:true, color:{argb:PAL.white}});
+      c1.fill      = fill(accentPal);
+      c1.alignment = align('center','middle');
+      ws.getRow(1).height = 32;
+ 
+      /* ── L2 : informations clés ── */
+      ws.mergeCells(`A2:${String.fromCharCode(64+ncols)}2`);
+      const c2 = ws.getCell('A2');
+      c2.value     = titleLine2;
+      c2.font      = font({size:9, italic:true, color:{argb:accentDark}});
+      c2.fill      = fill(accentLight);
+      c2.alignment = align('center','middle');
+      ws.getRow(2).height = 18;
+ 
+      /* ── L3 : info supplémentaire (si présente) ── */
+      if (infoLine) {
+        ws.mergeCells(`A3:${String.fromCharCode(64+ncols)}3`);
+        const c3 = ws.getCell('A3');
+        c3.value     = infoLine;
+        c3.font      = font({size:8, color:{argb:accentDark}});
+        c3.fill      = fill(accentMid);
+        c3.alignment = align('center','middle');
+        ws.getRow(3).height = 16;
+      }
+ 
+      /* ── Ligne légende (U20) ── */
+      const nextRow = infoLine ? 4 : 3;
+      if (legendLine) {
+        ws.mergeCells(`A${nextRow}:${String.fromCharCode(64+ncols)}${nextRow}`);
+        const cL = ws.getCell(`A${nextRow}`);
+        cL.value     = legendLine;
+        cL.font      = font({size:8, color:{argb:accentDark}});
+        cL.fill      = fill(accentLight);
+        cL.alignment = align('center','middle');
+        ws.getRow(nextRow).height = 14;
+      }
+ 
+      const startDataAt = (infoLine ? 3 : 2) + (legendLine ? 1 : 0);
+ 
+      /* ── Ligne séparateur ── */
+      const sepR = ws.addRow(Array(ncols).fill(''));
+      sepR.height = 5;
+      sepR.eachCell({includeEmpty:true}, c => c.fill = fill(PAL.bg));
+ 
+      /* ── Groupes de colonnes ♂ / ♀ ── */
+      const grpRow = ws.addRow(Array(ncols).fill(''));
+      grpRow.height = 22;
+      headerGroups.forEach(g => {
+        const startLetter = String.fromCharCode(64 + g.startCol);
+        const endLetter   = String.fromCharCode(64 + g.endCol);
+        if (g.startCol !== g.endCol) ws.mergeCells(`${startLetter}${grpRow.number}:${endLetter}${grpRow.number}`);
+        const cell = grpRow.getCell(g.startCol);
+        cell.value     = g.label;
+        cell.font      = font({size:10, bold:true, color:{argb:PAL.white}});
+        cell.fill      = fill(g.dark ? PAL.ink2 : PAL.ink);
+        cell.alignment = align('center','middle');
+      });
+      // Remplir les cellules vides du groupe row
+      for (let i = 1; i <= ncols; i++) {
+        const c = grpRow.getCell(i);
+        if (!c.fill || !c.fill.fgColor) c.fill = fill(PAL.ink);
+      }
+ 
+      /* ── En-têtes colonnes ── */
+      const hdrRow = ws.addRow(Array(ncols).fill(''));
+      hdrRow.height = 20;
+      headers.forEach((h, i) => {
+        const cell = hdrRow.getCell(i+1);
+        cell.value     = h.label;
+        cell.font      = font({size:9, bold:true, color:{argb:PAL.white}});
+        cell.fill      = fill(h.female ? PAL.ink2 : PAL.ink);
+        cell.alignment = align('center','middle');
+        cell.border    = borderFull(PAL.ink2);
+      });
+ 
+      /* ── Lignes de données ── */
+      events.forEach((e, idx) => {
+        const athM = (uiData[champKey][e.ev] || {}).m || [];
+        const athF = (uiData[champKey][e.ev] || {}).f || [];
+        const hM   = lineH(athM, 18);
+        const hF   = lineH(athF, 18);
+        const h    = Math.max(hM, hF, 18);
+        const bg   = idx % 2 === 0 ? PAL.bg : PAL.white;
+ 
+        const rowVals = getRowValues(e);
+        const r = ws.addRow(rowVals);
+        r.height = h;
+ 
+        r.eachCell({includeEmpty:true}, (cell, col) => {
+          cell.fill      = fill(bg);
+          cell.border    = col===1 ? borderAccent(accentPal) : borderFull();
+          cell.alignment = align('center','middle',true);
+          cell.font      = font({size:10, color:{argb:PAL.ink}});
+        });
+ 
+        /* Épreuve : gras + bordure accent */
+        r.getCell(1).font      = font({size:10, bold:true, color:{argb:PAL.ink}});
+        r.getCell(1).alignment = align('left','middle');
+ 
+        /* Colonnes configurées */
+        headers.forEach((h_def, i) => {
+          const cell = r.getCell(i+1);
+          if (h_def.isMinA) {
+            cell.font      = font({size:10, bold:true, color:{argb: h_def.female ? accentPal : accentPal}});
+            cell.alignment = align('center','middle');
+          } else if (h_def.isMinB) {
+            cell.font      = font({size:9, color:{argb:PAL.ink3}});
+            cell.alignment = align('center','middle');
+          } else if (h_def.isAthlete) {
+            const list = h_def.female ? athF : athM;
+            cell.value     = athleteRichText(list, h_def.female ? accentPal : accentPal);
+            cell.alignment = align('left','top',true);
+          } else if (h_def.isCat) {
+            const catBg = {'1':PAL.u20_light,'2':PAL.amber_bg,'3':PAL.u18_light};
+            const catFg = {'1':PAL.u20_dark, '2':PAL.warn_fg, '3':PAL.u18_dark};
+            cell.font  = font({size:9, bold:true, color:{argb: catFg[e.cat]||PAL.ink}});
+            cell.fill  = fill(catBg[e.cat]||PAL.bg);
+            cell.alignment = align('center','middle');
+          }
+        });
+      });
+ 
+      /* ── Pied de page dans la feuille ── */
+      addSpacer(ws, ncols);
+      const lrNum = ws.lastRow.number + 1;
+      ws.mergeCells(`A${lrNum}:${String.fromCharCode(64+ncols)}${lrNum}`);
+      const foot = ws.getCell(`A${lrNum}`);
+      foot.value     = `Mis à jour le ${dateMAJ}   ·   Source : World Athletics (worldathletics.org)   ·   Alexandre BRUNEL — Groupe d'animation FFA`;
+      foot.font      = font({size:8, italic:true, color:{argb:PAL.ink3}});
+      foot.fill      = fill(PAL.bg);
+      foot.alignment = align('center','middle');
+      ws.getRow(lrNum).height = 16;
+ 
+      /* ── Gel des lignes en-têtes ── */
+      ws.views = [{ state:'frozen', ySplit: ws.lastRow.number - events.length - 1, activeCell:'A1' }];
+    }
+ 
+    /* ══════════════════════════════════════════════════════════════
+       ONGLET CE — BIRMINGHAM
+    ══════════════════════════════════════════════════════════════ */
+    buildChampSheet({
+      sheetName:   'CE — Birmingham',
+      titleLine1:  'CHAMPIONNATS D\'EUROPE — BIRMINGHAM (GBR)   ·   10-16 AOÛT 2026   ·   SÉNIORS',
+      titleLine2:  'Période de réalisation des minima : 01/05/2026 → 26/07/2026   ·   ChF Élite Albi (24-26/07) OBLIGATOIRE   ·   Sélection publiée à partir du 28/07/2026',
+      infoLine:    null,
+      legendLine:  null,
+      columns: [
+        {width:18}, {width:10}, {width:10}, {width:46},
+        {width:10}, {width:10}, {width:46},
+      ],
+      headerGroups: [
+        {startCol:1, endCol:1, label:'ÉPREUVE',      dark:false},
+        {startCol:2, endCol:4, label:'♂  HOMMES',    dark:false},
+        {startCol:5, endCol:7, label:'♀  FEMMES',    dark:true},
+      ],
+      headers: [
+        {label:'ÉPREUVE',                   col:1},
+        {label:'Min. A',  isMinA:true,       col:2},
+        {label:'Min. B',  isMinB:true,       col:3},
+        {label:'ATHLÈTE(S) QUALIFIÉ(S)', isAthlete:true, female:false, col:4},
+        {label:'Min. A',  isMinA:true,  female:true,  col:5},
+        {label:'Min. B',  isMinB:true,  female:true,  col:6},
+        {label:'ATHLÈTE(S) QUALIFIÉ(E)S', isAthlete:true, female:true, col:7},
+      ],
+      events:   DATA.ce.events,
+      champKey: 'ce',
+      accentPal:   PAL.ce,
+      accentLight: PAL.ce_light,
+      accentMid:   PAL.ce_mid,
+      accentDark:  PAL.ce_dark,
+      getRowValues: (e) => [e.ev, e.minA_m, e.minB_m, '', e.minA_f, e.minB_f, ''],
+    });
+ 
+    /* ══════════════════════════════════════════════════════════════
+       ONGLET U18 — RIETI
+    ══════════════════════════════════════════════════════════════ */
+    buildChampSheet({
+      sheetName:   'CE U18 — Rieti',
+      titleLine1:  'CHAMPIONNATS D\'EUROPE U18 — RIETI (ITA)   ·   16-19 JUILLET 2026   ·   NÉS 2009/2010',
+      titleLine2:  'Période de réalisation des minima : 01/04/2026 → 05/07/2026   ·   Épreuve de référence : Montgeron 4-5/07   ·   Sélection publiée à partir du 07/07/2026',
+      infoLine:    null,
+      legendLine:  null,
+      columns: [
+        {width:18}, {width:10}, {width:10}, {width:46},
+        {width:10}, {width:10}, {width:46},
+      ],
+      headerGroups: [
+        {startCol:1, endCol:1, label:'ÉPREUVE',             dark:false},
+        {startCol:2, endCol:4, label:'♂  HOMMES (nés 2009-2010)', dark:false},
+        {startCol:5, endCol:7, label:'♀  FEMMES (nées 2009-2010)', dark:true},
+      ],
+      headers: [
+        {label:'ÉPREUVE',                      col:1},
+        {label:'Min. FFA',  isMinA:true,        col:2},
+        {label:'Min. EA',   isMinB:true,        col:3},
+        {label:'ATHLÈTE(S) QUALIFIÉ(S)',    isAthlete:true, female:false, col:4},
+        {label:'Min. FFA',  isMinA:true,  female:true, col:5},
+        {label:'Min. EA',   isMinB:true,  female:true, col:6},
+        {label:'ATHLÈTE(S) QUALIFIÉ(E)S', isAthlete:true, female:true,  col:7},
+      ],
+      events:   DATA.u18.events,
+      champKey: 'u18',
+      accentPal:   PAL.u18,
+      accentLight: PAL.u18_light,
+      accentMid:   PAL.u18_mid,
+      accentDark:  PAL.u18_dark,
+      getRowValues: (e) => [e.ev, e.min_m, e.ea_m, '', e.min_f, e.ea_f, ''],
+    });
+ 
+    /* ══════════════════════════════════════════════════════════════
+       ONGLET U20 — EUGENE
+    ══════════════════════════════════════════════════════════════ */
+    buildChampSheet({
+      sheetName:   'CM U20 — Eugene',
+      titleLine1:  'CHAMPIONNATS DU MONDE U20 — EUGENE, USA   ·   5-9 AOÛT 2026   ·   NÉS 2007-2010',
+      titleLine2:  'Cat.1 & Cat.2 : période de réalisation jusqu\'au 05/07/2026   ·   Cat.3 (Combinés) : jusqu\'au 21/06/2026   ·   Sélection publiée à partir du 21/07/2026',
+      infoLine:    'Cat.1 = Minima A & B (épreuves principales)   ·   Cat.2 = Minima A & B (épreuves spécifiques)   ·   Cat.3 = Combinés (Décathlon / Heptathlon)',
+      legendLine:  null,
+      columns: [
+        {width:20}, {width:7}, {width:10}, {width:10}, {width:42},
+        {width:10}, {width:10}, {width:42},
+      ],
+      headerGroups: [
+        {startCol:1, endCol:2, label:'ÉPREUVE',      dark:false},
+        {startCol:3, endCol:5, label:'♂  HOMMES',    dark:false},
+        {startCol:6, endCol:8, label:'♀  FEMMES',    dark:true},
+      ],
+      headers: [
+        {label:'ÉPREUVE',                      col:1},
+        {label:'CAT.',    isCat:true,           col:2},
+        {label:'Min. A',  isMinA:true,          col:3},
+        {label:'Min. B',  isMinB:true,          col:4},
+        {label:'ATHLÈTE(S) QUALIFIÉ(S)',    isAthlete:true, female:false, col:5},
+        {label:'Min. A',  isMinA:true,  female:true, col:6},
+        {label:'Min. B',  isMinB:true,  female:true, col:7},
+        {label:'ATHLÈTE(S) QUALIFIÉ(E)S', isAthlete:true, female:true,  col:8},
+      ],
+      events:   DATA.u20.events,
+      champKey: 'u20',
+      accentPal:   PAL.u20,
+      accentLight: PAL.u20_light,
+      accentMid:   PAL.u20_mid,
+      accentDark:  PAL.u20_dark,
+      getRowValues: (e) => [e.ev, `Cat.${e.cat}`, e.minA_m, e.minB_m, '', e.minA_f, e.minB_f, ''],
+    });
+ 
+    /* ── Téléchargement ── */
+    const dateStr = dateMAJ.replace(/\//g,'-').replace(/\s/g,'_').replace(/:/g,'h').replace(/_à_/,'_');
     const buf = await wb.xlsx.writeBuffer();
-    saveAs(new Blob([buf]), 'Minima_FFA_2026.xlsx');
+    saveAs(
+      new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),
+      `Minima_FFA_2026_${dateStr}.xlsx`
+    );
+ 
   } catch(err) {
-    console.error('Excel error:', err);
-    alert('Une erreur est survenue lors de la création du fichier Excel.');
+    console.error('Erreur génération Excel :', err);
+    alert('Une erreur est survenue lors de la génération du fichier Excel.\n' + err.message);
   } finally {
     btn.innerHTML = orig;
     btn.disabled = false;
