@@ -203,6 +203,12 @@ const achievements = {
       ],
       "100mH": [
         {
+          "name": "Lenny Pawlowicz",
+          "perf": "13.33",
+          "date": "29 mai 2026",
+          "place": "Stade Philippe Mahut, Fontainebleau (FRA)"
+        },
+        {
           "name": "Zola Ndouma-mona",
           "perf": "13.35",
           "date": "14 mai 2026",
@@ -215,6 +221,14 @@ const achievements = {
           "perf": "1.82",
           "date": "17 mai 2026",
           "place": "Stade Jean Delbert, Montreuil (FRA)"
+        }
+      ],
+      "Longueur": [
+        {
+          "name": "Soudatou Niang",
+          "perf": "6.34",
+          "date": "29 mai 2026",
+          "place": "Stade Philippe Mahut, Fontainebleau (FRA)"
         }
       ],
       "Triple": [
