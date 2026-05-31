@@ -11,10 +11,30 @@ const achievements = {
       ],
       "800m": [
         {
+          "name": "Gabriel Tual",
+          "perf": "1:44.03",
+          "date": "31 mai 2026",
+          "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)"
+        },
+        {
           "name": "Yanis Meziane",
           "perf": "1:44.17",
           "date": "16 mai 2026",
           "place": "China Textile City Sports Centre, Shaoxing/Keqiao (CHN)"
+        }
+      ],
+      "1500m": [
+        {
+          "name": "Azeddine Habz",
+          "perf": "3:30.68",
+          "date": "31 mai 2026",
+          "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)"
+        },
+        {
+          "name": "Flavien Szot",
+          "perf": "3:32.24",
+          "date": "31 mai 2026",
+          "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)"
         }
       ],
       "110mH": [
@@ -63,12 +83,28 @@ const achievements = {
       ]
     },
     "f": {
+      "800m": [
+        {
+          "name": "Anaïs Bourgoin",
+          "perf": "1:57.39",
+          "date": "31 mai 2026",
+          "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)"
+        }
+      ],
+      "1500m": [
+        {
+          "name": "Agathe Guillemot",
+          "perf": "3:59.60",
+          "date": "31 mai 2026",
+          "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)"
+        }
+      ],
       "100mH": [
         {
           "name": "Sacha Alessandrini",
-          "perf": "12.76",
-          "date": "17 mai 2026",
-          "place": "Stade Bachelard, Grenoble (FRA)"
+          "perf": "12.70",
+          "date": "31 mai 2026",
+          "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)"
         }
       ]
     }
@@ -92,9 +128,9 @@ const achievements = {
       "800m": [
         {
           "name": "Yannis Le Ruyet",
-          "perf": "1:51.45",
-          "date": "17 mai 2026",
-          "place": "Stade Bachelard, Grenoble (FRA)"
+          "perf": "1:50.19",
+          "date": "30 mai 2026",
+          "place": "Stade Universitaire D. Faucher, Toulouse (FRA)"
         }
       ],
       "3000m": [
@@ -103,6 +139,12 @@ const achievements = {
           "perf": "8:14.83",
           "date": "17 mai 2026",
           "place": "Stade L. Lagrange, Toulon (FRA)"
+        },
+        {
+          "name": "Malo Kerhamon",
+          "perf": "8:16.64",
+          "date": "30 mai 2026",
+          "place": "Stade de la Rudelière, Les Sables d'Olonne (FRA)"
         }
       ],
       "Longueur": [
@@ -148,9 +190,9 @@ const achievements = {
       "800m": [
         {
           "name": "Léa Eid",
-          "perf": "2:05.13",
-          "date": "23 mai 2026",
-          "place": "Boudewijnstadion, Bruxelles (BEL)"
+          "perf": "2:04.35",
+          "date": "30 mai 2026",
+          "place": "Carl-Kaufmann-Stadion, Karlsruhe (GER)"
         }
       ],
       "3000m": [
