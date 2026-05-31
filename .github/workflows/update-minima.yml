@@ -7,6 +7,8 @@ name: 🏃 Mise à jour des minima FFA
 # ─────────────────────────────────────────────────────────────────────────────
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * *'
 
 permissions:
   contents: write   # nécessaire pour git push
