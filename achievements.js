@@ -1,6 +1,14 @@
 const achievements = {
   "ce": {
     "m": {
+      "400m": [
+        {
+          "name": "Samuel Vessat",
+          "perf": "44.82",
+          "date": "27 mai 2026",
+          "place": "Un. of Kentucky Outdoor Track Facility, Lexington, KY (USA)"
+        }
+      ],
       "800m": [
         {
           "name": "Yanis Meziane",
@@ -175,6 +183,12 @@ const achievements = {
           "perf": "14:02.80",
           "date": "17 avr 2026",
           "place": "Cougar Athletic Stadium, Azusa, CA (USA)"
+        },
+        {
+          "name": "Yoann Debroucker",
+          "perf": "14:03.12",
+          "date": "30 mai 2026",
+          "place": "Stade Municipal, Ambilly (FRA)"
         }
       ]
     },
