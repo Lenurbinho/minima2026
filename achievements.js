@@ -57,6 +57,20 @@ const achievements = {
           "place": "Boudewijnstadion, Bruxelles (BEL)"
         }
       ],
+      "3000m Steeple": [
+        {
+          "name": "Nicolas-marie Daru",
+          "perf": "8:11.81",
+          "date": "31 mai 2026",
+          "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)"
+        },
+        {
+          "name": "Baptiste Fourmont",
+          "perf": "8:18.46",
+          "date": "31 mai 2026",
+          "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)"
+        }
+      ],
       "Triple": [
         {
           "name": "Melvin Raffin",
@@ -121,6 +135,14 @@ const achievements = {
           "perf": "12.70",
           "date": "31 mai 2026",
           "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)"
+        }
+      ],
+      "400mH": [
+        {
+          "name": "Louise Maraval",
+          "perf": "55.04",
+          "date": "01 juin 2026",
+          "place": "Stadion Juliska, Praha (CZE)"
         }
       ]
     }
@@ -272,6 +294,20 @@ const achievements = {
           "date": "17 mai 2026",
           "place": "Stade Charles Costa, Orange (FRA)"
         }
+      ],
+      "3000m Steeple": [
+        {
+          "name": "Basile Astier",
+          "perf": "8:48.60",
+          "date": "30 mai 2026",
+          "place": "Stade Universitaire D. Faucher, Toulouse (FRA)"
+        },
+        {
+          "name": "Mathis Dubois",
+          "perf": "8:49.31",
+          "date": "30 mai 2026",
+          "place": "Carl-Kaufmann-Stadion, Karlsruhe (GER)"
+        }
       ]
     },
     "f": {
@@ -309,6 +345,20 @@ const achievements = {
           "perf": "13.35",
           "date": "14 mai 2026",
           "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)"
+        }
+      ],
+      "3000m Steeple": [
+        {
+          "name": "Adéle Martin",
+          "perf": "10:17.26",
+          "date": "01 mai 2026",
+          "place": "Weaver Stadium, Princeton, NJ (USA)"
+        },
+        {
+          "name": "Gwladys Bouzat",
+          "perf": "10:19.43",
+          "date": "30 mai 2026",
+          "place": "Stade Universitaire D. Faucher, Toulouse (FRA)"
         }
       ],
       "Hauteur": [
