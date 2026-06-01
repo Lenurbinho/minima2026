@@ -218,6 +218,14 @@ const achievements = {
           "date": "17 mai 2026",
           "place": "Stade des Frères Lauvaux, Chalons-en-Champagne (FRA)"
         }
+      ],
+      "Marteau": [
+        {
+          "name": "Loan Rodride",
+          "perf": "64.79",
+          "date": "23 mai 2026",
+          "place": "Betty Heidler Arena, Fränkisch-Crumbach (GER)"
+        }
       ]
     }
   },
@@ -255,6 +263,14 @@ const achievements = {
           "perf": "14:03.12",
           "date": "30 mai 2026",
           "place": "Stade Municipal, Ambilly (FRA)"
+        }
+      ],
+      "110mH": [
+        {
+          "name": "Ewenn Vernack",
+          "perf": "13.43",
+          "date": "17 mai 2026",
+          "place": "Stade Charles Costa, Orange (FRA)"
         }
       ]
     },
