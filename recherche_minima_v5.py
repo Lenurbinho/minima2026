@@ -600,7 +600,7 @@ def fetch_wa_event(champ, gender, event):
                     "name": name_clean, 
                     "perf": perf_text, 
                     "date": translate_date_fr(date_text), 
-                    "place": venue_text
+                    "place": venue_text,
                     "raw_date": date_text
                 })
         
