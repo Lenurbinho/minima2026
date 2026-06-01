@@ -5,7 +5,7 @@ const achievements = {
         {
           "name": "Samuel Vessat",
           "perf": "44.82",
-          "date": "27 mai 2026",
+          "date": "29 mai 2026",
           "place": "Un. of Kentucky Outdoor Track Facility, Lexington, KY (USA)"
         }
       ],
