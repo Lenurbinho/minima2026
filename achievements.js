@@ -60,9 +60,17 @@ const achievements = {
       "Triple": [
         {
           "name": "Melvin Raffin",
-          "perf": "17.04",
-          "date": "24 mai 2026",
-          "place": "Municipal Sports Center, Alexandria (GRE)"
+          "perf": "17.29",
+          "date": "31 mai 2026",
+          "place": "Stade Omnisports Schlossberg, Forbach (FRA)"
+        }
+      ],
+      "Disque": [
+        {
+          "name": "Lolassonn Djouhan",
+          "perf": "66.22",
+          "date": "30 mai 2026",
+          "place": "Stade de la Réunification de Bepanda, Douala (CMR)"
         }
       ],
       "Marteau": [
@@ -83,6 +91,14 @@ const achievements = {
       ]
     },
     "f": {
+      "200m": [
+        {
+          "name": "Gémima Joseph",
+          "perf": "22.60",
+          "date": "29 mai 2026",
+          "place": "Ray Conn Sports Complex, Cleveland, TN (USA)"
+        }
+      ],
       "800m": [
         {
           "name": "Anaïs Bourgoin",
@@ -207,6 +223,14 @@ const achievements = {
   },
   "u20": {
     "m": {
+      "1500m": [
+        {
+          "name": "Alois Abraham",
+          "perf": "3:39.36",
+          "date": "31 mai 2026",
+          "place": "Stade Omnisports Schlossberg, Forbach (FRA)"
+        }
+      ],
       "5000m": [
         {
           "name": "Alois Abraham",
