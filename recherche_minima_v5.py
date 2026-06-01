@@ -291,7 +291,7 @@ def format_seconds_for_display(seconds, event_name):
 
 def fetch_wa_event(champ, gender, event):
     """Scrape le site de World Athletics et filtre strictement par catégorie d'âge, lieu et date."""
-    slug = MAP_WA_SLUGS.get(event)
+    slug = get_wa_slug(champ, gender, event)
     if not slug: return []
 
     wa_gender = "women" if gender == "f" else "men"
