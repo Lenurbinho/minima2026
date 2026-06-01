@@ -747,13 +747,28 @@ const DATA = {
   }
 };
 
+// Correspondances clés Python (achievements.js) → clés HTML (DATA[champ].events[].ev)
+// Règle générale : si la clé Python == clé HTML, pas besoin de l'indiquer ici.
 const EVENT_MAPPING = {
-  "100mH": "100m Haies",
-  "110mH": "110m Haies",
-  "400mH": "400m Haies",
-  "Triple": "Triple Saut",
-  "Semi-marathon Marche": "Semi-M. Marche"
+  // Haies & steeple
+  "100mH":               "100m Haies",
+  "110mH":               "110m Haies",
+  "400mH":               "400m Haies",
+  "2000m Steeple":       "2000m Steeple",   // identique, mais force la normalisation
+  // Sauts / lancers
+  "Triple":              "Triple Saut",
+  // Combinés : le Python écrit "Decathlon" (sans accent), l'HTML affiche "Décathlon"
+  "Decathlon":           "Décathlon",
+  // Marche longue
+  "Semi-marathon Marche":"Semi-M. Marche",
+  "Marathon Marche":     "Mar. Marche",
 };
+
+// Pour U20, le Python stocke "3000m Steeple" pour les deux sexes,
+// mais l'HTML a deux lignes distinctes ("3000m Steeple ♂" / "3000m Steeple ♀").
+// On gère ce cas spécial dans prepareLocalData().
+const U20_STEEPLE_MALE   = "3000m Steeple ♂";
+const U20_STEEPLE_FEMALE = "3000m Steeple ♀";
 
 let uiData = { ce: {}, u18: {}, u20: {} };
 
@@ -765,9 +780,15 @@ function prepareLocalData() {
   for (const champ in achievements) {
     for (const gender in achievements[champ]) {
       for (const ev in achievements[champ][gender]) {
-        const name = EVENT_MAPPING[ev] || ev;
-        if (!uiData[champ][name]) uiData[champ][name] = {};
-        uiData[champ][name][gender] = achievements[champ][gender][ev];
+        let htmlName = EVENT_MAPPING[ev] || ev;
+
+        // Cas spécial U20 : "3000m Steeple" → ligne ♂ ou ♀ selon le sexe
+        if (champ === 'u20' && ev === '3000m Steeple') {
+          htmlName = (gender === 'm') ? U20_STEEPLE_MALE : U20_STEEPLE_FEMALE;
+        }
+
+        if (!uiData[champ][htmlName]) uiData[champ][htmlName] = {};
+        uiData[champ][htmlName][gender] = achievements[champ][gender][ev];
       }
     }
   }
