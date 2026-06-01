@@ -181,6 +181,25 @@ MOIS_FR = {
     "SEP": "sep", "OCT": "oct", "NOV": "nov", "DEC": "déc"
 }
 
+def parse_date_universal(date_str):
+    """Convertit une date WA (15 MAY 2026) ou Tilastopaja (15.05.26 / 15.05.2026) en datetime."""
+    if not date_str:
+        return None
+    try:
+        clean_date = str(date_str).replace(",", "").strip()
+        
+        # Format Tilastopaja (DD.MM.YY ou DD.MM.YYYY)
+        m = re.match(r'^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$', clean_date)
+        if m:
+            d_num, m_num, y_num = int(m.group(1)), int(m.group(2)), int(m.group(3))
+            y_num = 2000 + y_num if y_num < 100 else y_num
+            return datetime(y_num, m_num, d_num)
+            
+        # Format WA (15 MAY 2026)
+        return datetime.strptime(clean_date, "%d %b %Y")
+    except Exception:
+        return None
+        
 def translate_date_fr(date_str):
     """Traduit une date WA (ex: 17 MAY 2026) en français (ex: 17 mai 2026)."""
     if not date_str:
@@ -197,7 +216,7 @@ def is_perf_in_period(date_str, champ):
     if champ not in PERIODES_MINIMA:
         return True
     
-    perf_date = parse_wa_date(date_str)
+    perf_date = parse_date_universal(date_str)
     if not perf_date:
         return False
         
@@ -288,6 +307,190 @@ def format_seconds_for_display(seconds, event_name):
         return f"{h_val}h{m_val:02d}'{s_val:02d}\"{c_val:02d}"
     else:
         return f"{m_val}'{s_val:02d}\"{c_val:02d}"
+        
+# ==============================================================================
+# SCRAPING TILASTOPAJA
+# ==============================================================================
+
+TILASTOPAJA_URLS = {
+    "ce": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=99",
+    "u20": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=19",
+    "u18": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=17"
+}
+
+def map_tilastopaja_event(text):
+    """Mappe un nom d'épreuve issu du HTML Tilastopaja vers la nomenclature du script."""
+    t = text.lower().replace(",", "").replace("'", "").strip()
+    
+    if "steeple" in t or "sc" in t:
+        if "2000" in t: return "2000m Steeple"
+        return "3000m Steeple"
+        
+    if "walk" in t:
+        if "5000" in t: return "5000m Marche"
+        if "10000" in t: return "10000m Marche"
+        if "20km" in t or "20 km" in t: return "20km Marche"
+        if "35km" in t or "35 km" in t: return "35km Marche"
+        if "half" in t: return "Semi-marathon Marche"
+        
+    if "marathon" in t and "half" not in t: return "Marathon"
+    if "110m" in t and ("h" in t or "hurdles" in t): return "110mH"
+    if "100m" in t and ("h" in t or "hurdles" in t): return "100mH"
+    if "400m" in t and ("h" in t or "hurdles" in t): return "400mH"
+    
+    if "high jump" in t: return "Hauteur"
+    if "pole vault" in t: return "Perche"
+    if "long jump" in t: return "Longueur"
+    if "triple jump" in t: return "Triple"
+    
+    if "shot" in t: return "Poids"
+    if "discus" in t: return "Disque"
+    if "hammer" in t: return "Marteau"
+    if "javelin" in t: return "Javelot"
+    
+    if "decathlon" in t: return "Decathlon"
+    if "heptathlon" in t: return "Heptathlon"
+    
+    for e in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m"]:
+        if re.search(r'\b' + e + r'\b', t):
+            if "4x" in t or "4 x" in t: continue
+            return e
+            
+    return None
+
+def fetch_tilastopaja_all(champ, url):
+    """Scrape une page complète Tilastopaja Europe Top 20 et extrait les FRA par épreuve et par sexe."""
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml"
+    }
+    
+    results = {'m': {}, 'f': {}}
+    try:
+        response = requests.get(url, headers=headers, timeout=15)
+        if response.status_code != 200: return results
+        
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        current_gender = None
+        current_event = None
+        
+        for el in soup.find_all(['tr', 'h1', 'h2', 'h3', 'div', 'b', 'strong']):
+            text = el.get_text(separator=' ', strip=True)
+            if not text: continue
+            
+            # Détection d'un titre/en-tête (genre + épreuve)
+            is_heading = False
+            if el.name in ['h1', 'h2', 'h3', 'b', 'strong']:
+                is_heading = True
+            elif el.name == 'tr' and len(el.find_all('td')) <= 2:
+                is_heading = True
+            elif el.name == 'div' and len(text) < 50:
+                is_heading = True
+                
+            if is_heading:
+                lower_text = text.lower()
+                if "women" in lower_text or "girls" in lower_text: current_gender = 'f'
+                elif "men" in lower_text or "boys" in lower_text: current_gender = 'm'
+                
+                ev = map_tilastopaja_event(text)
+                if ev: current_event = ev
+                continue
+                
+            # Traitement d'une ligne de résultat
+            if el.name == 'tr' and current_gender and current_event:
+                tds = el.find_all('td')
+                if len(tds) < 5: continue
+                
+                td_texts = [td.get_text(strip=True) for td in tds]
+                
+                # C'est un athlète français !
+                if "FRA" in td_texts:
+                    fra_idx = td_texts.index("FRA")
+                    
+                    # Performance : premier élément numérique avant FRA
+                    perf_text = ""
+                    for t in td_texts[1:fra_idx]:
+                        if re.search(r'\d', t) and not re.search(r'[a-zA-Z]{3,}', t):
+                            perf_text = t
+                            break
+                            
+                    # Nom : généralement 1 ou 2 cellules avant FRA (parfois il y a la date de naissance au milieu)
+                    name_text = ""
+                    if fra_idx >= 2:
+                        name_text = td_texts[fra_idx - 2]
+                        if re.match(r'^\d{1,2}\.\d{1,2}\.\d{2,4}$', name_text) or re.match(r'^\d{4}$', name_text):
+                            name_text = td_texts[fra_idx - 3] if fra_idx >= 3 else name_text
+                    
+                    date_text = td_texts[-1] if len(td_texts) > 0 else ""
+                    venue_text = td_texts[-2] if len(td_texts) >= 2 else ""
+                    
+                    clean_date = date_text
+                    try:
+                        m_date = re.match(r'^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$', date_text.strip())
+                        if m_date:
+                            d_num, m_num, y_num = int(m_date.group(1)), int(m_date.group(2)), int(m_date.group(3))
+                            y_num = 2000 + y_num if y_num < 100 else y_num
+                            clean_date = f"{d_num} {MOIS_FR[m_num]} {y_num}"
+                    except Exception:
+                        pass
+
+                    name_clean = " ".join([w.capitalize() for w in name_text.split()])
+                    
+                    if current_event not in results[current_gender]:
+                        results[current_gender][current_event] = []
+                        
+                    results[current_gender][current_event].append({
+                        "name": name_clean,
+                        "perf": perf_text,
+                        "date": clean_date,
+                        "place": venue_text,
+                        "raw_date": date_text
+                    })
+                    
+        return results
+    except Exception as e:
+        print(f"❌ Erreur scraping Tilastopaja pour {champ}: {e}")
+        return results
+
+def merge_and_filter_athletes(wa_list, tila_list, event_name, limit_to_check, champ):
+    """Fusionne intelligemment les deux listes, filtre par minima et période, et ne garde que la meilleure perf."""
+    unique_athletes = {}
+    
+    is_running = event_name in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m", "100mH", "110mH", "400mH", "2000m Steeple", "3000m Steeple", "5000m Marche", "10000m Marche", "20km Marche", "Semi-marathon Marche", "35km Marche", "Marathon Marche", "Marathon"]
+    
+    for ath in wa_list + tila_list:
+        name = ath["name"].strip()
+        name_lower = name.lower()
+        perf_v = time_to_seconds(ath["perf"])
+        if perf_v is None: continue
+        
+        # Filtrage par Minima
+        if is_running:
+            if perf_v > limit_to_check: continue
+        else:
+            if perf_v < limit_to_check: continue
+            
+        # Filtrage par Date (période de réalisation)
+        date_str = ath.get("raw_date", ath.get("date"))
+        if not is_perf_in_period(date_str, champ):
+            continue
+            
+        # Conservation de la meilleure performance uniquement
+        if name_lower not in unique_athletes:
+            unique_athletes[name_lower] = ath
+        else:
+            existing_perf_v = time_to_seconds(unique_athletes[name_lower]["perf"])
+            if is_running:
+                if perf_v < existing_perf_v: unique_athletes[name_lower] = ath
+            else:
+                if perf_v > existing_perf_v: unique_athletes[name_lower] = ath
+                
+    # Trie des résultats finaux (du meilleur au moins bon)
+    results_list = list(unique_athletes.values())
+    results_list.sort(key=lambda x: time_to_seconds(x["perf"]) or 999999 if is_running else -(time_to_seconds(x["perf"]) or 0))
+    
+    return results_list
 
 def fetch_wa_event(champ, gender, event):
     """Scrape le site de World Athletics et filtre strictement par catégorie d'âge, lieu et date."""
@@ -398,6 +601,7 @@ def fetch_wa_event(champ, gender, event):
                     "perf": perf_text, 
                     "date": translate_date_fr(date_text), 
                     "place": venue_text
+                    "raw_date": date_text
                 })
         
         # Déduplication et conservation de la meilleure perf
@@ -663,8 +867,17 @@ def beautify_and_format_sheet(sheet, champ_key):
 
 def run_scraping():
     """Fonction principale de scraping qui tourne en arrière-plan"""
-    print("🚀 Début de la veille World Athletics (Minima FFA 2026)...")
+    print("🚀 Début de la veille globale (World Athletics + Tilastopaja)...")
     
+    # --- 1. Scraping Tilastopaja ---
+    tila_data = {}
+    print("\n🌍 Récupération des listes Tilastopaja...")
+    for champ, url in TILASTOPAJA_URLS.items():
+        tila_data[champ] = fetch_tilastopaja_all(champ, url)
+        print(f"✔️ Données Tilastopaja chargées pour {champ.upper()}")
+
+    # --- 2. Scraping World Athletics & Fusion ---
+    print("\n🌐 Récupération World Athletics et croisement des données...")
     final_data = {"ce": {"m": {}, "f": {}}, "u18": {"m": {}, "f": {}}, "u20": {"m": {}, "f": {}}}
     taches = []
     
@@ -675,10 +888,21 @@ def run_scraping():
                     taches.append((champ, gender, event, executor.submit(fetch_wa_event, champ, gender, event)))
 
         for champ, gender, event, future in taches:
-            resultats = future.result()
-            if resultats:
-                final_data[champ][gender][event] = resultats
-                print(f"✅ {len(resultats)} qualifié(s) trouvé(s) pour {champ.upper()} - {gender.upper()} - {event}")
+            wa_resultats = future.result()
+            
+            # Récupérer les résultats Tilastopaja correspondants
+            tila_resultats = tila_data.get(champ, {}).get(gender, {}).get(event, [])
+            
+            # Limite FFA pour filtrage lors de la fusion
+            limit_tuple = MINIMA_FFA[champ][gender][event]
+            limit_to_check = limit_tuple[1] if limit_tuple[1] is not None else limit_tuple[0]
+            
+            # Fusion intelligente et filtrage strict
+            resultats_fusionnes = merge_and_filter_athletes(wa_resultats, tila_resultats, event, limit_to_check, champ)
+            
+            if resultats_fusionnes:
+                final_data[champ][gender][event] = resultats_fusionnes
+                print(f"✅ {len(resultats_fusionnes)} qualifié(s) (WA+Tila) pour {champ.upper()} - {gender.upper()} - {event}")
 
     contenu_js = f"const achievements = {json.dumps(final_data, indent=2, ensure_ascii=False)};"
     with open("achievements.js", "w", encoding="utf-8") as f: f.write(contenu_js)
@@ -724,10 +948,8 @@ def run_scraping():
             if has_femmes_event and femmes_key:
                 ath_list = final_data.get(champ_key, {}).get("f", {}).get(femmes_key, [])
                 if ath_list:
-                    is_run = femmes_key in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m", "100mH", "110mH", "400mH", "2000m Steeple", "3000m Steeple", "5000m Marche", "10000m Marche", "20km Marche", "Semi-marathon Marche", "35km Marche", "Marathon Marche", "Marathon"]
-                    ath_list_sorted = sorted(ath_list, key=lambda x: time_to_seconds(x["perf"]) or 999999 if is_run else -(time_to_seconds(x["perf"]) or 0))
                     formatted_lines = []
-                    for a in ath_list_sorted:
+                    for a in ath_list:
                         perf_sec = time_to_seconds(a['perf'])
                         display_perf = format_seconds_for_display(perf_sec, femmes_key)
                         place_date_info = []
@@ -745,10 +967,8 @@ def run_scraping():
             if has_hommes_event and hommes_key:
                 ath_list = final_data.get(champ_key, {}).get("m", {}).get(hommes_key, [])
                 if ath_list:
-                    is_run = hommes_key in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m", "100mH", "110mH", "400mH", "2000m Steeple", "3000m Steeple", "5000m Marche", "10000m Marche", "20km Marche", "Semi-marathon Marche", "35km Marche", "Marathon Marche", "Marathon"]
-                    ath_list_sorted = sorted(ath_list, key=lambda x: time_to_seconds(x["perf"]) or 999999 if is_run else -(time_to_seconds(x["perf"]) or 0))
                     formatted_lines = []
-                    for a in ath_list_sorted:
+                    for a in ath_list:
                         perf_sec = time_to_seconds(a['perf'])
                         display_perf = format_seconds_for_display(perf_sec, hommes_key)
                         place_date_info = []
