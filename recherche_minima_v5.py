@@ -188,14 +188,19 @@ def parse_date_universal(date_str):
     try:
         clean_date = str(date_str).replace(",", "").strip()
         
-        # Format Tilastopaja (DD.MM.YY ou DD.MM.YYYY)
-        m = re.match(r'^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$', clean_date)
+        # Format Tilastopaja (DD.MM.YY ou DD-DD.MM.YY pour les épreuves combinées)
+        # L'utilisation de re.search plutôt que re.match permet d'ignorer le premier jour d'un décathlon
+        m = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{2,4})', clean_date)
         if m:
             d_num, m_num, y_num = int(m.group(1)), int(m.group(2)), int(m.group(3))
             y_num = 2000 + y_num if y_num < 100 else y_num
             return datetime(y_num, m_num, d_num)
             
-        # Format WA (15 MAY 2026)
+        # Format WA (15 MAY 2026 ou multi-jours 15-16 MAY 2026)
+        m_wa = re.search(r'(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})', clean_date)
+        if m_wa:
+            return datetime.strptime(f"{m_wa.group(1)} {m_wa.group(2)} {m_wa.group(3)}", "%d %b %Y")
+            
         return datetime.strptime(clean_date, "%d %b %Y")
     except Exception:
         return None
@@ -230,8 +235,11 @@ def time_to_seconds(time_str):
     time_str = str(time_str).strip().lower().replace(',', '.')
     if not time_str or time_str == "-": return None
     
+    # Séparer les +, -, et autres annotations (exclut les (w))
     time_str = re.split(r'\s*\+|\s*\-|\s*\(', time_str)[0].strip()
-    time_str = time_str.replace('a', '').strip() 
+    
+    # SUPPRESSION CRITIQUE : enlever le 'i' (indoor), 'a' (altitude), et '*' des perfs Tilastopaja
+    time_str = re.sub(r'[a-z\*\+]+$', '', time_str).strip()
     
     try:
         if 'm' in time_str and 'h' not in time_str and "'" not in time_str:
@@ -322,6 +330,9 @@ def map_tilastopaja_event(text):
     """Mappe un nom d'épreuve issu du HTML Tilastopaja vers la nomenclature du script."""
     t = text.lower().replace(",", "").replace("'", "").strip()
     
+    # Rapprocher le chiffre du 'm' si un espace s'y trouve (ex: "1500 m" -> "1500m")
+    t = re.sub(r'(\d+)\s+m\b', r'\1m', t)
+    
     if "steeple" in t or "sc" in t:
         if "2000" in t: return "2000m Steeple"
         return "3000m Steeple"
@@ -397,7 +408,7 @@ def fetch_tilastopaja_all(champ, url):
                 if ev: current_event = ev
                 continue
                 
-            # Traitement d'une ligne de résultat
+               # Traitement d'une ligne de résultat
             if el.name == 'tr' and current_gender and current_event:
                 tds = el.find_all('td')
                 if len(tds) < 5: continue
@@ -415,19 +426,21 @@ def fetch_tilastopaja_all(champ, url):
                             perf_text = t
                             break
                             
-                    # Nom : généralement 1 ou 2 cellules avant FRA (parfois il y a la date de naissance au milieu)
+                    # Nom : Recherche dynamique (on recule à partir de FRA jusqu'à trouver une cellule SANS chiffre)
+                    # Cela évite de confondre le nom avec la date de naissance ou le vent
                     name_text = ""
-                    if fra_idx >= 2:
-                        name_text = td_texts[fra_idx - 2]
-                        if re.match(r'^\d{1,2}\.\d{1,2}\.\d{2,4}$', name_text) or re.match(r'^\d{4}$', name_text):
-                            name_text = td_texts[fra_idx - 3] if fra_idx >= 3 else name_text
+                    for i in range(fra_idx - 1, 0, -1):
+                        if not re.search(r'\d', td_texts[i]):
+                            name_text = td_texts[i]
+                            break
                     
                     date_text = td_texts[-1] if len(td_texts) > 0 else ""
                     venue_text = td_texts[-2] if len(td_texts) >= 2 else ""
                     
                     clean_date = date_text
                     try:
-                        m_date = re.match(r'^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$', date_text.strip())
+                        # Gestion des dates sur plusieurs jours pour les combinés (ex: 25-26.05.26)
+                        m_date = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{2,4})', date_text.strip())
                         if m_date:
                             d_num, m_num, y_num = int(m_date.group(1)), int(m_date.group(2)), int(m_date.group(3))
                             y_num = 2000 + y_num if y_num < 100 else y_num
