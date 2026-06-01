@@ -135,6 +135,38 @@ MAP_WA_SLUGS = {
     "Marathon Marche": "race-walks/marathon-race-walk"
 }
 
+MAP_WA_SLUGS_OVERRIDES = {
+    # ── U20 Hommes ──────────────────────────────────────────────────────────
+    ("u20", "m", "110mH"):    "hurdles/110m-hurdles-990cm",
+    ("u20", "m", "Poids"):    "throws/shot-put-6kg",
+    ("u20", "m", "Disque"):   "throws/discus-throw-1750kg",
+    ("u20", "m", "Marteau"):  "throws/hammer-throw-6kg",
+    ("u20", "m", "Decathlon"):"combined-events/decathlon-u20",
+
+    # ── U18 Hommes ──────────────────────────────────────────────────────────
+    ("u18", "m", "110mH"):    "hurdles/110m-hurdles-914cm",
+    ("u18", "m", "400mH"):    "hurdles/400m-hurdles-840cm",
+    ("u18", "m", "Poids"):    "throws/shot-put-5kg",
+    ("u18", "m", "Disque"):   "throws/discus-throw-1500kg",
+    ("u18", "m", "Marteau"):  "throws/hammer-throw-5kg",
+    ("u18", "m", "Javelot"):  "throws/javelin-throw-700g",
+    ("u18", "m", "Decathlon"):"combined-events/decathlon-boys",
+
+    # ── U18 Femmes ──────────────────────────────────────────────────────────
+    ("u18", "f", "100mH"):    "hurdles/100m-hurdles-762cm",
+    ("u18", "f", "Poids"):    "throws/shot-put-3kg",
+    ("u18", "f", "Marteau"):  "throws/hammer-throw-3kg",
+    ("u18", "f", "Javelot"):  "throws/javelin-throw-500g",
+    ("u18", "f", "Heptathlon"):"combined-events/heptathlon-girls",
+}
+
+def get_wa_slug(champ, gender, event):
+    """Retourne le slug WA approprié en tenant compte des variantes d'engins par catégorie."""
+    override = MAP_WA_SLUGS_OVERRIDES.get((champ, gender, event))
+    if override:
+        return override
+    return MAP_WA_SLUGS.get(event)
+
 def parse_wa_date(date_str):
     """Convertit une date World Athletics (ex: 15 MAY 2026) en objet datetime."""
     try:
