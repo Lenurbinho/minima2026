@@ -629,59 +629,70 @@ def fetch_tilastopaja_all(champ, url):
         return results
 
 def merge_and_filter_athletes(wa_list, tila_list, event_name, limit_to_check, champ):
-    """Fusionne WA + Tilastopaja, filtre par minima et période, ne garde que la meilleure perf par athlète.
-
-    Chaque entrée est taguée avec sa source ('wa' ou 'tila') pour le débogage.
-    La meilleure performance toutes sources confondues est conservée.
-    """
-    is_running = event_name in [
-        "100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m",
-        "100mH", "110mH", "400mH", "2000m Steeple", "3000m Steeple",
-        "5000m Marche", "10000m Marche", "20km Marche",
-        "Semi-marathon Marche", "35km Marche", "Marathon Marche", "Marathon"
-    ]
+    """Fusionne intelligemment les deux listes, filtre par minima et période, et gère les doublons."""
+    import unicodedata
+    
+    def _normalize_name_for_dedup(name):
+        """Normalise le nom (sans accent, minuscule, mots triés) pour gérer les inversions Prénom/Nom et accents."""
+        # Supprime les accents
+        n = unicodedata.normalize('NFKD', name).encode('ASCII', 'ignore').decode('utf-8')
+        # Remplace tirets/apostrophes par des espaces et met en minuscule
+        n = n.replace('-', ' ').replace("'", ' ').lower()
+        # Trie les mots alphabétiquement (pour que "Mayer Kevin" == "Kevin Mayer")
+        return " ".join(sorted(n.split()))
 
     unique_athletes = {}
-
-    for source, ath_list in (('wa', wa_list), ('tila', tila_list)):
-        for ath in ath_list:
-            name      = ath["name"].strip()
-            name_key  = name.lower()
-            perf_v    = time_to_seconds(ath["perf"])
-            if perf_v is None:
-                continue
-
-            # ── Filtre minima ──────────────────────────────────────────────
-            if is_running:
-                if perf_v > limit_to_check: continue
+    
+    is_running = event_name in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m", "100mH", "110mH", "400mH", "2000m Steeple", "3000m Steeple", "5000m Marche", "10000m Marche", "20km Marche", "Semi-marathon Marche", "35km Marche", "Marathon Marche", "Marathon"]
+    
+    # Tag des sources pour appliquer la règle de priorité (WA > Tila en cas d'égalité)
+    for ath in wa_list: ath["source"] = "wa"
+    for ath in tila_list: ath["source"] = "tila"
+    
+    for ath in wa_list + tila_list:
+        raw_name = ath["name"].strip()
+        dedup_key = _normalize_name_for_dedup(raw_name)
+        
+        perf_v = time_to_seconds(ath["perf"])
+        if perf_v is None: continue
+        
+        # Filtrage par Minima
+        if is_running:
+            if perf_v > limit_to_check: continue
+        else:
+            if perf_v < limit_to_check: continue
+            
+        # Filtrage par Date (période de réalisation)
+        date_str = ath.get("raw_date", ath.get("date"))
+        if not is_perf_in_period(date_str, champ):
+            continue
+            
+        # Conservation et dédoublonnage selon les règles
+        if dedup_key not in unique_athletes:
+            unique_athletes[dedup_key] = ath
+        else:
+            existing_ath = unique_athletes[dedup_key]
+            existing_perf_v = time_to_seconds(existing_ath["perf"])
+            
+            if perf_v == existing_perf_v:
+                # Règle 2 : Performances identiques -> On conserve World Athletics
+                if ath["source"] == "wa":
+                    unique_athletes[dedup_key] = ath
             else:
-                if perf_v < limit_to_check: continue
-
-            # ── Filtre période de réalisation ─────────────────────────────
-            date_str = ath.get("raw_date") or ath.get("date", "")
-            if not is_perf_in_period(date_str, champ):
-                continue
-
-            # ── Conservation de la meilleure perf par athlète ─────────────
-            tagged = dict(ath, source=source)   # copie avec tag source
-            if name_key not in unique_athletes:
-                unique_athletes[name_key] = tagged
-            else:
-                existing_v = time_to_seconds(unique_athletes[name_key]["perf"])
-                if existing_v is None:
-                    unique_athletes[name_key] = tagged
-                elif is_running and perf_v < existing_v:
-                    unique_athletes[name_key] = tagged
-                elif (not is_running) and perf_v > existing_v:
-                    unique_athletes[name_key] = tagged
-
-    # ── Tri final : du meilleur au moins bon ──────────────────────────────
+                # Règle 1 : Performances différentes -> On garde la meilleure
+                if is_running:
+                    if perf_v < existing_perf_v: unique_athletes[dedup_key] = ath
+                else:
+                    if perf_v > existing_perf_v: unique_athletes[dedup_key] = ath
+                
+    # Trie des résultats finaux (du meilleur au moins bon)
     results_list = list(unique_athletes.values())
-    if is_running:
-        results_list.sort(key=lambda x: time_to_seconds(x["perf"]) or 999_999)
-    else:
-        results_list.sort(key=lambda x: -(time_to_seconds(x["perf"]) or 0))
-
+    results_list.sort(key=lambda x: time_to_seconds(x["perf"]) or 999999 if is_running else -(time_to_seconds(x["perf"]) or 0))
+    
+    # Nettoyage de la clé 'source' (optionnel, pour garder un dictionnaire propre)
+    for res in results_list:
+        res.pop("source", None)
+        
     return results_list
 
 def fetch_wa_event(champ, gender, event):
