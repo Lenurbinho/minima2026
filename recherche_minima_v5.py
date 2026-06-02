@@ -327,68 +327,49 @@ TILASTOPAJA_URLS = {
 }
 
 def map_tilastopaja_event(text):
-    """Mappe un nom d'épreuve issu du HTML Tilastopaja vers la nomenclature du script.
-
-    Corrections appliquées :
-    - "sc" in "discus" provoquait un faux positif -> Steeple détecté par mot-clé explicite
-    - "100 Metres", "110 Metres Hurdles" etc. maintenant reconnus (normalisation "metres"->"m")
-    - Marche marathon et semi-marathon mieux couverts
-    """
+    """Mappe un nom d'épreuve issu du HTML Tilastopaja vers la nomenclature du script."""
     t = text.lower().replace(",", "").replace("'", "").strip()
-
-    # Normaliser "metres" / "meter" en "m" pour capturer les variantes textuelles
-    t = t.replace("metres", "m").replace("meter", "m")
-    # Rapprocher le chiffre du 'm' si un espace s'y trouve (ex: "1500 m" -> "1500m")
-    t = re.sub(r'(\d+)\s+m\b', r'\1m', t)
-
-    # ── Steeple/Steeplechase (AVANT toute détection basée sur "sc") ──────────
-    if "steeple" in t or "steeplechase" in t:
+    
+    # Exclusion explicite des relais pour éviter le "saignement" des performances
+    if "4x" in t or "4 x" in t or "relay" in t or "medley" in t:
+        return "IGNORE"
+        
+    if "steeple" in t or "sc" in t:
         if "2000" in t: return "2000m Steeple"
         return "3000m Steeple"
-
-    # ── Marche (race walk) ───────────────────────────────────────────────────
-    if "race walk" in t or "racewalk" in t:
-        if "half" in t or "semi" in t: return "Semi-marathon Marche"
-        if "marathon" in t:            return "Marathon Marche"
-        if "5000" in t:                return "5000m Marche"
-        if "10000" in t:               return "10000m Marche"
-        if "20" in t:                  return "20km Marche"
-        if "35" in t:                  return "35km Marche"
-
-    # ── Marathon (route, pas marche) ─────────────────────────────────────────
-    if "marathon" in t and "walk" not in t and "racewalk" not in t:
-        if "half" in t or "semi" in t: return "Semi-marathon Marche"
-        return "Marathon"
-
-    # ── Haies (tester avant les distances nues pour éviter les ambiguïtés) ──
-    if "110m" in t and ("hurdles" in t or "haies" in t): return "110mH"
-    if "100m" in t and ("hurdles" in t or "haies" in t): return "100mH"
-    if "400m" in t and ("hurdles" in t or "haies" in t): return "400mH"
-
-    # ── Sauts ────────────────────────────────────────────────────────────────
-    if "high jump"   in t: return "Hauteur"
-    if "pole vault"  in t: return "Perche"
-    if "long jump"   in t: return "Longueur"
+        
+    if "walk" in t:
+        if "5000" in t: return "5000m Marche"
+        if "10000" in t: return "10000m Marche"
+        if "20km" in t or "20 km" in t: return "20km Marche"
+        if "35km" in t or "35 km" in t: return "35km Marche"
+        if "half" in t: return "Semi-marathon Marche"
+        
+    if "marathon" in t and "half" not in t: return "Marathon"
+    if "110m" in t and ("h" in t or "hurdles" in t): return "110mH"
+    if "100m" in t and ("h" in t or "hurdles" in t): return "100mH"
+    if "400m" in t and ("h" in t or "hurdles" in t): return "400mH"
+    
+    if "high jump" in t: return "Hauteur"
+    if "pole vault" in t: return "Perche"
+    if "long jump" in t: return "Longueur"
     if "triple jump" in t: return "Triple"
-
-    # ── Lancers (discus APRÈS steeple pour éviter le faux positif "sc") ─────
-    if "shot"    in t: return "Poids"
-    if "discus"  in t: return "Disque"
-    if "hammer"  in t: return "Marteau"
+    
+    if "shot" in t: return "Poids"
+    if "discus" in t: return "Disque"
+    if "hammer" in t: return "Marteau"
     if "javelin" in t: return "Javelot"
-
-    # ── Combinés ─────────────────────────────────────────────────────────────
+    
     if "decathlon"  in t: return "Decathlon"
     if "heptathlon" in t: return "Heptathlon"
 
     # ── Courses (distances numériques) ───────────────────────────────────────
     for e in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m"]:
         if re.search(r'\b' + re.escape(e) + r'\b', t):
-            if "4x" in t or "4 x" in t: continue
             return e
 
     return None
-
+    
 def _parse_tila_dob_year(dob_str):
     """Extrait l'année de naissance depuis un format Tilastopaja DD.MM.YY, DD.MM.YYYY ou 'DD MMM YY'."""
     dob_str = str(dob_str).strip()
@@ -475,7 +456,9 @@ def fetch_tilastopaja_all(champ, url):
                     elif "men" in lower_text or "boys" in lower_text:
                         current_gender = 'm'
                     ev = map_tilastopaja_event(text)
-                    if ev:
+                    if ev == "IGNORE":
+                        current_event = None
+                    elif ev:
                         current_event = ev
                 continue
 
@@ -499,7 +482,11 @@ def fetch_tilastopaja_all(champ, url):
                 if td_event:
                     ev_text = td_event.get_text(strip=True)
                     ev = map_tilastopaja_event(ev_text)
-                    if ev:
+                    
+                    if ev == "IGNORE" or ev is None:
+                        # Stoppe le saignement : épreuve ignorée ou inconnue, on coupe le flux
+                        current_event = None
+                    else:
                         current_event = ev
                         if code:
                             code_to_event[code] = ev
