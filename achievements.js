@@ -188,16 +188,6 @@ const achievements = {
           "raw_date": "31 MAY 2026"
         }
       ],
-      "10000m": [
-        {
-          "name": "",
-          "perf": "42.92A",
-          "date": "3 mai 2026",
-          "place": "Gaborone",
-          "raw_date": "3 May 2026",
-          "dob": "1s1"
-        }
-      ],
       "100mH": [
         {
           "name": "Sacha Alessandrini",
@@ -236,24 +226,6 @@ const achievements = {
           "raw_date": "03 MAY 2026"
         }
       ],
-      "200m": [
-        {
-          "name": "Alan-mathias Ranaivoson",
-          "perf": "21.24",
-          "date": "16 mai 2026",
-          "place": "Guyancourt",
-          "raw_date": "16 May 2026",
-          "dob": "10"
-        },
-        {
-          "name": "Dylan Telo",
-          "perf": "21.50",
-          "date": "17 mai 2026",
-          "place": "Grenoble",
-          "raw_date": "17 May 2026",
-          "dob": "09"
-        }
-      ],
       "800m": [
         {
           "name": "Yannis Le Ruyet",
@@ -261,24 +233,6 @@ const achievements = {
           "date": "30 mai 2026",
           "place": "Stade Universitaire D. Faucher, Toulouse (FRA)",
           "raw_date": "30 MAY 2026"
-        }
-      ],
-      "1500m": [
-        {
-          "name": "Youenn Thetiot",
-          "perf": "3:49.67",
-          "date": "23 mai 2026",
-          "place": "Mauges Sur Loire",
-          "raw_date": "23 May 2026",
-          "dob": "09"
-        },
-        {
-          "name": "Malo Kerhamon",
-          "perf": "3:49.95",
-          "date": "23 mai 2026",
-          "place": "Mauges Sur Loire",
-          "raw_date": "23 May 2026",
-          "dob": "23 Mar 09"
         }
       ],
       "3000m": [
@@ -366,24 +320,6 @@ const achievements = {
           "date": "17 mai 2026",
           "place": "Stade des Frères Lauvaux, Chalons-en-Champagne (FRA)",
           "raw_date": "17 MAY 2026"
-        },
-        {
-          "name": "Rose Simonneau-violleau",
-          "perf": "9:34.39",
-          "date": "27 mai 2026",
-          "place": "Niort",
-          "raw_date": "27 May 2026",
-          "dob": "09"
-        }
-      ],
-      "100mH": [
-        {
-          "name": "Anna Peeters",
-          "perf": "13.39",
-          "date": "14 mai 2026",
-          "place": "Aubagne",
-          "raw_date": "14 May 2026",
-          "dob": "09"
         }
       ],
       "Perche": [
@@ -466,6 +402,14 @@ const achievements = {
         }
       ],
       "3000m Steeple": [
+        {
+          "name": "Ingmar Bratteby Belem",
+          "perf": "50.00",
+          "date": "3 mai 2026",
+          "place": "Saint-Etienne",
+          "raw_date": "3 May 2026",
+          "dob": "7 Nov 08"
+        },
         {
           "name": "Basile Astier",
           "perf": "8:48.60",
