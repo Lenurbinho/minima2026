@@ -182,28 +182,43 @@ MOIS_FR = {
 }
 
 def parse_date_universal(date_str):
-    """Convertit une date WA (15 MAY 2026) ou Tilastopaja (15.05.26 / 15.05.2026) en datetime."""
+    """Convertit tous les formats de date possibles en datetime."""
     if not date_str:
         return None
     try:
-        clean_date = str(date_str).replace(",", "").strip()
+        c = str(date_str).replace(",", "").strip().lower()
         
-        # Format Tilastopaja (DD.MM.YY ou DD-DD.MM.YY pour les épreuves combinées)
-        # L'utilisation de re.search plutôt que re.match permet d'ignorer le premier jour d'un décathlon
-        m = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{2,4})', clean_date)
+        # Format numérique Tilastopaja : 15.05.2026 ou 15.05.26
+        m = re.match(r'^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$', c)
         if m:
-            d_num, m_num, y_num = int(m.group(1)), int(m.group(2)), int(m.group(3))
-            y_num = 2000 + y_num if y_num < 100 else y_num
-            return datetime(y_num, m_num, d_num)
+            y = int(m.group(3))
+            y = 2000 + y if y < 100 else y
+            return datetime(y, int(m.group(2)), int(m.group(1)))
             
-        # Format WA (15 MAY 2026 ou multi-jours 15-16 MAY 2026)
-        m_wa = re.search(r'(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})', clean_date)
-        if m_wa:
-            return datetime.strptime(f"{m_wa.group(1)} {m_wa.group(2)} {m_wa.group(3)}", "%d %b %Y")
-            
-        return datetime.strptime(clean_date, "%d %b %Y")
+        # Format numérique court Tilastopaja : 15.05 (sans année -> on assume l'année en cours)
+        m_short = re.match(r'^(\d{1,2})\.(\d{1,2})$', c)
+        if m_short:
+            return datetime(2026, int(m_short.group(2)), int(m_short.group(1)))
+        
+        # Format texte WA ou Tilastopaja : "15 May 2026" ou "15 May"
+        mois_map = {
+            "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
+            "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
+            "fév": 2, "fev": 2, "avr": 4, "mai": 5, "aou": 8, "aoû": 8, "déc": 12
+        }
+        for m_str, m_num in mois_map.items():
+            if m_str in c:
+                # On cherche le jour (1 ou 2 chiffres isolés)
+                day_match = re.search(r'\b(\d{1,2})\b', c)
+                if day_match:
+                    d = int(day_match.group(1))
+                    # On cherche l'année (4 chiffres commençant par 202). Sinon, on met 2026 par défaut.
+                    year_match = re.search(r'\b(202\d)\b', c)
+                    y = int(year_match.group(1)) if year_match else 2026
+                    return datetime(y, m_num, d)
     except Exception:
-        return None
+        pass
+    return None
         
 def translate_date_fr(date_str):
     """Traduit une date WA (ex: 17 MAY 2026) en français (ex: 17 mai 2026)."""
@@ -334,8 +349,7 @@ def map_tilastopaja_event(text):
     if "4x" in t or "4 x" in t or "relay" in t or "medley" in t:
         return "IGNORE"
         
-    # CORRECTION : On utilise \b pour s'assurer que "sc" est un mot isolé
-    # et qu'on ne le détecte pas par erreur au milieu du mot "diSCus" !
+    # CORRECTION STEEPLE : On utilise \b pour s'assurer que "sc" est un mot isolé
     if "steeple" in t or re.search(r'\bsc\b', t):
         if "2000" in t: return "2000m Steeple"
         return "3000m Steeple"
@@ -348,9 +362,11 @@ def map_tilastopaja_event(text):
         if "half" in t: return "Semi-marathon Marche"
         
     if "marathon" in t and "half" not in t: return "Marathon"
-    if "110m" in t and ("h" in t or "hurdles" in t): return "110mH"
-    if "100m" in t and ("h" in t or "hurdles" in t): return "100mH"
-    if "400m" in t and ("h" in t or "hurdles" in t): return "400mH"
+    
+    # CORRECTION HAIES : Gère "110mH", "110m h", "110 m hurdles", etc.
+    if re.search(r'\b110\s*m?\s*(h\b|hurdles)', t): return "110mH"
+    if re.search(r'\b100\s*m?\s*(h\b|hurdles)', t): return "100mH"
+    if re.search(r'\b400\s*m?\s*(h\b|hurdles)', t): return "400mH"
     
     if "high jump" in t: return "Hauteur"
     if "pole vault" in t: return "Perche"
@@ -366,9 +382,10 @@ def map_tilastopaja_event(text):
     if "heptathlon" in t: return "Heptathlon"
 
     # ── Courses (distances numériques) ───────────────────────────────────────
-    for e in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m"]:
-        if re.search(r'\b' + re.escape(e) + r'\b', t):
-            return e
+    # CORRECTION DISTANCES : Gère "1500", "1500m", "1500 m" de manière robuste
+    for e in ["100", "200", "400", "800", "1500", "3000", "5000", "10000"]:
+        if re.search(rf'\b{e}\s*m?\b', t):
+            return f"{e}m"
 
     return None
     
