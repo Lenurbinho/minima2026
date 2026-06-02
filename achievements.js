@@ -403,14 +403,6 @@ const achievements = {
       ],
       "3000m Steeple": [
         {
-          "name": "Ingmar Bratteby Belem",
-          "perf": "50.00",
-          "date": "3 mai 2026",
-          "place": "Saint-Etienne",
-          "raw_date": "3 May 2026",
-          "dob": "7 Nov 08"
-        },
-        {
           "name": "Basile Astier",
           "perf": "8:48.60",
           "date": "30 mai 2026",
