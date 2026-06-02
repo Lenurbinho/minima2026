@@ -1,9 +1,15 @@
 name: 🏃 Mise à jour des minima FFA
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Déclenchement UNIQUEMENT manuel :
-#   • Via le bouton "Recherche minima" de la page web  (appel API)
-#   • Via l'onglet Actions de GitHub  (bouton "Run workflow")
+#Déclenchement :
+
+• Automatique : Tous les jours à 05h23 UTC (soit 06h23/07h23 heure de Paris)
+
+• Manuel : Via le bouton "Run workflow" ou appel API
+
+/!\ ATTENTION : Ce fichier doit être sur la branche 'main' ou 'master'
+
+pour que le déclenchement automatique (cron) fonctionne.
 # ─────────────────────────────────────────────────────────────────────────────
 on:
   workflow_dispatch:
