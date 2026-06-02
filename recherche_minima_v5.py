@@ -334,7 +334,9 @@ def map_tilastopaja_event(text):
     if "4x" in t or "4 x" in t or "relay" in t or "medley" in t:
         return "IGNORE"
         
-    if "steeple" in t or "sc" in t:
+    # CORRECTION : On utilise \b pour s'assurer que "sc" est un mot isolé
+    # et qu'on ne le détecte pas par erreur au milieu du mot "diSCus" !
+    if "steeple" in t or re.search(r'\bsc\b', t):
         if "2000" in t: return "2000m Steeple"
         return "3000m Steeple"
         
