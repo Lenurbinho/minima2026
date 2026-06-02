@@ -226,6 +226,24 @@ const achievements = {
           "raw_date": "03 MAY 2026"
         }
       ],
+      "200m": [
+        {
+          "name": "Alan-mathias Ranaivoson",
+          "perf": "21.24",
+          "date": "16 mai 2026",
+          "place": "Guyancourt",
+          "raw_date": "16 May 2026",
+          "dob": "10"
+        },
+        {
+          "name": "Dylan Telo",
+          "perf": "21.50",
+          "date": "17 mai 2026",
+          "place": "Grenoble",
+          "raw_date": "17 May 2026",
+          "dob": "09"
+        }
+      ],
       "800m": [
         {
           "name": "Yannis Le Ruyet",
@@ -233,6 +251,24 @@ const achievements = {
           "date": "30 mai 2026",
           "place": "Stade Universitaire D. Faucher, Toulouse (FRA)",
           "raw_date": "30 MAY 2026"
+        }
+      ],
+      "1500m": [
+        {
+          "name": "Youenn Thetiot",
+          "perf": "3:49.67",
+          "date": "23 mai 2026",
+          "place": "Mauges Sur Loire",
+          "raw_date": "23 May 2026",
+          "dob": "09"
+        },
+        {
+          "name": "Malo Kerhamon",
+          "perf": "3:49.95",
+          "date": "23 mai 2026",
+          "place": "Mauges Sur Loire",
+          "raw_date": "23 May 2026",
+          "dob": "23 Mar 09"
         }
       ],
       "3000m": [
@@ -320,6 +356,24 @@ const achievements = {
           "date": "17 mai 2026",
           "place": "Stade des Frères Lauvaux, Chalons-en-Champagne (FRA)",
           "raw_date": "17 MAY 2026"
+        },
+        {
+          "name": "Rose Simonneau-violleau",
+          "perf": "9:34.39",
+          "date": "27 mai 2026",
+          "place": "Niort",
+          "raw_date": "27 May 2026",
+          "dob": "09"
+        }
+      ],
+      "100mH": [
+        {
+          "name": "Anna Peeters",
+          "perf": "13.39",
+          "date": "14 mai 2026",
+          "place": "Aubagne",
+          "raw_date": "14 May 2026",
+          "dob": "09"
         }
       ],
       "Perche": [
