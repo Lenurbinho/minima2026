@@ -442,6 +442,15 @@ const achievements = {
           "raw_date": "31 May 2026",
           "dob": "24 May 08"
         }
+      ],
+      "Decathlon": [
+        {
+          "name": "Mael-bephassou Lannurien",
+          "perf": "7785",
+          "date": "31 mai 2026",
+          "place": "Stade Philippides, Montpellier (FRA)",
+          "raw_date": "31 MAY 2026"
+        }
       ]
     },
     "f": {
