@@ -390,20 +390,23 @@ def map_tilastopaja_event(text):
     return None
 
 def _parse_tila_dob_year(dob_str):
-    """Extrait l'année de naissance depuis un format Tilastopaja DD.MM.YY ou DD.MM.YYYY.
-
-    Règle d'ambiguïté pour les années sur 2 chiffres :
-      00-24  -> 2000-2024  (athlètes actuels)
-      25-99  -> 1925-1999  (athlètes seniors, voire retraités)
-    """
-    m = re.search(r'\d{1,2}\.\d{1,2}\.(\d{2,4})', str(dob_str))
-    if not m:
+    """Extrait l'année de naissance depuis un format Tilastopaja DD.MM.YY, DD.MM.YYYY ou 'DD MMM YY'."""
+    dob_str = str(dob_str).strip()
+    if not dob_str:
         return None
-    y = int(m.group(1))
-    if y >= 1000:
-        return y
-    return 2000 + y if y <= 24 else 1900 + y
+        
+    # Format complet avec année sur 4 chiffres (ex: 2009)
+    m4 = re.search(r'\b(19|20)\d{2}\b', dob_str)
+    if m4:
+        return int(m4.group(0))
+        
+    # Format avec année sur 2 chiffres à la fin (ex: 09, 1 Oct 09, 15.01.09)
+    m2 = re.search(r'(\d{2})$', dob_str)
+    if m2:
+        y = int(m2.group(1))
+        return 2000 + y if y <= 24 else 1900 + y
 
+    return None
 
 def _tila_dob_ok_for_champ(dob_str, champ):
     """Retourne True si l'année de naissance est compatible avec la catégorie."""
@@ -429,13 +432,7 @@ _MOIS_INT_TO_FR = {
 
 def fetch_tilastopaja_all(champ, url):
     """Scrape une page complète Tilastopaja Europe Top 20 et extrait les FRA par épreuve et par sexe.
-
-    Corrections v2 :
-    - MOIS_FR[int] -> KeyError résolu (utilisation de _MOIS_INT_TO_FR avec clé int)
-    - Filtrage DOB ajouté pour U18 (nés 2009-2010) et U20 (nés 2007-2008)
-    - Logs détaillés : athlètes trouvés, ignorés (hors période / hors catégorie)
-    - Titre de genre et d'épreuve robustifiés (td avec colspan détecté explicitement)
-    """
+    Prend en charge la nouvelle structure HTML via les classes (ex: showM40, showW310)."""
     req_headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                       "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -449,6 +446,10 @@ def fetch_tilastopaja_all(champ, url):
     fra_skipped_dob    = 0
     fra_skipped_period = 0
 
+    # Récupération de l'année ciblée depuis l'URL (utile car les nouvelles dates n'ont pas l'année, ex: "26 Apr")
+    m_url = re.search(r'Season=(\d{4})', url)
+    season_year = m_url.group(1) if m_url else str(datetime.now().year)
+
     try:
         response = requests.get(url, headers=req_headers, timeout=20)
         if response.status_code != 200:
@@ -459,41 +460,58 @@ def fetch_tilastopaja_all(champ, url):
 
         current_gender = None
         current_event  = None
+        code_to_event = {}
+        code_to_gender = {}
 
         for el in soup.find_all(['tr', 'h1', 'h2', 'h3', 'div', 'b', 'strong']):
-            text = el.get_text(separator=' ', strip=True)
-            if not text:
+            
+            # ── Fallback (Ancien format) : Détection via les titres ──
+            if el.name in ('h1', 'h2', 'h3', 'b', 'strong') or (el.name == 'div' and len(el.get_text(strip=True)) < 60):
+                text = el.get_text(separator=' ', strip=True)
+                if text:
+                    lower_text = text.lower()
+                    if "women" in lower_text or "girls" in lower_text:
+                        current_gender = 'f'
+                    elif "men" in lower_text or "boys" in lower_text:
+                        current_gender = 'm'
+                    ev = map_tilastopaja_event(text)
+                    if ev:
+                        current_event = ev
                 continue
 
-            # ── Détection d'un titre/en-tête ──────────────────────────────
-            is_heading = False
-            if el.name in ('h1', 'h2', 'h3', 'b', 'strong'):
-                is_heading = True
-            elif el.name == 'tr':
-                tds = el.find_all('td')
-                # Ligne titre = 1 seule <td> (avec colspan) ou ≤ 2 <td> courtes
-                if len(tds) == 1:
-                    is_heading = True
-                elif len(tds) <= 2 and all(len(td.get_text(strip=True)) < 60 for td in tds):
-                    is_heading = True
-            elif el.name == 'div' and len(text) < 60:
-                is_heading = True
+            if el.name == 'tr':
+                classes = el.get('class', [])
+                # Nettoyage de la classe pour obtenir le code unique (ex: 'showM40 ')
+                code = classes[0].strip() if classes else None
 
-            if is_heading:
-                lower_text = text.lower()
-                # Détection du genre – "women" avant "men" pour éviter le faux positif
-                if "women" in lower_text or "girls" in lower_text:
-                    current_gender = 'f'
-                elif "men" in lower_text or "boys" in lower_text:
-                    current_gender = 'm'
-                # Détection de l'épreuve
-                ev = map_tilastopaja_event(text)
-                if ev:
-                    current_event = ev
-                continue
+                # ── Nouveau format : Détection d'un titre de Genre ──
+                td_sex = el.find('td', class_='sex')
+                if td_sex:
+                    sex_text = td_sex.get_text(strip=True).lower()
+                    if "women" in sex_text or "girls" in sex_text:
+                        current_gender = 'f'
+                    elif "men" in sex_text or "boys" in sex_text:
+                        current_gender = 'm'
+                    continue
 
-            # ── Traitement d'une ligne de résultat ────────────────────────
-            if el.name == 'tr' and current_gender and current_event:
+                # ── Nouveau format : Détection d'un titre d'Épreuve ──
+                td_event = el.find('td', class_='event')
+                if td_event:
+                    ev_text = td_event.get_text(strip=True)
+                    ev = map_tilastopaja_event(ev_text)
+                    if ev:
+                        current_event = ev
+                        if code:
+                            code_to_event[code] = ev
+                            if 'showm' in code.lower():
+                                code_to_gender[code] = 'm'
+                                current_gender = 'm'
+                            elif 'showw' in code.lower():
+                                code_to_gender[code] = 'f'
+                                current_gender = 'f'
+                    continue
+
+                # ── Traitement d'une ligne de résultat ──
                 tds = el.find_all('td')
                 if len(tds) < 5:
                     continue
@@ -503,70 +521,92 @@ def fetch_tilastopaja_all(champ, url):
                 if "FRA" not in td_texts:
                     continue
 
+                # Détermination ultra-fiable de l'épreuve via le code classe de la ligne
+                row_gender = current_gender
+                row_event = current_event
+                if code and code in code_to_event:
+                    row_event = code_to_event[code]
+                    row_gender = code_to_gender.get(code, current_gender)
+
+                if not row_gender or not row_event:
+                    continue
+
                 fra_total += 1
                 fra_idx = td_texts.index("FRA")
 
-                # DOB : cellule juste après la colonne FRA
-                dob_text = td_texts[fra_idx + 1] if fra_idx + 1 < len(td_texts) else ""
+                # Extraction de la Date (et correction de l'année si manquante)
+                date_text  = td_texts[-1] if td_texts else ""
+                raw_date = date_text.strip()
+                if raw_date and not re.search(r'\d{4}', raw_date) and not re.search(r'\.\d{2}$', raw_date):
+                    raw_date = f"{raw_date} {season_year}"
+                
+                clean_date = raw_date
+                
+                # Conversion lisible (Format: 15.05.26 ou 15 May 2026)
+                try:
+                    m_date = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{2,4})', date_text.strip())
+                    if m_date:
+                        d_num = int(m_date.group(1))
+                        m_num = int(m_date.group(2))
+                        y_num = int(m_date.group(3))
+                        y_num = 2000 + y_num if y_num < 100 else y_num
+                        mois_str = _MOIS_INT_TO_FR.get(m_num, str(m_num))
+                        clean_date = f"{d_num} {mois_str} {y_num}"
+                    else:
+                        clean_date = translate_date_fr(raw_date)
+                except Exception:
+                    pass
 
-                # ── Filtre catégorie d'âge (U18 / U20) ───────────────────
+                # Filtre période de réalisation
+                if not is_perf_in_period(raw_date, champ):
+                    fra_skipped_period += 1
+                    continue
+
+                # Date de naissance (cellule juste avant le pays FRA dans le nouveau format)
+                dob_text = td_texts[fra_idx - 1] if fra_idx > 0 else ""
+                if not re.search(r'\d', dob_text):
+                    dob_text = td_texts[fra_idx + 1] if fra_idx + 1 < len(td_texts) else ""
+
+                # Filtre catégorie d'âge (U18 / U20)
                 if not _tila_dob_ok_for_champ(dob_text, champ):
                     fra_skipped_dob += 1
                     continue
 
-                # Performance : premier champ numérique avant FRA (hors nom)
+                # Performance : premier champ numérique
                 perf_text = ""
                 for t_val in td_texts[1:fra_idx]:
                     if re.search(r'\d', t_val) and not re.search(r'[a-zA-Z]{3,}', t_val):
                         perf_text = t_val
                         break
 
-                # Nom : recule à partir de FRA, première cellule sans chiffre
+                # Nom : Recherche dynamique (évite de cumuler "Nom" + "Nom (09)" en isolant la balise desktop)
                 name_text = ""
                 for i in range(fra_idx - 1, 0, -1):
+                    a_tags = tds[i].find_all('a')
+                    if a_tags:
+                        desktop_a = tds[i].find('a', class_='desktop')
+                        if desktop_a:
+                            name_text = desktop_a.get_text(strip=True)
+                        else:
+                            name_text = a_tags[0].get_text(strip=True)
+                        break
                     if not re.search(r'\d', td_texts[i]):
                         name_text = td_texts[i]
                         break
 
-                date_text  = td_texts[-1] if td_texts else ""
                 venue_text = td_texts[-2] if len(td_texts) >= 2 else ""
-
-                # ── Conversion de la date Tilastopaja (DD.MM.YY) en texte lisible ──
-                # Correction bug : MOIS_FR utilisait une clé str alors qu'on avait un int
-                clean_date = date_text
-                m_date = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{2,4})', date_text.strip())
-                if m_date:
-                    try:
-                        d_num = int(m_date.group(1))
-                        m_num = int(m_date.group(2))   # int, pas str
-                        y_num = int(m_date.group(3))
-                        y_num = 2000 + y_num if y_num < 100 else y_num
-                        # _MOIS_INT_TO_FR accepte bien une clé int
-                        mois_str = _MOIS_INT_TO_FR.get(m_num, str(m_num))
-                        clean_date = f"{d_num} {mois_str} {y_num}"
-                    except Exception:
-                        pass  # on garde date_text brut si conversion échoue
-
-                # raw_date = format brut conservé pour parse_date_universal
-                raw_date = date_text
-
-                # ── Filtre période de réalisation ─────────────────────────
-                if not is_perf_in_period(raw_date, champ):
-                    fra_skipped_period += 1
-                    continue
-
                 name_clean = " ".join(w.capitalize() for w in name_text.split())
 
-                if current_event not in results[current_gender]:
-                    results[current_gender][current_event] = []
+                if row_event not in results[row_gender]:
+                    results[row_gender][row_event] = []
 
-                results[current_gender][current_event].append({
+                results[row_gender][row_event].append({
                     "name":     name_clean,
                     "perf":     perf_text,
                     "date":     clean_date,
                     "place":    venue_text,
                     "raw_date": raw_date,
-                    "dob":      dob_text,    # stocké pour débogage éventuel
+                    "dob":      dob_text,
                 })
                 fra_kept += 1
 
@@ -574,7 +614,7 @@ def fetch_tilastopaja_all(champ, url):
         total_events = sum(len(v) for v in results['m'].values()) + sum(len(v) for v in results['f'].values())
         print(f"  📋 Tilastopaja {champ.upper()} : {fra_total} FRA trouvés | "
               f"{fra_kept} conservés | {fra_skipped_dob} hors catégorie âge | "
-              f"{fra_skipped_period} hors période | {total_events} entrées au total")
+              f"{fra_skipped_period} hors période | {total_events} épreuve(s) avec des FRA")
         if fra_kept > 0:
             for g in ('m', 'f'):
                 for ev, lst in results[g].items():
