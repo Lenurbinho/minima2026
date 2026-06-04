@@ -333,76 +333,106 @@ def load_ffa_epreuves_dict():
 
 # Dictionnaire dynamique des codes épreuves FFA
 MAP_FFA_EPREUVES = load_ffa_epreuves_dict()
+
+# ------------------------------------------------------------------------------
+# SURCHARGES SPÉCIFIQUES FFA (Catégories, Poids des engins, Hauteur des haies)
+# ------------------------------------------------------------------------------
+MAP_FFA_OVERRIDES = {
+    # --- U18 (Cadets) - Garçons ---
+    ("u18", "m", "110mH"): "216",     # Haies 91 cm
+    ("u18", "m", "Poids"): "415",     # Poids 5 kg
+    ("u18", "m", "Disque"): "421",    # Disque 1.5 kg
+    ("u18", "m", "Marteau"): "434",   # Marteau 5 kg
+    ("u18", "m", "Javelot"): "441",   # Javelot 700 g
+    ("u18", "m", "Decathlon"): "584", # Decathlon Cadet
+    
+    # --- U18 (Cadettes) - Filles ---
+    ("u18", "f", "100mH"): "211",     # Haies 76 cm
+    ("u18", "f", "Poids"): "416",     # Poids 3 kg
+    ("u18", "f", "Marteau"): "435",   # Marteau 3 kg
+    ("u18", "f", "Javelot"): "444",   # Javelot 500 g
+    ("u18", "f", "Heptathlon"): "571",# Heptathlon Cadette
+    
+    # --- U20 (Juniors) - Garçons ---
+    ("u20", "m", "110mH"): "212",     # Haies 99 cm
+    ("u20", "m", "Poids"): "413",     # Poids 6 kg
+    ("u20", "m", "Disque"): "422",    # Disque 1.75 kg
+    ("u20", "m", "Marteau"): "433",   # Marteau 6 kg
+    ("u20", "m", "Decathlon"): "582", # Decathlon Junior
+    
+    # Note : Les U20 Filles utilisent les engins/haies standards (Senior)
+    # Les autres épreuves tombent sur le dictionnaire générique.
+}
+
+def get_ffa_code(champ, gender, event):
+    """Retourne le code FFA exact en tenant compte des spécificités de catégories."""
+    override_key = (champ.lower(), gender.lower(), event)
+    if override_key in MAP_FFA_OVERRIDES:
+        return MAP_FFA_OVERRIDES[override_key]
+    return MAP_FFA_EPREUVES.get(event, "")
+
 def fetch_ffa_event(champ, gender, event):
-    """Scrape les bilans officiels de la FFA pour une épreuve précise."""
-    epreuve_id = MAP_FFA_EPREUVES.get(event)
-    if not epreuve_id:
+    """Scrape le bilan FFA pour une épreuve, un sexe et un championnat donnés."""
+    # Utilisation de la nouvelle fonction qui gère les engins par catégorie
+    epreuve_code = get_ffa_code(champ, gender, event)
+    if not epreuve_code:
+        print(f"⚠️ Code FFA introuvable pour {event} ({champ} {gender})")
         return []
 
-    # Le champ vide ("") pour 'ce' (Seniors/Europe) permet de prendre toutes les catégories
-    cat_map = {"ce": "", "u20": "JU", "u18": "CA"}
-    sexe_map = {"m": "M", "f": "F"}
+    # Détermination du code catégorie pour l'URL FFA
+    cat_code = ""
+    if champ.lower() == "u18":
+        cat_code = "CA"
+    elif champ.lower() == "u20":
+        cat_code = "JU"
+    # Pour 'ce' (Senior), cat_code reste vide, ce qui prend toutes les catégories
+        
+    sexe_code = "M" if gender.lower() == "m" else "F"
     
-    cat = cat_map.get(champ, "")
-    sexe = sexe_map.get(gender, "M")
-
-    # frmnationalite=1 garantit que seuls les athlètes français sont pris en compte
-    url = f"https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee=2026&frmepreuve={epreuve_id}&frmsexe={sexe}&frmcategorie={cat}&frmdepartement=&frmligue=&frmnationalite=1&frmvent=VR&frmamaxi="
-
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml"
-    }
+    # Construction de l'URL avec frmnationalite=1 (Français uniquement)
+    url = f"https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee=2026&frmepreuve={epreuve_code}&frmsexe={sexe_code}&frmcategorie={cat_code}&frmnationalite=1"
     
-    athletes = []
+    # Facultatif : afficher l'URL dans la console pour vérifier que tout se passe bien
+    # print(f"  [FFA] URL : {url}")
+    
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
     try:
-        res = requests.get(url, headers=headers, timeout=15)
-        if res.status_code != 200: return []
-        
-        soup = BeautifulSoup(res.content, 'html.parser')
-        
-        table = soup.find('table', id='ctnBilans')
-        if not table: return []
-        
-        # On parcourt toutes les lignes du tableau
-        for tr in table.find_all('tr'):
-            # La nouvelle structure FFA double chaque ligne pour la version mobile ("detail-row"), on l'ignore.
-            if 'detail-row' in tr.get('class', []):
-                continue
-                
-            tds = tr.find_all('td')
-            # Une ligne de résultat valide possède au moins 9 colonnes (Place, Perf, Nom, Club, Ligue, Dep, Infos, Date, Lieu)
-            if len(tds) < 9: continue
-            
-            # Colonne 2 (index 1) : La perf. 
-            # On remplace les doubles apostrophes par des guillemets et on supprime le vent ou la mention (RP)
-            # Ex: "10''18 (+2.0) (RP)" devient "10"18"
-            perf_raw = tds[1].get_text(strip=True).replace("''", '"')
-            perf_text = perf_raw.split('(')[0].strip()
-            if not re.search(r'\d', perf_text): continue
-            
-            # Colonne 3 (index 2) : Nom de l'athlète situé dans le lien
-            a_tag = tds[2].find('a')
-            if not a_tag: continue
-            name_clean = " ".join([w.capitalize() for w in a_tag.get_text(strip=True).split()])
-            
-            # Colonne 8 (index 7) : Date
-            date_text = tds[7].get_text(strip=True)
-            
-            # Colonne 9 (index 8) : Lieu
-            venue_text = tds[8].get_text(strip=True)
-            
-            athletes.append({
-                "name": name_clean,
-                "perf": perf_text,
-                "date": date_text,
-                "place": venue_text,
-                "raw_date": date_text
-            })
+        resp = requests.get(url, headers=headers, timeout=15)
+        resp.raise_for_status()
     except Exception as e:
-        print(f"❌ Erreur scraping FFA pour {champ.upper()} - {event}: {e}")
+        print(f"  [FFA] Erreur de connexion : {e}")
+        return []
         
-    return athletes
+    soup = BeautifulSoup(resp.text, 'html.parser')
+    results = []
+    
+    for tr in soup.find_all('tr'):
+        # Ignorer les lignes de détails cachées (version mobile de la FFA)
+        if 'detail-row' in tr.get('class', []):
+            continue
+            
+        tds = tr.find_all('td')
+        if len(tds) >= 9:
+            perf_raw = tds[1].get_text(strip=True)
+            # Nettoyage : enlever le vent (ex: "(+2.0)") et le record perso "(RP)"
+            perf = perf_raw.split('(')[0].replace('RP', '').strip()
+            
+            a_tag = tds[2].find('a')
+            if not a_tag:
+                continue
+            name = a_tag.get_text(strip=True).title()
+            
+            date_text = tds[7].get_text(strip=True)
+            place_text = tds[8].get_text(strip=True)
+            
+            results.append({
+                "name": name,
+                "perf": perf,
+                "raw_date": date_text,
+                "place": place_text
+            })
+            
+    return results
 
 def merge_and_filter_athletes(wa_list, ffa_list, event_name, limit_to_check, champ):
     """Fusionne intelligemment les deux listes, filtre par minima et période, et ne garde que la meilleure perf."""
