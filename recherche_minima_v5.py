@@ -433,7 +433,7 @@ def get_ffa_code(champ, gender, event):
         return MAP_FFA_OVERRIDES[override_key]
     return MAP_FFA_EPREUVES.get(event, "")
 
-ef fetch_ffa_event(champ, gender, event):
+def fetch_ffa_event(champ, gender, event):
     """Scrape le bilan FFA pour une épreuve, un sexe et un championnat donnés."""
     epreuve_code = get_ffa_code(champ, gender, event)
     if not epreuve_code:
