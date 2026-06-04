@@ -213,14 +213,14 @@ const achievements = {
         {
           "name": "Youenn Thetiot",
           "perf": "3:49.67",
-          "date": "23/05/26",
+          "date": "23 mai 2026",
           "raw_date": "23/05/26",
           "place": "Mauges sur loire"
         },
         {
           "name": "Malo Kerhamon",
           "perf": "3:49.95",
-          "date": "23/05/26",
+          "date": "23 mai 2026",
           "raw_date": "23/05/26",
           "place": "Mauges sur loire"
         }
@@ -245,7 +245,7 @@ const achievements = {
         {
           "name": "Maxence Bal",
           "perf": "5:49.38",
-          "date": "11/04/26",
+          "date": "11 avr 2026",
           "raw_date": "11/04/26",
           "place": "Perpignan"
         }
@@ -261,7 +261,7 @@ const achievements = {
         {
           "name": "Kays Flamand",
           "perf": "7.31",
-          "date": "25/04/26",
+          "date": "25 avr 2026",
           "raw_date": "25/04/26",
           "place": "Fort de france"
         }
@@ -322,7 +322,7 @@ const achievements = {
         {
           "name": "Rose Simonneau violleau",
           "perf": "9:34.39",
-          "date": "27/05/26",
+          "date": "27 mai 2026",
           "raw_date": "27/05/26",
           "place": "Niort"
         }
@@ -331,7 +331,7 @@ const achievements = {
         {
           "name": "Anna Peeters",
           "perf": "13.39",
-          "date": "14/05/26",
+          "date": "14 mai 2026",
           "raw_date": "14/05/26",
           "place": "Aubagne"
         }
@@ -340,7 +340,7 @@ const achievements = {
         {
           "name": "Julie Bourgis",
           "perf": "3.95",
-          "date": "09/05/26",
+          "date": "9 mai 2026",
           "raw_date": "09/05/26",
           "place": "Cambrai"
         }
@@ -358,7 +358,7 @@ const achievements = {
         {
           "name": "Eleonore Breney",
           "perf": "23:37.65",
-          "date": "23/05/26",
+          "date": "23 mai 2026",
           "raw_date": "23/05/26",
           "place": "Belfort"
         }
@@ -446,7 +446,7 @@ const achievements = {
         {
           "name": "Beatrice Tassin",
           "perf": "23.46",
-          "date": "31/05/26",
+          "date": "31 mai 2026",
           "raw_date": "31/05/26",
           "place": "Sarcelles"
         },
@@ -510,7 +510,7 @@ const achievements = {
         {
           "name": "Heloise Mariette",
           "perf": "1.82",
-          "date": "30/05/26",
+          "date": "30 mai 2026",
           "raw_date": "30/05/26",
           "place": "Lomme"
         }
