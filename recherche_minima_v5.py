@@ -437,7 +437,6 @@ def fetch_ffa_event(champ, gender, event):
     """Scrape le bilan FFA pour une épreuve, un sexe et un championnat donnés."""
     epreuve_code = get_ffa_code(champ, gender, event)
     if not epreuve_code:
-        # print(f"⚠️ Code FFA introuvable pour {event} ({champ} {gender})")
         return []
 
     # Détermination du code catégorie pour l'URL FFA
@@ -449,20 +448,18 @@ def fetch_ffa_event(champ, gender, event):
         
     sexe_code = "M" if gender.lower() == "m" else "F"
     
-    # Gestion du Vent Régulier (VR) pour les épreuves concernées
+    # Gestion du Vent Régulier (VR)
     vent_param = ""
     epreuves_avec_vent = ["100m", "200m", "100mH", "110mH", "Longueur", "Triple"]
     if event in epreuves_avec_vent:
         vent_param = "&frmvent=VR"
     
-    # Construction de l'URL
     url = f"https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee=2026&frmepreuve={epreuve_code}&frmsexe={sexe_code}&frmcategorie={cat_code}&frmnationalite=1{vent_param}"
     
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
     
-    # Le bloc try/except qui causait l'erreur est ici
     try:
-        resp = ffa_session.get(url, headers=headers, timeout=15)
+        resp = FFA_SESSION.get(url, headers=headers, timeout=15)
         resp.raise_for_status()
     except Exception as e:
         print(f"  [FFA] Erreur de connexion : {e}")
@@ -470,6 +467,7 @@ def fetch_ffa_event(champ, gender, event):
         
     soup = BeautifulSoup(resp.text, 'html.parser')
     results = []
+    import unicodedata
     
     for tr in soup.find_all('tr'):
         if 'detail-row' in tr.get('class', []):
@@ -480,51 +478,31 @@ def fetch_ffa_event(champ, gender, event):
             perf_raw = tds[1].get_text(strip=True)
             perf_clean = perf_raw.split('(')[0].replace('RP', '').strip()
             
-            # Formatage standard de la perf FFA pour l'affichage (1m95 -> 1.95, 13''39 -> 13.39)
-            perf_clean = perf_clean.replace("''", ".").replace("m", ".")
+            # Homogénéisation des perfs
+            perf_clean = perf_clean.replace("''", ".").replace("m", ".").replace("h", ":").rstrip('.')
             if "'" in perf_clean and "." not in perf_clean:
                 perf_clean = perf_clean.replace("'", ":") + ".00"
             elif "'" in perf_clean:
                 perf_clean = perf_clean.replace("'", ":")
             
             a_tag = tds[2].find('a')
-            if not a_tag:
-                continue
+            if not a_tag: continue
                 
-            # Formatage du nom : suppression des accents, mise au format "Prénom Nom"
+            # Formatage Prénom Nom
             name_raw = a_tag.get_text(strip=True)
             name_no_accents = ''.join(c for c in unicodedata.normalize('NFD', name_raw) if unicodedata.category(c) != 'Mn')
-            name_no_accents = name_no_accents.replace('-', ' ')
-            
-            parts = name_no_accents.split()
+            parts = name_no_accents.replace('-', ' ').split()
             nom = " ".join([p for p in parts if p.isupper()])
             prenom = " ".join([p for p in parts if not p.isupper()])
-            
-            if not nom: 
-                nom = parts[-1] if parts else ""
-                prenom = " ".join(parts[:-1]) if len(parts) > 1 else ""
-                
             final_name = f"{prenom.capitalize()} {nom.capitalize()}".strip()
             
             date_text = tds[7].get_text(strip=True)
-            place_text = tds[8].get_text(strip=True)
-            
-            # Conversion du format de date FFA (ex: 28/05/2026) au format du front (ex: 28 mai 2026)
-            date_formatee = date_text
-            try:
-                if "/" in date_text:
-                    d, m, y = date_text.split('/')
-                    mois_str = MOIS_FR.get(int(m), m)
-                    date_formatee = f"{d} {mois_str} {y}"
-            except:
-                pass
-            
             results.append({
                 "name": final_name,
                 "perf": perf_clean,
-                "date": date_formatee,
+                "date": date_text,
                 "raw_date": date_text,
-                "place": place_text
+                "place": tds[8].get_text(strip=True)
             })
             
     return results
