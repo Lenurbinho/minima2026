@@ -33,7 +33,7 @@ def resource_path(relative_path):
 PERIODES_MINIMA = {
     "ce":  (datetime(2026, 5, 1), datetime(2026, 7, 26)),
     "u20": (datetime(2026, 4, 1), datetime(2026, 7, 19)),
-    "u18": (datetime(2026, 4, 1), datetime(2026, 7, 5))
+    "u18": (datetime(2026, 2, 1), datetime(2026, 7, 5))
 }
 
 # ==========================================
@@ -201,7 +201,6 @@ def parse_date_universal(date_str):
     except Exception:
         pass
     return None
-        
 def translate_date_fr(date_str):
     """Traduit une date WA (ex: 17 MAY 2026) en français (ex: 17 mai 2026)."""
     if not date_str:
@@ -475,10 +474,20 @@ def fetch_ffa_event(champ, gender, event):
             final_name = f"{prenom.capitalize()} {nom.capitalize()}".strip()
             
             date_text = tds[7].get_text(strip=True)
+            # Conversion du format FFA (25/04/26) vers le format lisible (25 avr 2026)
+            display_date = date_text
+            try:
+                m_date = re.match(r'^(\d{1,2})/(\d{1,2})/(\d{2,4})$', date_text.strip())
+                if m_date:
+                    d_num, m_num, y_num = int(m_date.group(1)), int(m_date.group(2)), int(m_date.group(3))
+                    y_num = 2000 + y_num if y_num < 100 else y_num
+                    display_date = f"{d_num} {MOIS_FR[m_num]} {y_num}"
+            except Exception:
+                pass
             results.append({
                 "name": final_name,
                 "perf": perf_clean,
-                "date": date_text,
+                "date": display_date,
                 "raw_date": date_text,
                 "place": tds[8].get_text(strip=True)
             })
