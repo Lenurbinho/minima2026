@@ -315,6 +315,17 @@ FFA_SESSION.headers.update({
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 })
 
+# Session partagée pour World Athletics (keep-alive + pool de connexions)
+WA_SESSION = requests.Session()
+_wa_adapter = HTTPAdapter(pool_connections=20, pool_maxsize=20)
+WA_SESSION.mount('http://', _wa_adapter)
+WA_SESSION.mount('https://', _wa_adapter)
+WA_SESSION.headers.update({
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
+})
+
 def load_ffa_epreuves_dict():
     """Charge les codes épreuves depuis le fichier Excel s'il existe pour éviter les erreurs de code."""
     filepath = "Dictionnaire_Epreuves_FFA_3.xlsx"  # Mise à jour avec la version 3
@@ -537,14 +548,8 @@ def fetch_wa_event(champ, gender, event):
     year = "2026"
     url = f"https://worldathletics.org/records/toplists/{slug}/all/{wa_gender}/{wa_category}/{year}?regionType=countries&region=fra&timing=electronic&windReading=regular&page=1&bestResultsOnly=true"
     
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
-    }
-    
     try:
-        response = requests.get(url, headers=headers, timeout=15)
+        response = WA_SESSION.get(url, timeout=15)
         if response.status_code != 200: return []
         
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -908,7 +913,7 @@ def run_scraping():
     print("\n🌐 Récupération simultanée WA et FFA et croisement des données...")
     
     # Nous lançons les requêtes en parallèle (5 requêtes à la fois pour ne pas surcharger les serveurs)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         
         # 1. Planification de toutes les requêtes (WA et FFA)
         for champ in MINIMA_FFA.keys():
