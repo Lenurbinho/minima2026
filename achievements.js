@@ -200,24 +200,6 @@ const achievements = {
           "raw_date": "03 MAY 2026"
         }
       ],
-      "200m": [
-        {
-          "name": "Dylan Telo",
-          "perf": "21.33",
-          "date": "01 fév 2026",
-          "place": "Stadium Jean-Pellez, Aubière (FRA) (i)",
-          "raw_date": "01 FEB 2026"
-        }
-      ],
-      "400m": [
-        {
-          "name": "Dylan Telo",
-          "perf": "48.09",
-          "date": "04/02/26",
-          "raw_date": "04/02/26",
-          "place": "Lyon"
-        }
-      ],
       "800m": [
         {
           "name": "Yannis Le Ruyet",
@@ -266,15 +248,6 @@ const achievements = {
           "date": "11/04/26",
           "raw_date": "11/04/26",
           "place": "Perpignan"
-        }
-      ],
-      "Perche": [
-        {
-          "name": "Jonas Bestory",
-          "perf": "5.01",
-          "date": "21 fév 2026",
-          "place": "Stade couvert Jesse Owens, Val-de-Reuil (FRA) (i)",
-          "raw_date": "21 FEB 2026"
         }
       ],
       "Longueur": [
@@ -363,47 +336,13 @@ const achievements = {
           "place": "Aubagne"
         }
       ],
-      "Hauteur": [
-        {
-          "name": "Elina Redon",
-          "perf": "1.80",
-          "date": "21 fév 2026",
-          "place": "Stade couvert Jesse Owens, Val-de-Reuil (FRA) (i)",
-          "raw_date": "21 FEB 2026"
-        }
-      ],
       "Perche": [
-        {
-          "name": "Isild Drouet",
-          "perf": "4.35",
-          "date": "28 fév 2026",
-          "place": "Stadium Jean-Pellez, Aubière (FRA) (i)",
-          "raw_date": "28 FEB 2026"
-        },
         {
           "name": "Julie Bourgis",
           "perf": "3.95",
           "date": "09/05/26",
           "raw_date": "09/05/26",
           "place": "Cambrai"
-        }
-      ],
-      "Triple": [
-        {
-          "name": "Suzanne Cornelie-lenoir",
-          "perf": "12.75",
-          "date": "22 fév 2026",
-          "place": "Stade couvert Jesse Owens, Val-de-Reuil (FRA) (i)",
-          "raw_date": "22 FEB 2026"
-        }
-      ],
-      "Poids": [
-        {
-          "name": "Jasmine Nkoso",
-          "perf": "16.09",
-          "date": "07/02/26",
-          "raw_date": "07/02/26",
-          "place": "Vaxjo (SWE)"
         }
       ],
       "Marteau": [
