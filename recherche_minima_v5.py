@@ -182,23 +182,58 @@ MOIS_FR = {
 }
 
 def parse_date_universal(date_str):
-    """Convertit une date WA (15 MAY 2026) ou FFA (15/05/26) en datetime."""
+    """Convertit une date WA (15 MAY 2026) ou Tilastopaja (15.05.26 / 15.05.2026) en datetime."""
     if not date_str:
         return None
     try:
-        clean_date = str(date_str).replace(",", "").strip()
-        
-        # Format FFA (DD/MM/YY ou DD/MM/YYYY)
-        m_ffa = re.match(r'^(\d{1,2})/(\d{1,2})/(\d{2,4})$', clean_date)
-        if m_ffa:
-            d_num, m_num, y_num = int(m_ffa.group(1)), int(m_ffa.group(2)), int(m_ffa.group(3))
-            y_num = 2000 + y_num if y_num < 100 else y_num
-            return datetime(y_num, m_num, d_num)
+        tds = tr.find_all('td')
+        if len(tds) >= 9:
+            perf_raw = tds[1].get_text(strip=True)
+            # Nettoyage : enlever le vent (ex: "(+2.0)") et le record perso "(RP)"
+            perf = perf_raw.split('(')[0].replace('RP', '').strip()
             
-        # Format WA (15 MAY 2026)
-        return datetime.strptime(clean_date, "%d %b %Y")
-    except Exception:
-        return None
+            # Homogénéisation du format FFA vers le format World Athletics
+            # Exemples: 9'34''39 -> 9:34.39 | 13''39 -> 13.39 | 1m95 -> 1.95 | 1h20'33'' -> 1:20:33
+            perf = perf.replace('h', ':').replace('m', '.').replace("''", ".").replace("'", ":").rstrip('.')
+            
+            a_tag = tds[2].find('a')
+            if not a_tag:
+                continue
+                
+            # Formatage Prénom Nom : La FFA met le nom en MAJUSCULES.
+            # Ex: "SIMONNEAU-VIOLLEAU Rose" -> "Rose Simonneau-Violleau"
+            parts = a_tag.get_text(strip=True).split()
+            nom_parts = [p for p in parts if p.isupper() and len(p) > 1]
+            prenom_parts = [p for p in parts if not (p.isupper() and len(p) > 1)]
+            
+            if nom_parts and prenom_parts:
+                name = " ".join(prenom_parts + nom_parts).title()
+            else:
+                name = a_tag.get_text(strip=True).title()
+            
+            date_text = tds[7].get_text(strip=True)
+            place_text = tds[8].get_text(strip=True)
+            
+            # Conversion de la date FFA (DD/MM/YY) pour l'affichage UI
+            clean_date = date_text
+            try:
+                m_date = re.match(r'^(\d{1,2})/(\d{1,2})/(\d{2,4})$', date_text.strip())
+                if m_date:
+                    d_num, m_num, y_num = int(m_date.group(1)), int(m_date.group(2)), int(m_date.group(3))
+                    y_num = 2000 + y_num if y_num < 100 else y_num
+                    clean_date = f"{d_num} {MOIS_FR[m_num]} {y_num}"
+            except Exception:
+                pass
+            
+            results.append({
+                "name": name,
+                "perf": perf,
+                "date": clean_date,     # Correction : ajout de la date pour le front-end
+                "raw_date": date_text,
+                "place": place_text
+            })
+            
+    return results
         
 def translate_date_fr(date_str):
     """Traduit une date WA (ex: 17 MAY 2026) en français (ex: 17 mai 2026)."""
@@ -476,15 +511,21 @@ def fetch_ffa_event(champ, gender, event):
 
 def merge_and_filter_athletes(wa_list, ffa_list, event_name, limit_to_check, champ):
     """Fusionne intelligemment les deux listes, filtre par minima et période, et ne garde que la meilleure perf."""
+    import unicodedata
     unique_athletes = {}
     
     is_running = event_name in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m", "100mH", "110mH", "400mH", "2000m Steeple", "3000m Steeple", "5000m Marche", "10000m Marche", "20km Marche", "Semi-marathon Marche", "35km Marche", "Marathon Marche", "Marathon"]
     
     for ath in wa_list + ffa_list:
-        name = ath["name"].strip()
-        name_lower = name.lower()
+        name_raw = ath["name"].strip()
         
-        # Le nom de l'épreuve est passé ici pour exiger les chronos électriques le cas échéant
+        # Création d'une clé robuste anti-doublons (sans accents, sans tirets)
+        # "Jean-Baptiste Écuyer" ou "Jean Baptiste Ecuyer" deviennent tous les deux "jean baptiste ecuyer"
+        name_key = ''.join(c for c in unicodedata.normalize('NFD', name_raw) if unicodedata.category(c) != 'Mn')
+        name_key = name_key.lower().replace("-", " ")
+        name_key = " ".join(name_key.split()) # Retire les éventuels doubles espaces
+        
+        # Le nom de l'épreuve est passé ici pour exiger les chronos électriques
         perf_v = time_to_seconds(ath["perf"], event_name)
         if perf_v is None: continue
         
@@ -499,22 +540,21 @@ def merge_and_filter_athletes(wa_list, ffa_list, event_name, limit_to_check, cha
         if not is_perf_in_period(date_str, champ):
             continue
             
-        # Conservation de la meilleure performance uniquement
-        if name_lower not in unique_athletes:
-            unique_athletes[name_lower] = ath
+        # Conservation de la meilleure performance (utilisation de name_key)
+        if name_key not in unique_athletes:
+            unique_athletes[name_key] = ath
         else:
-            existing_perf_v = time_to_seconds(unique_athletes[name_lower]["perf"], event_name)
+            existing_perf_v = time_to_seconds(unique_athletes[name_key]["perf"], event_name)
             if is_running:
-                if perf_v < existing_perf_v: unique_athletes[name_lower] = ath
+                if perf_v < existing_perf_v: unique_athletes[name_key] = ath
             else:
-                if perf_v > existing_perf_v: unique_athletes[name_lower] = ath
+                if perf_v > existing_perf_v: unique_athletes[name_key] = ath
                 
     # Trie des résultats finaux (du meilleur au moins bon)
     results_list = list(unique_athletes.values())
     results_list.sort(key=lambda x: time_to_seconds(x["perf"], event_name) or 999999 if is_running else -(time_to_seconds(x["perf"], event_name) or 0))
     
     return results_list
-
 # ==============================================================================
 # SCRAPING WORLD ATHLETICS
 # ==============================================================================
