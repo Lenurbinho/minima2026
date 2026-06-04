@@ -182,58 +182,25 @@ MOIS_FR = {
 }
 
 def parse_date_universal(date_str):
-    """Convertit une date WA (15 MAY 2026) ou Tilastopaja (15.05.26 / 15.05.2026) en datetime."""
+    """Convertit une date WA (15 MAY 2026) ou FFA (15/05/2026) en datetime."""
     if not date_str:
         return None
+    # Essai format World Athletics : "15 MAY 2026"
     try:
-        tds = tr.find_all('td')
-        if len(tds) >= 9:
-            perf_raw = tds[1].get_text(strip=True)
-            # Nettoyage : enlever le vent (ex: "(+2.0)") et le record perso "(RP)"
-            perf = perf_raw.split('(')[0].replace('RP', '').strip()
-            
-            # Homogénéisation du format FFA vers le format World Athletics
-            # Exemples: 9'34''39 -> 9:34.39 | 13''39 -> 13.39 | 1m95 -> 1.95 | 1h20'33'' -> 1:20:33
-            perf = perf.replace('h', ':').replace('m', '.').replace("''", ".").replace("'", ":").rstrip('.')
-            
-            a_tag = tds[2].find('a')
-            if not a_tag:
-                continue
-                
-            # Formatage Prénom Nom : La FFA met le nom en MAJUSCULES.
-            # Ex: "SIMONNEAU-VIOLLEAU Rose" -> "Rose Simonneau-Violleau"
-            parts = a_tag.get_text(strip=True).split()
-            nom_parts = [p for p in parts if p.isupper() and len(p) > 1]
-            prenom_parts = [p for p in parts if not (p.isupper() and len(p) > 1)]
-            
-            if nom_parts and prenom_parts:
-                name = " ".join(prenom_parts + nom_parts).title()
-            else:
-                name = a_tag.get_text(strip=True).title()
-            
-            date_text = tds[7].get_text(strip=True)
-            place_text = tds[8].get_text(strip=True)
-            
-            # Conversion de la date FFA (DD/MM/YY) pour l'affichage UI
-            clean_date = date_text
-            try:
-                m_date = re.match(r'^(\d{1,2})/(\d{1,2})/(\d{2,4})$', date_text.strip())
-                if m_date:
-                    d_num, m_num, y_num = int(m_date.group(1)), int(m_date.group(2)), int(m_date.group(3))
-                    y_num = 2000 + y_num if y_num < 100 else y_num
-                    clean_date = f"{d_num} {MOIS_FR[m_num]} {y_num}"
-            except Exception:
-                pass
-            
-            results.append({
-                "name": name,
-                "perf": perf,
-                "date": clean_date,     # Correction : ajout de la date pour le front-end
-                "raw_date": date_text,
-                "place": place_text
-            })
-            
-    return results
+        clean = date_str.replace(",", "").strip()
+        return datetime.strptime(clean, "%d %b %Y")
+    except Exception:
+        pass
+    # Essai format FFA : "15/05/2026" ou "15/05/26"
+    try:
+        m_date = re.match(r'^(\d{1,2})/(\d{1,2})/(\d{2,4})$', date_str.strip())
+        if m_date:
+            d, m, y = int(m_date.group(1)), int(m_date.group(2)), int(m_date.group(3))
+            y = 2000 + y if y < 100 else y
+            return datetime(y, m, d)
+    except Exception:
+        pass
+    return None
         
 def translate_date_fr(date_str):
     """Traduit une date WA (ex: 17 MAY 2026) en français (ex: 17 mai 2026)."""
