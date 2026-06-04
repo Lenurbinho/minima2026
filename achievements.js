@@ -63,12 +63,6 @@ const achievements = {
           "date": "24 mai 2026",
           "place": "Boudewijnstadion, Bruxelles (BEL)",
           "raw_date": "24 MAY 2026"
-        },
-        {
-          "name": "Raphael Mohamed",
-          "perf": "13''40",
-          "raw_date": "24/05/26",
-          "place": "Bruxelles (BEL)"
         }
       ],
       "3000m Steeple": [
@@ -128,12 +122,6 @@ const achievements = {
           "date": "08 mai 2026",
           "place": "Kolonáda, Poděbrady (CZE)",
           "raw_date": "08 MAY 2026"
-        },
-        {
-          "name": "Aurelien Quinion",
-          "perf": "1h24'01''",
-          "raw_date": "08/05/26",
-          "place": "Podebrady (CZE)"
         }
       ]
     },
@@ -145,12 +133,6 @@ const achievements = {
           "date": "29 mai 2026",
           "place": "Ray Conn Sports Complex, Cleveland, TN (USA)",
           "raw_date": "29 MAY 2026"
-        },
-        {
-          "name": "Gemima Joseph",
-          "perf": "22''60",
-          "raw_date": "29/05/26",
-          "place": "Cleveland (USA)"
         }
       ],
       "800m": [
@@ -160,12 +142,6 @@ const achievements = {
           "date": "31 mai 2026",
           "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)",
           "raw_date": "31 MAY 2026"
-        },
-        {
-          "name": "Anais Bourgoin",
-          "perf": "1'57''39",
-          "raw_date": "31/05/26",
-          "place": "Rabat (MAR)"
         }
       ],
       "1500m": [
@@ -236,7 +212,8 @@ const achievements = {
       "400m": [
         {
           "name": "Dylan Telo",
-          "perf": "48''09",
+          "perf": "48.09",
+          "date": "04/02/26",
           "raw_date": "04/02/26",
           "place": "Lyon"
         }
@@ -253,13 +230,15 @@ const achievements = {
       "1500m": [
         {
           "name": "Youenn Thetiot",
-          "perf": "3'49''67",
+          "perf": "3:49.67",
+          "date": "23/05/26",
           "raw_date": "23/05/26",
           "place": "Mauges sur loire"
         },
         {
           "name": "Malo Kerhamon",
-          "perf": "3'49''95",
+          "perf": "3:49.95",
+          "date": "23/05/26",
           "raw_date": "23/05/26",
           "place": "Mauges sur loire"
         }
@@ -283,7 +262,8 @@ const achievements = {
       "2000m Steeple": [
         {
           "name": "Maxence Bal",
-          "perf": "5'49''38",
+          "perf": "5:49.38",
+          "date": "11/04/26",
           "raw_date": "11/04/26",
           "place": "Perpignan"
         }
@@ -308,6 +288,7 @@ const achievements = {
         {
           "name": "Kays Flamand",
           "perf": "7.31",
+          "date": "25/04/26",
           "raw_date": "25/04/26",
           "place": "Fort de france"
         }
@@ -355,12 +336,6 @@ const achievements = {
           "date": "30 mai 2026",
           "place": "Carl-Kaufmann-Stadion, Karlsruhe (GER)",
           "raw_date": "30 MAY 2026"
-        },
-        {
-          "name": "Lea Eid",
-          "perf": "2'04''35",
-          "raw_date": "30/05/26",
-          "place": "Karlsruhe (GER)"
         }
       ],
       "3000m": [
@@ -372,8 +347,9 @@ const achievements = {
           "raw_date": "17 MAY 2026"
         },
         {
-          "name": "Rose Simonneau-Violleau",
-          "perf": "9'34''39",
+          "name": "Rose Simonneau violleau",
+          "perf": "9:34.39",
+          "date": "27/05/26",
           "raw_date": "27/05/26",
           "place": "Niort"
         }
@@ -381,7 +357,8 @@ const achievements = {
       "100mH": [
         {
           "name": "Anna Peeters",
-          "perf": "13''39",
+          "perf": "13.39",
+          "date": "14/05/26",
           "raw_date": "14/05/26",
           "place": "Aubagne"
         }
@@ -406,6 +383,7 @@ const achievements = {
         {
           "name": "Julie Bourgis",
           "perf": "3.95",
+          "date": "09/05/26",
           "raw_date": "09/05/26",
           "place": "Cambrai"
         }
@@ -423,6 +401,7 @@ const achievements = {
         {
           "name": "Jasmine Nkoso",
           "perf": "16.09",
+          "date": "07/02/26",
           "raw_date": "07/02/26",
           "place": "Vaxjo (SWE)"
         }
@@ -439,7 +418,8 @@ const achievements = {
       "5000m Marche": [
         {
           "name": "Eleonore Breney",
-          "perf": "23'37''65",
+          "perf": "23:37.65",
+          "date": "23/05/26",
           "raw_date": "23/05/26",
           "place": "Belfort"
         }
@@ -526,7 +506,8 @@ const achievements = {
       "200m": [
         {
           "name": "Beatrice Tassin",
-          "perf": "23''46",
+          "perf": "23.46",
+          "date": "31/05/26",
           "raw_date": "31/05/26",
           "place": "Sarcelles"
         },
@@ -590,6 +571,7 @@ const achievements = {
         {
           "name": "Heloise Mariette",
           "perf": "1.82",
+          "date": "30/05/26",
           "raw_date": "30/05/26",
           "place": "Lomme"
         }
