@@ -299,6 +299,19 @@ def format_seconds_for_display(seconds, event_name):
 
 import os
 import openpyxl
+import requests
+from requests.adapters import HTTPAdapter
+
+# --- OPTIMISATION DU RÉSEAU (Anti-Timeout) ---
+# Création d'une session globale pour éviter d'ouvrir/fermer 140 connexions.
+# Cela empêche le pare-feu de la FFA de bloquer le script et accélère massivement le scraping.
+FFA_SESSION = requests.Session()
+_adapter = HTTPAdapter(pool_connections=20, pool_maxsize=20)
+FFA_SESSION.mount('http://', _adapter)
+FFA_SESSION.mount('https://', _adapter)
+FFA_SESSION.headers.update({
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+})
 
 def load_ffa_epreuves_dict():
     """Charge les codes épreuves depuis le fichier Excel s'il existe pour éviter les erreurs de code."""
@@ -409,9 +422,9 @@ def fetch_ffa_event(champ, gender, event):
     # Construction de l'URL avec frmnationalite=1 (Français uniquement) et le filtre vent
     url = f"https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee=2026&frmepreuve={epreuve_code}&frmsexe={sexe_code}&frmcategorie={cat_code}&frmnationalite=1{vent_param}"
     
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
     try:
-        resp = requests.get(url, headers=headers, timeout=15)
+        # ⚠️ UTILISATION DE LA SESSION AU LIEU DE requests.get()
+        resp = FFA_SESSION.get(url, timeout=15)
         resp.raise_for_status()
     except Exception as e:
         print(f"  [FFA] Erreur de connexion : {e}")
