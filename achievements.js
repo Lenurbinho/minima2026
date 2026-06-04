@@ -87,6 +87,13 @@ const achievements = {
           "date": "31 mai 2026",
           "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)",
           "raw_date": "31 MAY 2026"
+        },
+        {
+          "name": "Luc Le Baron",
+          "perf": "8:19.16",
+          "date": "03 juin 2026",
+          "place": "Paavo Nurmen Stadion, Turku (FIN)",
+          "raw_date": "03 JUN 2026"
         }
       ],
       "Perche": [
@@ -204,6 +211,15 @@ const achievements = {
           "date": "01 juin 2026",
           "place": "Stadion Juliska, Praha (CZE)",
           "raw_date": "01 JUN 2026"
+        }
+      ],
+      "3000m Steeple": [
+        {
+          "name": "Clara Entresangle",
+          "perf": "9:23.43",
+          "date": "03 juin 2026",
+          "place": "Paavo Nurmen Stadion, Turku (FIN)",
+          "raw_date": "03 JUN 2026"
         }
       ]
     }
