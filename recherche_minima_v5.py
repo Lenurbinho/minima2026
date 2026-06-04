@@ -301,15 +301,14 @@ import os
 import openpyxl
 
 def load_ffa_epreuves_dict():
-    """Charge les codes épreuves depuis le fichier Excel s'il existe pour éviter les erreurs de code (ex: 300m à la place du 400m)."""
-    filepath = "Dictionnaire_Epreuves_FFA.xlsx"
+    """Charge les codes épreuves depuis le fichier Excel s'il existe pour éviter les erreurs de code."""
+    filepath = "Dictionnaire_Epreuves_FFA_3.xlsx"  # Mise à jour avec la version 3
     mapping = {}
     if os.path.exists(filepath):
         try:
             wb = openpyxl.load_workbook(filepath, data_only=True)
             sheet = wb.active
             for row in sheet.iter_rows(min_row=2, values_only=True):
-                # On suppose que la colonne A contient le nom et la B contient l'ID du code
                 if row[0] is not None and row[1] is not None:
                     mapping[str(row[0]).strip()] = str(row[1]).strip()
             print(f"✅ Dictionnaire FFA chargé depuis {filepath} ({len(mapping)} épreuves).")
@@ -335,33 +334,48 @@ def load_ffa_epreuves_dict():
 MAP_FFA_EPREUVES = load_ffa_epreuves_dict()
 
 # ------------------------------------------------------------------------------
-# SURCHARGES SPÉCIFIQUES FFA (Catégories, Poids des engins, Hauteur des haies)
+# SURCHARGES SPÉCIFIQUES FFA (Codes officiels Logica FFA corrigés)
 # ------------------------------------------------------------------------------
 MAP_FFA_OVERRIDES = {
+    # ================= GARÇONS =================
     # --- U18 (Cadets) - Garçons ---
-    ("u18", "m", "110mH"): "216",     # Haies 91 cm
-    ("u18", "m", "Poids"): "415",     # Poids 5 kg
-    ("u18", "m", "Disque"): "421",    # Disque 1.5 kg
-    ("u18", "m", "Marteau"): "434",   # Marteau 5 kg
-    ("u18", "m", "Javelot"): "441",   # Javelot 700 g
-    ("u18", "m", "Decathlon"): "584", # Decathlon Cadet
-    
-    # --- U18 (Cadettes) - Filles ---
-    ("u18", "f", "100mH"): "211",     # Haies 76 cm
-    ("u18", "f", "Poids"): "416",     # Poids 3 kg
-    ("u18", "f", "Marteau"): "435",   # Marteau 3 kg
-    ("u18", "f", "Javelot"): "444",   # Javelot 500 g
-    ("u18", "f", "Heptathlon"): "571",# Heptathlon Cadette
+    ("u18", "m", "110mH"): "312",     # Haies 91 cm
+    ("u18", "m", "Poids"): "605",     # Poids 5 kg
+    ("u18", "m", "Disque"): "615",    # Disque 1.5 kg
+    ("u18", "m", "Marteau"): "635",   # Marteau 5 kg
+    ("u18", "m", "Javelot"): "670",   # Javelot 700 g
     
     # --- U20 (Juniors) - Garçons ---
-    ("u20", "m", "110mH"): "212",     # Haies 99 cm
-    ("u20", "m", "Poids"): "413",     # Poids 6 kg
-    ("u20", "m", "Disque"): "422",    # Disque 1.75 kg
-    ("u20", "m", "Marteau"): "433",   # Marteau 6 kg
-    ("u20", "m", "Decathlon"): "582", # Decathlon Junior
+    ("u20", "m", "110mH"): "315",     # Haies 99 cm
+    ("u20", "m", "Poids"): "606",     # Poids 6 kg
+    ("u20", "m", "Disque"): "617",    # Disque 1.75 kg
+    ("u20", "m", "Marteau"): "636",   # Marteau 6 kg
+    # Note : Le javelot U20M est à 800g (comme Senior, code 681 par défaut)
     
-    # Note : Les U20 Filles utilisent les engins/haies standards (Senior)
-    # Les autres épreuves tombent sur le dictionnaire générique.
+    # ================= FILLES =================
+    # Les codes du dictionnaire par défaut (ex: 620 pour Disque) visent souvent les hommes.
+    # Il est crucial d'écraser les lancers pour toutes les catégories féminines.
+    
+    # --- U18 (Cadettes) - Filles ---
+    ("u18", "f", "100mH"): "311",     # Haies 76 cm
+    ("u18", "f", "Poids"): "603",     # Poids 3 kg
+    ("u18", "f", "Disque"): "610",    # Disque 1 kg (Standard F)
+    ("u18", "f", "Marteau"): "633",   # Marteau 3 kg
+    ("u18", "f", "Javelot"): "650",   # Javelot 500 g
+    
+    # --- U20 (Juniors) - Filles ---
+    ("u20", "f", "100mH"): "310",     # Haies 84 cm (Standard F)
+    ("u20", "f", "Poids"): "604",     # Poids 4 kg (Standard F)
+    ("u20", "f", "Disque"): "610",    # Disque 1 kg (Standard F)
+    ("u20", "f", "Marteau"): "634",   # Marteau 4 kg (Standard F)
+    ("u20", "f", "Javelot"): "660",   # Javelot 600 g (Standard F)
+    
+    # --- Seniors / Championnats d'Europe (ce) - Filles ---
+    ("ce", "f", "100mH"): "310",
+    ("ce", "f", "Poids"): "604",
+    ("ce", "f", "Disque"): "610",
+    ("ce", "f", "Marteau"): "634",
+    ("ce", "f", "Javelot"): "660",
 }
 
 def get_ffa_code(champ, gender, event):
