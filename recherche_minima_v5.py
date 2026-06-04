@@ -182,43 +182,23 @@ MOIS_FR = {
 }
 
 def parse_date_universal(date_str):
-    """Convertit tous les formats de date possibles en datetime."""
+    """Convertit une date WA (15 MAY 2026) ou FFA (15/05/26) en datetime."""
     if not date_str:
         return None
     try:
-        c = str(date_str).replace(",", "").strip().lower()
+        clean_date = str(date_str).replace(",", "").strip()
         
-        # Format numérique Tilastopaja : 15.05.2026 ou 15.05.26
-        m = re.match(r'^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$', c)
-        if m:
-            y = int(m.group(3))
-            y = 2000 + y if y < 100 else y
-            return datetime(y, int(m.group(2)), int(m.group(1)))
+        # Format FFA (DD/MM/YY ou DD/MM/YYYY)
+        m_ffa = re.match(r'^(\d{1,2})/(\d{1,2})/(\d{2,4})$', clean_date)
+        if m_ffa:
+            d_num, m_num, y_num = int(m_ffa.group(1)), int(m_ffa.group(2)), int(m_ffa.group(3))
+            y_num = 2000 + y_num if y_num < 100 else y_num
+            return datetime(y_num, m_num, d_num)
             
-        # Format numérique court Tilastopaja : 15.05 (sans année -> on assume l'année en cours)
-        m_short = re.match(r'^(\d{1,2})\.(\d{1,2})$', c)
-        if m_short:
-            return datetime(2026, int(m_short.group(2)), int(m_short.group(1)))
-        
-        # Format texte WA ou Tilastopaja : "15 May 2026" ou "15 May"
-        mois_map = {
-            "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
-            "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
-            "fév": 2, "fev": 2, "avr": 4, "mai": 5, "aou": 8, "aoû": 8, "déc": 12
-        }
-        for m_str, m_num in mois_map.items():
-            if m_str in c:
-                # On cherche le jour (1 ou 2 chiffres isolés)
-                day_match = re.search(r'\b(\d{1,2})\b', c)
-                if day_match:
-                    d = int(day_match.group(1))
-                    # On cherche l'année (4 chiffres commençant par 202). Sinon, on met 2026 par défaut.
-                    year_match = re.search(r'\b(202\d)\b', c)
-                    y = int(year_match.group(1)) if year_match else 2026
-                    return datetime(y, m_num, d)
+        # Format WA (15 MAY 2026)
+        return datetime.strptime(clean_date, "%d %b %Y")
     except Exception:
-        pass
-    return None
+        return None
         
 def translate_date_fr(date_str):
     """Traduit une date WA (ex: 17 MAY 2026) en français (ex: 17 mai 2026)."""
@@ -332,333 +312,103 @@ def format_seconds_for_display(seconds, event_name):
         return f"{m_val}'{s_val:02d}\"{c_val:02d}"
         
 # ==============================================================================
-# SCRAPING TILASTOPAJA
+# SCRAPING FFA (Remplace Tilastopaja)
 # ==============================================================================
 
-TILASTOPAJA_URLS = {
-    "ce": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=99",
-    "u20": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=19",
-    "u18": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=17"
+# Dictionnaire des codes épreuves FFA. 
+MAP_FFA_EPREUVES = {
+    "100m": "110", "200m": "120", "400m": "130",
+    "800m": "140", "1500m": "150", "3000m": "160",
+    "5000m": "170", "10000m": "180", "Marathon": "205",
+    "100mH": "210", "110mH": "210", "400mH": "220",
+    "2000m Steeple": "260", "3000m Steeple": "250",
+    "Hauteur": "310", "Perche": "320", "Longueur": "330", "Triple": "340",
+    "Poids": "410", "Disque": "420", "Marteau": "430", "Javelot": "440",
+    "Heptathlon": "570", "Decathlon": "580",
+    "5000m Marche": "610", "10000m Marche": "620", "20km Marche": "630",
+    "35km Marche": "640", "Semi-marathon Marche": "635", "Marathon Marche": "645"
 }
 
-def map_tilastopaja_event(text):
-    """Mappe un nom d'épreuve issu du HTML Tilastopaja vers la nomenclature du script."""
-    t = text.lower().replace(",", "").replace("'", "").strip()
+def fetch_ffa_event(champ, gender, event):
+    """Scrape les bilans officiels de la FFA pour une épreuve précise."""
+    epreuve_id = MAP_FFA_EPREUVES.get(event)
+    if not epreuve_id:
+        return []
+
+    # Le champ vide ("") pour 'ce' (Seniors/Europe) permet de prendre toutes les catégories
+    cat_map = {"ce": "", "u20": "JU", "u18": "CA"}
+    sexe_map = {"m": "M", "f": "F"}
     
-    # Exclusion explicite des relais pour éviter le "saignement" des performances
-    if "4x" in t or "4 x" in t or "relay" in t or "medley" in t:
-        return "IGNORE"
-        
-    # CORRECTION STEEPLE : On utilise \b pour s'assurer que "sc" est un mot isolé
-    if "steeple" in t or re.search(r'\bsc\b', t):
-        if "2000" in t: return "2000m Steeple"
-        return "3000m Steeple"
-        
-    if "walk" in t:
-        if "5000" in t: return "5000m Marche"
-        if "10000" in t: return "10000m Marche"
-        if "20km" in t or "20 km" in t: return "20km Marche"
-        if "35km" in t or "35 km" in t: return "35km Marche"
-        if "half" in t: return "Semi-marathon Marche"
-        
-    if "marathon" in t and "half" not in t: return "Marathon"
-    
-    # CORRECTION HAIES : Gère "110mH", "110m h", "110 m hurdles", etc.
-    if re.search(r'\b110\s*m?\s*(h\b|hurdles)', t): return "110mH"
-    if re.search(r'\b100\s*m?\s*(h\b|hurdles)', t): return "100mH"
-    if re.search(r'\b400\s*m?\s*(h\b|hurdles)', t): return "400mH"
-    
-    if "high jump" in t: return "Hauteur"
-    if "pole vault" in t: return "Perche"
-    if "long jump" in t: return "Longueur"
-    if "triple jump" in t: return "Triple"
-    
-    if "shot" in t: return "Poids"
-    if "discus" in t: return "Disque"
-    if "hammer" in t: return "Marteau"
-    if "javelin" in t: return "Javelot"
-    
-    if "decathlon"  in t: return "Decathlon"
-    if "heptathlon" in t: return "Heptathlon"
+    cat = cat_map.get(champ, "")
+    sexe = sexe_map.get(gender, "M")
 
-    # ── Courses (distances numériques) ───────────────────────────────────────
-    # CORRECTION DISTANCES : Gère "1500", "1500m", "1500 m" de manière robuste
-    for e in ["100", "200", "400", "800", "1500", "3000", "5000", "10000"]:
-        if re.search(rf'\b{e}\s*m?\b', t):
-            return f"{e}m"
+    # frmnationalite=1 garantit que seuls les athlètes français sont pris en compte
+    url = f"https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee=2026&frmepreuve={epreuve_id}&frmsexe={sexe}&frmcategorie={cat}&frmdepartement=&frmligue=&frmnationalite=1&frmvent=VR&frmamaxi="
 
-    return None
-    
-def _parse_tila_dob_year(dob_str):
-    """Extrait l'année de naissance depuis un format Tilastopaja DD.MM.YY, DD.MM.YYYY ou 'DD MMM YY'."""
-    dob_str = str(dob_str).strip()
-    if not dob_str:
-        return None
-        
-    # Format complet avec année sur 4 chiffres (ex: 2009)
-    m4 = re.search(r'\b(19|20)\d{2}\b', dob_str)
-    if m4:
-        return int(m4.group(0))
-        
-    # Format avec année sur 2 chiffres à la fin (ex: 09, 1 Oct 09, 15.01.09)
-    m2 = re.search(r'(\d{2})$', dob_str)
-    if m2:
-        y = int(m2.group(1))
-        return 2000 + y if y <= 24 else 1900 + y
-
-    return None
-
-def _tila_dob_ok_for_champ(dob_str, champ):
-    """Retourne True si l'année de naissance est compatible avec la catégorie."""
-    if champ not in ('u18', 'u20'):
-        return True   # CE séniors : pas de filtre strict sur l'âge
-    year = _parse_tila_dob_year(dob_str)
-    if year is None:
-        return True   # pas d'info -> on laisse passer plutôt que de rejeter
-    if champ == 'u18':
-        return year in (2009, 2010)
-    if champ == 'u20':
-        return year in (2007, 2008)
-    return True
-
-
-# Table de conversion numéro de mois -> abréviation française (corrige le bug MOIS_FR[int])
-_MOIS_INT_TO_FR = {
-    1: "jan", 2: "fév",  3: "mar",  4: "avr",
-    5: "mai", 6: "juin", 7: "juil", 8: "août",
-    9: "sep", 10: "oct", 11: "nov", 12: "déc",
-}
-
-
-def fetch_tilastopaja_all(champ, url):
-    """Scrape une page complète Tilastopaja Europe Top 20 et extrait les FRA par épreuve et par sexe.
-    Prend en charge la nouvelle structure HTML via les classes (ex: showM40, showW310)."""
-    req_headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                      "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml",
-        "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml"
     }
-
-    results = {'m': {}, 'f': {}}
-    fra_total   = 0
-    fra_kept    = 0
-    fra_skipped_dob    = 0
-    fra_skipped_period = 0
-
-    # Récupération de l'année ciblée depuis l'URL (utile car les nouvelles dates n'ont pas l'année, ex: "26 Apr")
-    m_url = re.search(r'Season=(\d{4})', url)
-    season_year = m_url.group(1) if m_url else str(datetime.now().year)
-
-    try:
-        response = requests.get(url, headers=req_headers, timeout=20)
-        if response.status_code != 200:
-            print(f"  ⚠️  Tilastopaja {champ.upper()} : HTTP {response.status_code}")
-            return results
-
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        current_gender = None
-        current_event  = None
-        code_to_event = {}
-        code_to_gender = {}
-
-        for el in soup.find_all(['tr', 'h1', 'h2', 'h3', 'div', 'b', 'strong']):
-            
-            # ── Fallback (Ancien format) : Détection via les titres ──
-            if el.name in ('h1', 'h2', 'h3', 'b', 'strong') or (el.name == 'div' and len(el.get_text(strip=True)) < 60):
-                text = el.get_text(separator=' ', strip=True)
-                if text:
-                    lower_text = text.lower()
-                    if "women" in lower_text or "girls" in lower_text:
-                        current_gender = 'f'
-                    elif "men" in lower_text or "boys" in lower_text:
-                        current_gender = 'm'
-                    ev = map_tilastopaja_event(text)
-                    if ev == "IGNORE":
-                        current_event = None
-                    elif ev:
-                        current_event = ev
-                continue
-
-            if el.name == 'tr':
-                classes = el.get('class', [])
-                # Nettoyage de la classe pour obtenir le code unique (ex: 'showM40 ')
-                code = classes[0].strip() if classes else None
-
-                # ── Nouveau format : Détection d'un titre de Genre ──
-                td_sex = el.find('td', class_='sex')
-                if td_sex:
-                    sex_text = td_sex.get_text(strip=True).lower()
-                    if "women" in sex_text or "girls" in sex_text:
-                        current_gender = 'f'
-                    elif "men" in sex_text or "boys" in sex_text:
-                        current_gender = 'm'
-                    continue
-
-                # ── Nouveau format : Détection d'un titre d'Épreuve ──
-                td_event = el.find('td', class_='event')
-                if td_event:
-                    ev_text = td_event.get_text(strip=True)
-                    ev = map_tilastopaja_event(ev_text)
-                    
-                    if ev == "IGNORE" or ev is None:
-                        # Stoppe le saignement : épreuve ignorée ou inconnue, on coupe le flux
-                        current_event = None
-                    else:
-                        current_event = ev
-                        if code:
-                            code_to_event[code] = ev
-                            if 'showm' in code.lower():
-                                code_to_gender[code] = 'm'
-                                current_gender = 'm'
-                            elif 'showw' in code.lower():
-                                code_to_gender[code] = 'f'
-                                current_gender = 'f'
-                    continue
-
-                # ── Traitement d'une ligne de résultat ──
-                tds = el.find_all('td')
-                if len(tds) < 5:
-                    continue
-
-                td_texts = [td.get_text(strip=True) for td in tds]
-
-                if "FRA" not in td_texts:
-                    continue
-
-                # Détermination ultra-fiable de l'épreuve via le code classe de la ligne
-                row_gender = current_gender
-                row_event = current_event
-                if code and code in code_to_event:
-                    row_event = code_to_event[code]
-                    row_gender = code_to_gender.get(code, current_gender)
-
-                if not row_gender or not row_event:
-                    continue
-
-                fra_total += 1
-                fra_idx = td_texts.index("FRA")
-
-                # Extraction de la Date (et correction de l'année si manquante)
-                date_text  = td_texts[-1] if td_texts else ""
-                raw_date = date_text.strip()
-                if raw_date and not re.search(r'\d{4}', raw_date) and not re.search(r'\.\d{2}$', raw_date):
-                    raw_date = f"{raw_date} {season_year}"
-                
-                clean_date = raw_date
-                
-                # Conversion lisible (Format: 15.05.26 ou 15 May 2026)
-                try:
-                    m_date = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{2,4})', date_text.strip())
-                    if m_date:
-                        d_num = int(m_date.group(1))
-                        m_num = int(m_date.group(2))
-                        y_num = int(m_date.group(3))
-                        y_num = 2000 + y_num if y_num < 100 else y_num
-                        mois_str = _MOIS_INT_TO_FR.get(m_num, str(m_num))
-                        clean_date = f"{d_num} {mois_str} {y_num}"
-                    else:
-                        clean_date = translate_date_fr(raw_date)
-                except Exception:
-                    pass
-
-                # Filtre période de réalisation
-                if not is_perf_in_period(raw_date, champ):
-                    fra_skipped_period += 1
-                    continue
-
-                # Date de naissance (cellule juste avant le pays FRA dans le nouveau format)
-                dob_text = td_texts[fra_idx - 1] if fra_idx > 0 else ""
-                if not re.search(r'\d', dob_text):
-                    dob_text = td_texts[fra_idx + 1] if fra_idx + 1 < len(td_texts) else ""
-
-                # Filtre catégorie d'âge (U18 / U20)
-                if not _tila_dob_ok_for_champ(dob_text, champ):
-                    fra_skipped_dob += 1
-                    continue
-
-                # Performance : premier champ numérique
-                perf_text = ""
-                for t_val in td_texts[1:fra_idx]:
-                    if re.search(r'\d', t_val) and not re.search(r'[a-zA-Z]{3,}', t_val):
-                        perf_text = t_val
-                        break
-
-                # Nom : Recherche dynamique (évite de cumuler "Nom" + "Nom (09)" en isolant la balise desktop)
-                name_text = ""
-                for i in range(fra_idx - 1, 0, -1):
-                    a_tags = tds[i].find_all('a')
-                    if a_tags:
-                        desktop_a = tds[i].find('a', class_='desktop')
-                        if desktop_a:
-                            name_text = desktop_a.get_text(strip=True)
-                        else:
-                            name_text = a_tags[0].get_text(strip=True)
-                        break
-                    if not re.search(r'\d', td_texts[i]):
-                        name_text = td_texts[i]
-                        break
-
-                venue_text = td_texts[-2] if len(td_texts) >= 2 else ""
-                name_clean = " ".join(w.capitalize() for w in name_text.split())
-
-                if row_event not in results[row_gender]:
-                    results[row_gender][row_event] = []
-
-                results[row_gender][row_event].append({
-                    "name":     name_clean,
-                    "perf":     perf_text,
-                    "date":     clean_date,
-                    "place":    venue_text,
-                    "raw_date": raw_date,
-                    "dob":      dob_text,
-                })
-                fra_kept += 1
-
-        # ── Bilan Tilastopaja ──────────────────────────────────────────────
-        total_events = sum(len(v) for v in results['m'].values()) + sum(len(v) for v in results['f'].values())
-        print(f"  📋 Tilastopaja {champ.upper()} : {fra_total} FRA trouvés | "
-              f"{fra_kept} conservés | {fra_skipped_dob} hors catégorie âge | "
-              f"{fra_skipped_period} hors période | {total_events} épreuve(s) avec des FRA")
-        if fra_kept > 0:
-            for g in ('m', 'f'):
-                for ev, lst in results[g].items():
-                    for ath in lst:
-                        print(f"    ✔ [{champ.upper()}/{g}] {ev}: {ath['name']} {ath['perf']} ({ath['date']})")
-
-        return results
-
-    except Exception as e:
-        print(f"  ❌ Erreur scraping Tilastopaja pour {champ}: {e}")
-        import traceback; traceback.print_exc()
-        return results
-
-def merge_and_filter_athletes(wa_list, tila_list, event_name, limit_to_check, champ):
-    """Fusionne intelligemment les deux listes, filtre par minima et période, et gère les doublons."""
-    import unicodedata
     
-    def _normalize_name_for_dedup(name):
-        """Normalise le nom (sans accent, minuscule, mots triés) pour gérer les inversions Prénom/Nom et accents."""
-        # Supprime les accents
-        n = unicodedata.normalize('NFKD', name).encode('ASCII', 'ignore').decode('utf-8')
-        # Remplace tirets/apostrophes par des espaces et met en minuscule
-        n = n.replace('-', ' ').replace("'", ' ').lower()
-        # Trie les mots alphabétiquement (pour que "Mayer Kevin" == "Kevin Mayer")
-        return " ".join(sorted(n.split()))
+    athletes = []
+    try:
+        res = requests.get(url, headers=headers, timeout=15)
+        if res.status_code != 200: return []
+        
+        soup = BeautifulSoup(res.content, 'html.parser')
+        
+        table = soup.find('table', id='ctnBilans')
+        if not table: return []
+        
+        # On parcourt toutes les lignes du tableau
+        for tr in table.find_all('tr'):
+            # La nouvelle structure FFA double chaque ligne pour la version mobile ("detail-row"), on l'ignore.
+            if 'detail-row' in tr.get('class', []):
+                continue
+                
+            tds = tr.find_all('td')
+            # Une ligne de résultat valide possède au moins 9 colonnes (Place, Perf, Nom, Club, Ligue, Dep, Infos, Date, Lieu)
+            if len(tds) < 9: continue
+            
+            # Colonne 2 (index 1) : La perf. 
+            # On remplace les doubles apostrophes par des guillemets et on supprime le vent ou la mention (RP)
+            # Ex: "10''18 (+2.0) (RP)" devient "10"18"
+            perf_raw = tds[1].get_text(strip=True).replace("''", '"')
+            perf_text = perf_raw.split('(')[0].strip()
+            if not re.search(r'\d', perf_text): continue
+            
+            # Colonne 3 (index 2) : Nom de l'athlète situé dans le lien
+            a_tag = tds[2].find('a')
+            if not a_tag: continue
+            name_clean = " ".join([w.capitalize() for w in a_tag.get_text(strip=True).split()])
+            
+            # Colonne 8 (index 7) : Date
+            date_text = tds[7].get_text(strip=True)
+            
+            # Colonne 9 (index 8) : Lieu
+            venue_text = tds[8].get_text(strip=True)
+            
+            athletes.append({
+                "name": name_clean,
+                "perf": perf_text,
+                "date": date_text,
+                "place": venue_text,
+                "raw_date": date_text
+            })
+    except Exception as e:
+        print(f"❌ Erreur scraping FFA pour {champ.upper()} - {event}: {e}")
+        
+    return athletes
 
+def merge_and_filter_athletes(wa_list, ffa_list, event_name, limit_to_check, champ):
+    """Fusionne intelligemment les deux listes, filtre par minima et période, et ne garde que la meilleure perf."""
     unique_athletes = {}
     
     is_running = event_name in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m", "100mH", "110mH", "400mH", "2000m Steeple", "3000m Steeple", "5000m Marche", "10000m Marche", "20km Marche", "Semi-marathon Marche", "35km Marche", "Marathon Marche", "Marathon"]
     
-    # Tag des sources pour appliquer la règle de priorité (WA > Tila en cas d'égalité)
-    for ath in wa_list: ath["source"] = "wa"
-    for ath in tila_list: ath["source"] = "tila"
-    
-    for ath in wa_list + tila_list:
-        raw_name = ath["name"].strip()
-        dedup_key = _normalize_name_for_dedup(raw_name)
-        
+    for ath in wa_list + ffa_list:
+        name = ath["name"].strip()
+        name_lower = name.lower()
         perf_v = time_to_seconds(ath["perf"])
         if perf_v is None: continue
         
@@ -673,33 +423,25 @@ def merge_and_filter_athletes(wa_list, tila_list, event_name, limit_to_check, ch
         if not is_perf_in_period(date_str, champ):
             continue
             
-        # Conservation et dédoublonnage selon les règles
-        if dedup_key not in unique_athletes:
-            unique_athletes[dedup_key] = ath
+        # Conservation de la meilleure performance uniquement
+        if name_lower not in unique_athletes:
+            unique_athletes[name_lower] = ath
         else:
-            existing_ath = unique_athletes[dedup_key]
-            existing_perf_v = time_to_seconds(existing_ath["perf"])
-            
-            if perf_v == existing_perf_v:
-                # Règle 2 : Performances identiques -> On conserve World Athletics
-                if ath["source"] == "wa":
-                    unique_athletes[dedup_key] = ath
+            existing_perf_v = time_to_seconds(unique_athletes[name_lower]["perf"])
+            if is_running:
+                if perf_v < existing_perf_v: unique_athletes[name_lower] = ath
             else:
-                # Règle 1 : Performances différentes -> On garde la meilleure
-                if is_running:
-                    if perf_v < existing_perf_v: unique_athletes[dedup_key] = ath
-                else:
-                    if perf_v > existing_perf_v: unique_athletes[dedup_key] = ath
+                if perf_v > existing_perf_v: unique_athletes[name_lower] = ath
                 
     # Trie des résultats finaux (du meilleur au moins bon)
     results_list = list(unique_athletes.values())
     results_list.sort(key=lambda x: time_to_seconds(x["perf"]) or 999999 if is_running else -(time_to_seconds(x["perf"]) or 0))
     
-    # Nettoyage de la clé 'source' (optionnel, pour garder un dictionnaire propre)
-    for res in results_list:
-        res.pop("source", None)
-        
     return results_list
+
+# ==============================================================================
+# SCRAPING WORLD ATHLETICS
+# ==============================================================================
 
 def fetch_wa_event(champ, gender, event):
     """Scrape le site de World Athletics et filtre strictement par catégorie d'âge, lieu et date."""
@@ -1076,44 +818,52 @@ def beautify_and_format_sheet(sheet, champ_key):
 
 def run_scraping():
     """Fonction principale de scraping qui tourne en arrière-plan"""
-    print("🚀 Début de la veille globale (World Athletics + Tilastopaja)...")
+    print("🚀 Début de la veille globale (World Athletics + FFA)...")
     
-    # --- 1. Scraping Tilastopaja ---
-    tila_data = {}
-    print("\n🌍 Récupération des listes Tilastopaja...")
-    for champ, url in TILASTOPAJA_URLS.items():
-        tila_data[champ] = fetch_tilastopaja_all(champ, url)
-        print(f"✔️ Données Tilastopaja chargées pour {champ.upper()}")
-
-    # --- 2. Scraping World Athletics & Fusion ---
-    print("\n🌐 Récupération World Athletics et croisement des données...")
     final_data = {"ce": {"m": {}, "f": {}}, "u18": {"m": {}, "f": {}}, "u20": {"m": {}, "f": {}}}
-    taches = []
+    taches_wa = []
+    taches_ffa = []
     
+    print("\n🌐 Récupération simultanée WA et FFA et croisement des données...")
+    
+    # Nous lançons les requêtes en parallèle (5 requêtes à la fois pour ne pas surcharger les serveurs)
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        
+        # 1. Planification de toutes les requêtes (WA et FFA)
         for champ in MINIMA_FFA.keys():
             for gender in ["m", "f"]:
                 for event in MINIMA_FFA[champ][gender].keys():
-                    taches.append((champ, gender, event, executor.submit(fetch_wa_event, champ, gender, event)))
+                    taches_wa.append((champ, gender, event, executor.submit(fetch_wa_event, champ, gender, event)))
+                    taches_ffa.append((champ, gender, event, executor.submit(fetch_ffa_event, champ, gender, event)))
 
-        for champ, gender, event, future in taches:
-            wa_resultats = future.result()
+        # 2. Récolte des résultats de World Athletics
+        results_wa = {}
+        for champ, gender, event, future in taches_wa:
+            if champ not in results_wa: results_wa[champ] = {"m":{}, "f":{}}
+            results_wa[champ][gender][event] = future.result()
             
-            # Récupérer les résultats Tilastopaja correspondants
-            tila_resultats = tila_data.get(champ, {}).get(gender, {}).get(event, [])
+        # 3. Récolte des résultats de la FFA
+        results_ffa = {}
+        for champ, gender, event, future in taches_ffa:
+            if champ not in results_ffa: results_ffa[champ] = {"m":{}, "f":{}}
+            results_ffa[champ][gender][event] = future.result()
             
-            # Limite FFA pour filtrage lors de la fusion
-            limit_tuple = MINIMA_FFA[champ][gender][event]
-            limit_to_check = limit_tuple[1] if limit_tuple[1] is not None else limit_tuple[0]
-            
-            # Fusion intelligente et filtrage strict
-            resultats_fusionnes = merge_and_filter_athletes(wa_resultats, tila_resultats, event, limit_to_check, champ)
-            
-            if resultats_fusionnes:
-                final_data[champ][gender][event] = resultats_fusionnes
-                # Log détaillé : affiche la source (WA / Tila) de chaque qualifié
-                sources = [f"{a['name']} [{a.get('source','?').upper()}]" for a in resultats_fusionnes]
-                print(f"  ✅ {len(resultats_fusionnes)} qualifié(s) – {champ.upper()} {gender.upper()} {event} : {', '.join(sources)}")
+        # 4. Fusion et filtrage
+        for champ in MINIMA_FFA.keys():
+            for gender in ["m", "f"]:
+                for event in MINIMA_FFA[champ][gender].keys():
+                    wa_res = results_wa.get(champ, {}).get(gender, {}).get(event, [])
+                    ffa_res = results_ffa.get(champ, {}).get(gender, {}).get(event, [])
+                    
+                    limit_tuple = MINIMA_FFA[champ][gender][event]
+                    limit_to_check = limit_tuple[1] if limit_tuple[1] is not None else limit_tuple[0]
+                    
+                    # Fusion intelligente WA + FFA
+                    resultats_fusionnes = merge_and_filter_athletes(wa_res, ffa_res, event, limit_to_check, champ)
+                    
+                    if resultats_fusionnes:
+                        final_data[champ][gender][event] = resultats_fusionnes
+                        print(f"✅ {len(resultats_fusionnes)} qualifié(s) (WA+FFA) pour {champ.upper()} - {gender.upper()} - {event}")
 
     contenu_js = f"const achievements = {json.dumps(final_data, indent=2, ensure_ascii=False)};"
     with open("achievements.js", "w", encoding="utf-8") as f: f.write(contenu_js)
