@@ -433,12 +433,11 @@ def get_ffa_code(champ, gender, event):
         return MAP_FFA_OVERRIDES[override_key]
     return MAP_FFA_EPREUVES.get(event, "")
 
-def fetch_ffa_event(champ, gender, event):
+ef fetch_ffa_event(champ, gender, event):
     """Scrape le bilan FFA pour une épreuve, un sexe et un championnat donnés."""
-    # Utilisation de la nouvelle fonction qui gère les engins par catégorie
     epreuve_code = get_ffa_code(champ, gender, event)
     if not epreuve_code:
-        print(f"⚠️ Code FFA introuvable pour {event} ({champ} {gender})")
+        # print(f"⚠️ Code FFA introuvable pour {event} ({champ} {gender})")
         return []
 
     # Détermination du code catégorie pour l'URL FFA
@@ -447,19 +446,23 @@ def fetch_ffa_event(champ, gender, event):
         cat_code = "CA"
     elif champ.lower() == "u20":
         cat_code = "JU"
-    # Pour 'ce' (Senior), cat_code reste vide, ce qui prend toutes les catégories
         
     sexe_code = "M" if gender.lower() == "m" else "F"
     
-    # Filtrage vent régulier (VR) pour les épreuves soumises au vent
-    vent_param = "&frmvent=VR" if event in ["100m", "200m", "100mH", "110mH", "Longueur", "Triple"] else ""
+    # Gestion du Vent Régulier (VR) pour les épreuves concernées
+    vent_param = ""
+    epreuves_avec_vent = ["100m", "200m", "100mH", "110mH", "Longueur", "Triple"]
+    if event in epreuves_avec_vent:
+        vent_param = "&frmvent=VR"
     
-    # Construction de l'URL avec frmnationalite=1 (Français uniquement) et le filtre vent
+    # Construction de l'URL
     url = f"https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee=2026&frmepreuve={epreuve_code}&frmsexe={sexe_code}&frmcategorie={cat_code}&frmnationalite=1{vent_param}"
     
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+    
+    # Le bloc try/except qui causait l'erreur est ici
     try:
-        # ⚠️ UTILISATION DE LA SESSION AU LIEU DE requests.get()
-        resp = FFA_SESSION.get(url, timeout=15)
+        resp = ffa_session.get(url, headers=headers, timeout=15)
         resp.raise_for_status()
     except Exception as e:
         print(f"  [FFA] Erreur de connexion : {e}")
@@ -469,40 +472,57 @@ def fetch_ffa_event(champ, gender, event):
     results = []
     
     for tr in soup.find_all('tr'):
-        # Ignorer les lignes de détails cachées (version mobile de la FFA)
         if 'detail-row' in tr.get('class', []):
             continue
             
         tds = tr.find_all('td')
         if len(tds) >= 9:
             perf_raw = tds[1].get_text(strip=True)
-            # Nettoyage : enlever le vent (ex: "(+2.0)") et le record perso "(RP)"
-            perf = perf_raw.split('(')[0].replace('RP', '').strip()
-            # Remplacer le 'm' des concours par un point pour la lecture mathématique
-            perf = perf.replace('m', '.')
+            perf_clean = perf_raw.split('(')[0].replace('RP', '').strip()
+            
+            # Formatage standard de la perf FFA pour l'affichage (1m95 -> 1.95, 13''39 -> 13.39)
+            perf_clean = perf_clean.replace("''", ".").replace("m", ".")
+            if "'" in perf_clean and "." not in perf_clean:
+                perf_clean = perf_clean.replace("'", ":") + ".00"
+            elif "'" in perf_clean:
+                perf_clean = perf_clean.replace("'", ":")
             
             a_tag = tds[2].find('a')
             if not a_tag:
                 continue
                 
-            raw_name = a_tag.get_text(strip=True)
-            # Conversion FFA "NOM Prénom" -> WA "Prénom Nom"
-            parts = raw_name.split()
-            # On identifie le nom de famille (tout en majuscules sur la FFA)
-            last_names = [p for p in parts if p.isupper() or (p.replace('-', '').isupper() and '-' in p)]
-            first_names = [p for p in parts if p not in last_names]
+            # Formatage du nom : suppression des accents, mise au format "Prénom Nom"
+            name_raw = a_tag.get_text(strip=True)
+            name_no_accents = ''.join(c for c in unicodedata.normalize('NFD', name_raw) if unicodedata.category(c) != 'Mn')
+            name_no_accents = name_no_accents.replace('-', ' ')
             
-            if last_names and first_names:
-                name = " ".join(first_names).title() + " " + " ".join(last_names).title()
-            else:
-                name = raw_name.title()
+            parts = name_no_accents.split()
+            nom = " ".join([p for p in parts if p.isupper()])
+            prenom = " ".join([p for p in parts if not p.isupper()])
+            
+            if not nom: 
+                nom = parts[-1] if parts else ""
+                prenom = " ".join(parts[:-1]) if len(parts) > 1 else ""
+                
+            final_name = f"{prenom.capitalize()} {nom.capitalize()}".strip()
             
             date_text = tds[7].get_text(strip=True)
             place_text = tds[8].get_text(strip=True)
             
+            # Conversion du format de date FFA (ex: 28/05/2026) au format du front (ex: 28 mai 2026)
+            date_formatee = date_text
+            try:
+                if "/" in date_text:
+                    d, m, y = date_text.split('/')
+                    mois_str = MOIS_FR.get(int(m), m)
+                    date_formatee = f"{d} {mois_str} {y}"
+            except:
+                pass
+            
             results.append({
-                "name": name,
-                "perf": perf,
+                "name": final_name,
+                "perf": perf_clean,
+                "date": date_formatee,
                 "raw_date": date_text,
                 "place": place_text
             })
