@@ -403,11 +403,11 @@ def fetch_ffa_event(champ, gender, event):
         
     sexe_code = "M" if gender.lower() == "m" else "F"
     
-    # Construction de l'URL avec frmnationalite=1 (Français uniquement)
-    url = f"https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee=2026&frmepreuve={epreuve_code}&frmsexe={sexe_code}&frmcategorie={cat_code}&frmnationalite=1"
+    # Filtrage vent régulier (VR) pour les épreuves soumises au vent
+    vent_param = "&frmvent=VR" if event in ["100m", "200m", "100mH", "110mH", "Longueur", "Triple"] else ""
     
-    # Facultatif : afficher l'URL dans la console pour vérifier que tout se passe bien
-    # print(f"  [FFA] URL : {url}")
+    # Construction de l'URL avec frmnationalite=1 (Français uniquement) et le filtre vent
+    url = f"https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee=2026&frmepreuve={epreuve_code}&frmsexe={sexe_code}&frmcategorie={cat_code}&frmnationalite=1{vent_param}"
     
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
     try:
@@ -430,11 +430,24 @@ def fetch_ffa_event(champ, gender, event):
             perf_raw = tds[1].get_text(strip=True)
             # Nettoyage : enlever le vent (ex: "(+2.0)") et le record perso "(RP)"
             perf = perf_raw.split('(')[0].replace('RP', '').strip()
+            # Remplacer le 'm' des concours par un point pour la lecture mathématique
+            perf = perf.replace('m', '.')
             
             a_tag = tds[2].find('a')
             if not a_tag:
                 continue
-            name = a_tag.get_text(strip=True).title()
+                
+            raw_name = a_tag.get_text(strip=True)
+            # Conversion FFA "NOM Prénom" -> WA "Prénom Nom"
+            parts = raw_name.split()
+            # On identifie le nom de famille (tout en majuscules sur la FFA)
+            last_names = [p for p in parts if p.isupper() or (p.replace('-', '').isupper() and '-' in p)]
+            first_names = [p for p in parts if p not in last_names]
+            
+            if last_names and first_names:
+                name = " ".join(first_names).title() + " " + " ".join(last_names).title()
+            else:
+                name = raw_name.title()
             
             date_text = tds[7].get_text(strip=True)
             place_text = tds[8].get_text(strip=True)
