@@ -223,58 +223,40 @@ def is_perf_in_period(date_str, champ):
     start, end = PERIODES_MINIMA[champ]
     return start <= perf_date <= end
 
-def time_to_seconds(time_str):
-    """Parseur robuste pour comprendre les formats bruts."""
-    if isinstance(time_str, (int, float)): return float(time_str)
+def time_to_seconds(time_str, event=None):
+    """Convertit une chaîne de performance en secondes (float). 
+    Filtre strict : rejette les chronos manuels (1 décimale ou 'm') pour les sprints."""
+    if not time_str:
+        return None
     
-    time_str = str(time_str).strip().lower().replace(',', '.')
-    if not time_str or time_str == "-": return None
+    s = str(time_str).strip().lower()
+    is_sprint = event in ["100m", "200m", "400m", "110mH", "100mH", "400mH"]
     
-    # Séparer les +, -, et autres annotations (exclut les (w))
-    time_str = re.split(r'\s*\+|\s*\-|\s*\(', time_str)[0].strip()
-    
-    # SUPPRESSION CRITIQUE : enlever le 'i' (indoor), 'a' (altitude), et '*' des perfs Tilastopaja
-    time_str = re.sub(r'[a-z\*\+]+$', '', time_str).strip()
+    # Les chronos manuels finissent parfois par 'm' (ex: 10"4m)
+    if is_sprint and s.endswith('m'):
+        return None
+        
+    s = s.replace('m', '')
+    s = s.replace(',', '.')
+    s = s.replace('"', '.')
+    s = s.replace("''", '.')
+    s = s.replace("'", ':')
+    s = s.replace('h', ':')
     
     try:
-        if 'm' in time_str and 'h' not in time_str and "'" not in time_str:
-            parts = time_str.split('m')
-            m = float(parts[0]) if parts[0] else 0
-            cm = float(parts[1]) if len(parts) > 1 and parts[1] else 0
-            return float(f"{int(m)}.{int(cm):02d}")
-            
-        if re.match(r"^\d+(\.\d+)?$", time_str):
-            return float(time_str)
-
-        if ':' in time_str:
-            parts = time_str.split(':')
-            if len(parts) == 3:
-                return float(parts[0])*3600 + float(parts[1])*60 + float(parts[2])
-            elif len(parts) == 2:
-                return float(parts[0])*60 + float(parts[1])
-            
-        time_str = time_str.replace("''", '"').replace("’", "'").replace("´", "'")
-        h, m, s, c = 0, 0, 0, 0
-        
-        if 'h' in time_str:
-            parts = time_str.split('h')
-            h = float(parts[0])
-            time_str = parts[1]
-            
-        if "'" in time_str:
-            parts = time_str.split("'")
-            m = float(parts[0]) if parts[0] else 0
-            time_str = parts[1]
-            
-        if '"' in time_str:
-            parts = time_str.split('"')
-            s = float(parts[0]) if parts[0] else 0
-            c = float(parts[1]) if len(parts) > 1 and parts[1] else 0
-        elif time_str:
-            s = float(time_str)
-                
-        return h * 3600 + m * 60 + s + c / 100.0
-
+        parts = s.split(':')
+        if len(parts) == 3:  # HH:MM:SS.xx
+            h, m, sec = parts
+            if is_sprint and ('.' not in sec or len(sec.split('.')[1]) < 2): return None
+            return float(h) * 3600 + float(m) * 60 + float(sec)
+        elif len(parts) == 2:  # MM:SS.xx
+            m, sec = parts
+            if is_sprint and ('.' not in sec or len(sec.split('.')[1]) < 2): return None
+            return float(m) * 60 + float(sec)
+        else:  # SS.xx
+            sec = parts[0]
+            if is_sprint and ('.' not in sec or len(sec.split('.')[1]) < 2): return None
+            return float(sec)
     except Exception:
         return None
 
@@ -315,20 +297,42 @@ def format_seconds_for_display(seconds, event_name):
 # SCRAPING FFA (Remplace Tilastopaja)
 # ==============================================================================
 
-# Dictionnaire des codes épreuves FFA. 
-MAP_FFA_EPREUVES = {
-    "100m": "110", "200m": "120", "400m": "130",
-    "800m": "140", "1500m": "150", "3000m": "160",
-    "5000m": "170", "10000m": "180", "Marathon": "205",
-    "100mH": "210", "110mH": "210", "400mH": "220",
-    "2000m Steeple": "260", "3000m Steeple": "250",
-    "Hauteur": "310", "Perche": "320", "Longueur": "330", "Triple": "340",
-    "Poids": "410", "Disque": "420", "Marteau": "430", "Javelot": "440",
-    "Heptathlon": "570", "Decathlon": "580",
-    "5000m Marche": "610", "10000m Marche": "620", "20km Marche": "630",
-    "35km Marche": "640", "Semi-marathon Marche": "635", "Marathon Marche": "645"
-}
+import os
+import openpyxl
 
+def load_ffa_epreuves_dict():
+    """Charge les codes épreuves depuis le fichier Excel s'il existe pour éviter les erreurs de code (ex: 300m à la place du 400m)."""
+    filepath = "Dictionnaire_Epreuves_FFA.xlsx"
+    mapping = {}
+    if os.path.exists(filepath):
+        try:
+            wb = openpyxl.load_workbook(filepath, data_only=True)
+            sheet = wb.active
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                # On suppose que la colonne A contient le nom et la B contient l'ID du code
+                if row[0] is not None and row[1] is not None:
+                    mapping[str(row[0]).strip()] = str(row[1]).strip()
+            print(f"✅ Dictionnaire FFA chargé depuis {filepath} ({len(mapping)} épreuves).")
+            return mapping
+        except Exception as e:
+            print(f"⚠️ Erreur de lecture de {filepath} : {e}")
+            
+    print("⚠️ Fichier Excel FFA introuvable, utilisation du dictionnaire par défaut.")
+    return {
+        "100m": "110", "200m": "120", "400m": "140",
+        "800m": "208", "1500m": "215", "3000m": "230",
+        "5000m": "250", "10000m": "260", "Marathon": "295",
+        "100mH": "310", "110mH": "313", "400mH": "342",
+        "2000m Steeple": "422", "3000m Steeple": "430",
+        "Hauteur": "501", "Perche": "502", "Longueur": "503", "Triple": "504",
+        "Poids": "607", "Disque": "620", "Marteau": "637", "Javelot": "681",
+        "Heptathlon": "717", "Decathlon": "710",
+        "5000m Marche": "905", "10000m Marche": "910", "20km Marche": "971",
+        "35km Marche": "976", "Semi-marathon Marche": "972", "Marathon Marche": "979"
+    }
+
+# Dictionnaire dynamique des codes épreuves FFA
+MAP_FFA_EPREUVES = load_ffa_epreuves_dict()
 def fetch_ffa_event(champ, gender, event):
     """Scrape les bilans officiels de la FFA pour une épreuve précise."""
     epreuve_id = MAP_FFA_EPREUVES.get(event)
@@ -409,7 +413,9 @@ def merge_and_filter_athletes(wa_list, ffa_list, event_name, limit_to_check, cha
     for ath in wa_list + ffa_list:
         name = ath["name"].strip()
         name_lower = name.lower()
-        perf_v = time_to_seconds(ath["perf"])
+        
+        # Le nom de l'épreuve est passé ici pour exiger les chronos électriques le cas échéant
+        perf_v = time_to_seconds(ath["perf"], event_name)
         if perf_v is None: continue
         
         # Filtrage par Minima
@@ -427,7 +433,7 @@ def merge_and_filter_athletes(wa_list, ffa_list, event_name, limit_to_check, cha
         if name_lower not in unique_athletes:
             unique_athletes[name_lower] = ath
         else:
-            existing_perf_v = time_to_seconds(unique_athletes[name_lower]["perf"])
+            existing_perf_v = time_to_seconds(unique_athletes[name_lower]["perf"], event_name)
             if is_running:
                 if perf_v < existing_perf_v: unique_athletes[name_lower] = ath
             else:
@@ -435,7 +441,7 @@ def merge_and_filter_athletes(wa_list, ffa_list, event_name, limit_to_check, cha
                 
     # Trie des résultats finaux (du meilleur au moins bon)
     results_list = list(unique_athletes.values())
-    results_list.sort(key=lambda x: time_to_seconds(x["perf"]) or 999999 if is_running else -(time_to_seconds(x["perf"]) or 0))
+    results_list.sort(key=lambda x: time_to_seconds(x["perf"], event_name) or 999999 if is_running else -(time_to_seconds(x["perf"], event_name) or 0))
     
     return results_list
 
