@@ -13,10 +13,10 @@ const achievements = {
       "800m": [
         {
           "name": "Gabriel Tual",
-          "perf": "1:44.03",
-          "date": "31 mai 2026",
-          "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)",
-          "raw_date": "31 MAY 2026"
+          "perf": "1:43.66",
+          "date": "04 juin 2026",
+          "place": "Stadio Olimpico, Roma (ITA)",
+          "raw_date": "04 JUN 2026"
         },
         {
           "name": "Yanis Meziane",
@@ -151,6 +151,15 @@ const achievements = {
           "date": "31 mai 2026",
           "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)",
           "raw_date": "31 MAY 2026"
+        }
+      ],
+      "5000m": [
+        {
+          "name": "Sarah Madeleine",
+          "perf": "14:37.80",
+          "date": "04 juin 2026",
+          "place": "Stadio Olimpico, Roma (ITA)",
+          "raw_date": "04 JUN 2026"
         }
       ],
       "100mH": [
