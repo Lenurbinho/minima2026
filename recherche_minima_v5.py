@@ -181,6 +181,13 @@ MOIS_FR = {
     "SEP": "sep", "OCT": "oct", "NOV": "nov", "DEC": "déc"
 }
 
+# Même mapping indexé par numéro de mois (pour les dates FFA au format JJ/MM/AA)
+MOIS_FR_NUM = {
+    1: "jan", 2: "fév", 3: "mar", 4: "avr",
+    5: "mai", 6: "juin", 7: "juil", 8: "août",
+    9: "sep", 10: "oct", 11: "nov", 12: "déc"
+}
+
 def parse_date_universal(date_str):
     """Convertit une date WA (15 MAY 2026) ou FFA (15/05/2026) en datetime."""
     if not date_str:
@@ -481,7 +488,7 @@ def fetch_ffa_event(champ, gender, event):
                 if m_date:
                     d_num, m_num, y_num = int(m_date.group(1)), int(m_date.group(2)), int(m_date.group(3))
                     y_num = 2000 + y_num if y_num < 100 else y_num
-                    display_date = f"{d_num} {MOIS_FR[m_num]} {y_num}"
+                    display_date = f"{d_num} {MOIS_FR_NUM[m_num]} {y_num}"
             except Exception:
                 pass
             results.append({
