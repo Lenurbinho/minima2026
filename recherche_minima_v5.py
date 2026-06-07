@@ -628,12 +628,14 @@ def fetch_wa_event(champ, gender, event):
             # Filtrage EXCLUSIF des catégories (U18 = 2009-2010 | U20 = 2007-2008)
             if champ in ['u18', 'u20']:
                 dob_match = re.search(r'\b(19|20)\d{2}\b', dob_text)
-                if dob_match:
-                    dob_year = int(dob_match.group(0))
-                    if champ == 'u18' and dob_year not in [2009, 2010]:
-                        continue
-                    if champ == 'u20' and dob_year not in [2007, 2008]:
-                        continue
+                if not dob_match:
+                    # Pas de date de naissance connue : on ne peut pas vérifier la catégorie → on exclut
+                    continue
+                dob_year = int(dob_match.group(0))
+                if champ == 'u18' and dob_year not in [2009, 2010]:
+                    continue
+                if champ == 'u20' and dob_year not in [2007, 2008]:
+                    continue
 
             name_text = competitor_col.text.strip()
             perf_text = mark_col.text.strip().replace('A', '').strip()
