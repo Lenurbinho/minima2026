@@ -275,13 +275,6 @@ const achievements = {
       ],
       "3000m": [
         {
-          "name": "Abdallah Abubakr",
-          "perf": "8:04.39",
-          "date": "06 juin 2026",
-          "place": "Putbosstadion, Oordegem (BEL)",
-          "raw_date": "06 JUN 2026"
-        },
-        {
           "name": "Meziane Benhammou",
           "perf": "8:14.83",
           "date": "17 mai 2026",
