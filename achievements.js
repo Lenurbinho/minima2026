@@ -227,9 +227,9 @@ const achievements = {
         {
           "name": "Berenice Petit",
           "perf": "4.60",
-          "date": "5 juin 2026",
-          "raw_date": "05/06/26",
-          "place": "Orleans"
+          "date": "05 juin 2026",
+          "place": "Stade Omnisports de La Source, Orléans (FRA)",
+          "raw_date": "05 JUN 2026"
         }
       ]
     }
