@@ -460,10 +460,10 @@ const achievements = {
       "Marteau": [
         {
           "name": "Loan Rodride",
-          "perf": "64.79",
-          "date": "23 mai 2026",
-          "place": "Betty Heidler Arena, Fränkisch-Crumbach (GER)",
-          "raw_date": "23 MAY 2026"
+          "perf": "65.06",
+          "date": "30 mai 2026",
+          "raw_date": "30/05/26",
+          "place": "Volgelsheim"
         }
       ],
       "5000m Marche": [
