@@ -303,31 +303,31 @@ const achievements = {
           "name": "Malo Kerhamon",
           "perf": "8:16.64",
           "date": "30 mai 2026",
-          "place": "Stade de la Rudelière, Les Sables d'Olonne (FRA)",
-          "raw_date": "30 MAY 2026"
+          "raw_date": "30/05/26",
+          "place": "Les sables d'olonne"
         }
       ],
       "110mH": [
         {
           "name": "Darell Bartoche",
           "perf": "13.57",
-          "date": "6 juin 2026",
-          "raw_date": "06/06/26",
-          "place": "Evreux"
+          "date": "06 juin 2026",
+          "place": "Stade Roger Rochard, Evreux (FRA)",
+          "raw_date": "06 JUN 2026"
         },
         {
           "name": "Orfeo Chandler",
           "perf": "13.76",
-          "date": "6 juin 2026",
-          "raw_date": "06/06/26",
-          "place": "Evreux"
+          "date": "06 juin 2026",
+          "place": "Stade Roger Rochard, Evreux (FRA)",
+          "raw_date": "06 JUN 2026"
         },
         {
           "name": "Pierre Ivanes",
           "perf": "13.79",
-          "date": "6 juin 2026",
-          "raw_date": "06/06/26",
-          "place": "Evreux"
+          "date": "06 juin 2026",
+          "place": "Stade Roger Rochard, Evreux (FRA)",
+          "raw_date": "06 JUN 2026"
         }
       ],
       "2000m Steeple": [
@@ -443,9 +443,9 @@ const achievements = {
         {
           "name": "Anna Peeters",
           "perf": "13.38",
-          "date": "7 juin 2026",
-          "raw_date": "07/06/26",
-          "place": "Avignon"
+          "date": "07 juin 2026",
+          "place": "Stade Gillardeaux, Avignon (FRA)",
+          "raw_date": "07 JUN 2026"
         }
       ],
       "Perche": [
