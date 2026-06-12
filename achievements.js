@@ -298,6 +298,13 @@ const achievements = {
           "date": "23 mai 2026",
           "raw_date": "23/05/26",
           "place": "Mauges sur loire"
+        },
+        {
+          "name": "Esteban Pannier",
+          "perf": "3:50.63",
+          "date": "10 juin 2026",
+          "raw_date": "10/06/26",
+          "place": "Saint maur des fosse"
         }
       ],
       "3000m": [
@@ -471,11 +478,18 @@ const achievements = {
           "name": "Loan Rodride",
           "perf": "65.06",
           "date": "30 mai 2026",
-          "raw_date": "30/05/26",
-          "place": "Volgelsheim"
+          "place": "Terrain de Sport, Volgelsheim (FRA)",
+          "raw_date": "30 MAY 2026"
         }
       ],
       "5000m Marche": [
+        {
+          "name": "Daphne Gateau fernez",
+          "perf": "21:58.69",
+          "date": "10 juin 2026",
+          "raw_date": "10/06/26",
+          "place": "Saint maur des fosse"
+        },
         {
           "name": "Eleonore Breney",
           "perf": "23:37.65",
