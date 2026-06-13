@@ -4,10 +4,10 @@ const achievements = {
       "400m": [
         {
           "name": "Samuel Vessat",
-          "perf": "44.82",
-          "date": "29 mai 2026",
-          "place": "Un. of Kentucky Outdoor Track Facility, Lexington, KY (USA)",
-          "raw_date": "29 MAY 2026"
+          "perf": "44.47",
+          "date": "12 juin 2026",
+          "place": "Hayward Field, Eugene, OR (USA)",
+          "raw_date": "12 JUN 2026"
         }
       ],
       "800m": [
