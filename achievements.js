@@ -134,6 +134,13 @@ const achievements = {
       ],
       "Perche": [
         {
+          "name": "Thibaut Collet",
+          "perf": "5.82",
+          "date": "13 juin 2026",
+          "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
+          "raw_date": "13 JUN 2026"
+        },
+        {
           "name": "Anthony Ammirati",
           "perf": "5.82",
           "date": "13 juin 2026",
@@ -148,11 +155,39 @@ const achievements = {
           "raw_date": "13 JUN 2026"
         },
         {
+          "name": "Baptiste Thiery",
+          "perf": "5.80",
+          "date": "07 juin 2026",
+          "place": "Olympiastadion, Stockholm (SWE)",
+          "raw_date": "07 JUN 2026"
+        },
+        {
+          "name": "Ethan Cormont",
+          "perf": "5.75",
+          "date": "24 mai 2026",
+          "place": "Centrum Animacji Kultury, Duszniki (POL)",
+          "raw_date": "24 MAY 2026"
+        },
+        {
+          "name": "Mathieu Collet",
+          "perf": "5.72",
+          "date": "31 mai 2026",
+          "place": "Market square, Białystok (POL)",
+          "raw_date": "31 MAY 2026"
+        },
+        {
           "name": "Renaud Lavillenie",
           "perf": "5.70",
           "date": "07 juin 2026",
           "place": "Olympiastadion, Stockholm (SWE)",
           "raw_date": "07 JUN 2026"
+        },
+        {
+          "name": "Ismaila Sawaneh",
+          "perf": "5.70",
+          "date": "10 juin 2026",
+          "place": "Hayward Field, Eugene, OR (USA)",
+          "raw_date": "10 JUN 2026"
         },
         {
           "name": "Matthias Orban",
@@ -169,6 +204,13 @@ const achievements = {
           "date": "31 mai 2026",
           "place": "Stade Omnisports Schlossberg, Forbach (FRA)",
           "raw_date": "31 MAY 2026"
+        },
+        {
+          "name": "Jonathan Seremes",
+          "perf": "17.09",
+          "date": "16 mai 2026",
+          "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)",
+          "raw_date": "16 MAY 2026"
         }
       ],
       "Disque": [
@@ -297,25 +339,29 @@ const achievements = {
           "raw_date": "13 JUN 2026"
         },
         {
-          "name": "Rogilia Bissemo",
-          "perf": "6.80",
-          "date": "13 juin 2026",
-          "raw_date": "13/06/26",
-          "place": "Oullins"
-        },
-        {
           "name": "Yanis David",
           "perf": "6.70",
           "date": "13 juin 2026",
           "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
           "raw_date": "13 JUN 2026"
-        },
+        }
+      ],
+      "Disque": [
         {
-          "name": "Yanis esmeralda David",
-          "perf": "6.70",
+          "name": "Melina Robert-michon",
+          "perf": "62.08",
           "date": "13 juin 2026",
-          "raw_date": "13/06/26",
-          "place": "Oullins"
+          "place": "Stade Municipal Du Travet, Castres (FRA)",
+          "raw_date": "13 JUN 2026"
+        }
+      ],
+      "Marteau": [
+        {
+          "name": "Rose Loga",
+          "perf": "73.68",
+          "date": "03 juin 2026",
+          "place": "Paavo Nurmen Stadion, Turku (FIN)",
+          "raw_date": "03 JUN 2026"
         }
       ]
     }
@@ -341,63 +387,10 @@ const achievements = {
       "200m": [
         {
           "name": "Dylan Telo",
-          "perf": "21.21",
-          "date": "10 juin 2026",
-          "raw_date": "10/06/26",
-          "place": "Chassieu"
-        }
-      ],
-      "800m": [
-        {
-          "name": "Axel Mougel-depoutot",
-          "perf": "1:48.79",
-          "date": "06 juin 2026",
-          "place": "Stade d'Athlétisme Hautepierre, Strasbourg (FRA)",
-          "raw_date": "06 JUN 2026"
-        },
-        {
-          "name": "Yannis Le Ruyet",
-          "perf": "1:50.19",
-          "date": "30 mai 2026",
-          "place": "Stade Universitaire D. Faucher, Toulouse (FRA)",
-          "raw_date": "30 MAY 2026"
-        },
-        {
-          "name": "Louis Estublier",
-          "perf": "1:51.43",
-          "date": "6 juin 2026",
-          "raw_date": "06/06/26",
-          "place": "Firminy"
-        }
-      ],
-      "1500m": [
-        {
-          "name": "Yannis Le ruyet",
-          "perf": "3:49.62",
+          "perf": "21.23",
           "date": "13 juin 2026",
-          "raw_date": "13/06/26",
-          "place": "Nice"
-        },
-        {
-          "name": "Youenn Thetiot",
-          "perf": "3:49.67",
-          "date": "23 mai 2026",
-          "raw_date": "23/05/26",
-          "place": "Mauges sur loire"
-        },
-        {
-          "name": "Malo Kerhamon",
-          "perf": "3:49.95",
-          "date": "23 mai 2026",
-          "raw_date": "23/05/26",
-          "place": "Mauges sur loire"
-        },
-        {
-          "name": "Esteban Pannier",
-          "perf": "3:50.63",
-          "date": "10 juin 2026",
-          "raw_date": "10/06/26",
-          "place": "Saint maur des fosse"
+          "place": "Stade Paul Rebeilleau, Poitiers (FRA)",
+          "raw_date": "13 JUN 2026"
         }
       ],
       "3000m": [
@@ -407,13 +400,6 @@ const achievements = {
           "date": "10 juin 2026",
           "place": "Stade Delort, Marseille (FRA)",
           "raw_date": "10 JUN 2026"
-        },
-        {
-          "name": "Malo Kerhamon",
-          "perf": "8:16.64",
-          "date": "30 mai 2026",
-          "raw_date": "30/05/26",
-          "place": "Les sables d'olonne"
         }
       ],
       "110mH": [
@@ -439,15 +425,6 @@ const achievements = {
           "raw_date": "06 JUN 2026"
         }
       ],
-      "2000m Steeple": [
-        {
-          "name": "Maxence Bal",
-          "perf": "5:49.38",
-          "date": "11 avr 2026",
-          "raw_date": "11/04/26",
-          "place": "Perpignan"
-        }
-      ],
       "Longueur": [
         {
           "name": "Maidis Gorrillot",
@@ -455,13 +432,6 @@ const achievements = {
           "date": "28 avr 2026",
           "place": "Pilditch Stadium, Pretoria (RSA)",
           "raw_date": "28 APR 2026"
-        },
-        {
-          "name": "Kays Flamand",
-          "perf": "7.31",
-          "date": "25 avr 2026",
-          "raw_date": "25/04/26",
-          "place": "Fort de france"
         }
       ],
       "Triple": [
@@ -530,13 +500,6 @@ const achievements = {
           "date": "06 juin 2026",
           "place": "Stade d'Athlétisme Hautepierre, Strasbourg (FRA)",
           "raw_date": "06 JUN 2026"
-        },
-        {
-          "name": "Celeste Lardon",
-          "perf": "4:21.24",
-          "date": "12 juin 2026",
-          "raw_date": "12/06/26",
-          "place": "Laval"
         }
       ],
       "3000m": [
@@ -546,13 +509,6 @@ const achievements = {
           "date": "17 mai 2026",
           "place": "Stade des Frères Lauvaux, Chalons-en-Champagne (FRA)",
           "raw_date": "17 MAY 2026"
-        },
-        {
-          "name": "Rose Simonneau violleau",
-          "perf": "9:34.39",
-          "date": "27 mai 2026",
-          "raw_date": "27/05/26",
-          "place": "Niort"
         }
       ],
       "100mH": [
@@ -566,11 +522,11 @@ const achievements = {
       ],
       "Perche": [
         {
-          "name": "Julie Bourgis",
-          "perf": "3.95",
-          "date": "9 mai 2026",
-          "raw_date": "09/05/26",
-          "place": "Cambrai"
+          "name": "Isild Drouet",
+          "perf": "4.15",
+          "date": "30 mai 2026",
+          "place": "Stade de la Rudelière, Les Sables d'Olonne (FRA)",
+          "raw_date": "30 MAY 2026"
         }
       ],
       "Triple": [
@@ -589,22 +545,6 @@ const achievements = {
           "date": "30 mai 2026",
           "place": "Terrain de Sport, Volgelsheim (FRA)",
           "raw_date": "30 MAY 2026"
-        }
-      ],
-      "5000m Marche": [
-        {
-          "name": "Daphne Gateau fernez",
-          "perf": "21:58.69",
-          "date": "10 juin 2026",
-          "raw_date": "10/06/26",
-          "place": "Saint maur des fosse"
-        },
-        {
-          "name": "Eleonore Breney",
-          "perf": "23:37.65",
-          "date": "23 mai 2026",
-          "raw_date": "23/05/26",
-          "place": "Belfort"
         }
       ]
     }
@@ -710,16 +650,25 @@ const achievements = {
           "place": "Stade Philippides, Montpellier (FRA)",
           "raw_date": "31 MAY 2026"
         }
+      ],
+      "5000m Marche": [
+        {
+          "name": "Clement Rabreau",
+          "perf": "19:58.20",
+          "date": "17 mai 2026",
+          "place": "Stade de Courtemanche, Rennes (FRA)",
+          "raw_date": "17 MAY 2026"
+        }
       ]
     },
     "f": {
       "200m": [
         {
           "name": "Beatrice Tassin",
-          "perf": "23.46",
-          "date": "31 mai 2026",
-          "raw_date": "31/05/26",
-          "place": "Sarcelles"
+          "perf": "23.48",
+          "date": "25 mai 2026",
+          "place": "Stade Annexe Stade de France, St-Denis (FRA)",
+          "raw_date": "25 MAY 2026"
         },
         {
           "name": "Rose Djagbre",
@@ -777,13 +726,15 @@ const achievements = {
           "date": "17 mai 2026",
           "place": "Stade Jean Delbert, Montreuil (FRA)",
           "raw_date": "17 MAY 2026"
-        },
+        }
+      ],
+      "Perche": [
         {
-          "name": "Heloise Mariette",
-          "perf": "1.82",
-          "date": "30 mai 2026",
-          "raw_date": "30/05/26",
-          "place": "Lomme"
+          "name": "Moana Peyrard",
+          "perf": "4.35",
+          "date": "06 juin 2026",
+          "place": "Stade Gillardeaux, Avignon (FRA)",
+          "raw_date": "06 JUN 2026"
         }
       ],
       "Longueur": [
