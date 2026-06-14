@@ -562,7 +562,7 @@ def fetch_wa_event(champ, gender, event):
     elif champ == "u20": wa_category = "u20"
 
     year = "2026"
-    url = f"https://worldathletics.org/records/toplists/{slug}/all/{wa_gender}/{wa_category}/{year}?regionType=countries&region=fra&timing=electronic&windReading=regular&page=1&bestResultsOnly=true"
+    url = f"https://worldathletics.org/records/toplists/{slug}/all/{wa_gender}/{wa_category}/{year}?regionType=countries&region=fra&timing=electronic&windReading=regular&page=1&bestResultsOnly=false"
     
     try:
         response = WA_SESSION.get(url, timeout=15)
