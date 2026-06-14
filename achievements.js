@@ -616,8 +616,8 @@ const achievements = {
           "name": "Milann Klemenic",
           "perf": "46.66",
           "date": "13 juin 2026",
-          "raw_date": "13/06/26",
-          "place": "Beaupreau en mauges"
+          "place": "Stade de la Promenade, Beaupréau (FRA)",
+          "raw_date": "13 JUN 2026"
         }
       ],
       "1500m": [
