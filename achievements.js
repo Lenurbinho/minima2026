@@ -19,6 +19,13 @@ const achievements = {
           "raw_date": "04 JUN 2026"
         },
         {
+          "name": "Louey Ouerrat",
+          "perf": "1:43.80",
+          "date": "13 juin 2026",
+          "place": "Parc des Sports C. Ehrmann, Nice (FRA)",
+          "raw_date": "13 JUN 2026"
+        },
+        {
           "name": "Yanis Meziane",
           "perf": "1:44.17",
           "date": "16 mai 2026",
@@ -35,11 +42,32 @@ const achievements = {
           "raw_date": "31 MAY 2026"
         },
         {
+          "name": "Paul Anselmini",
+          "perf": "3:32.21",
+          "date": "13 juin 2026",
+          "place": "Parc des Sports C. Ehrmann, Nice (FRA)",
+          "raw_date": "13 JUN 2026"
+        },
+        {
           "name": "Flavien Szot",
           "perf": "3:32.24",
           "date": "31 mai 2026",
           "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)",
           "raw_date": "31 MAY 2026"
+        },
+        {
+          "name": "Anas Lagtiy Chaoudar",
+          "perf": "3:32.29",
+          "date": "13 juin 2026",
+          "place": "Parc des Sports C. Ehrmann, Nice (FRA)",
+          "raw_date": "13 JUN 2026"
+        },
+        {
+          "name": "Titouan Le Grix",
+          "perf": "3:33.01",
+          "date": "13 juin 2026",
+          "place": "Parc des Sports C. Ehrmann, Nice (FRA)",
+          "raw_date": "13 JUN 2026"
         }
       ],
       "110mH": [
@@ -90,6 +118,13 @@ const achievements = {
           "raw_date": "31 MAY 2026"
         },
         {
+          "name": "Pierre Boudy",
+          "perf": "8:18.65",
+          "date": "13 juin 2026",
+          "place": "Parc des Sports C. Ehrmann, Nice (FRA)",
+          "raw_date": "13 JUN 2026"
+        },
+        {
           "name": "Luc Le Baron",
           "perf": "8:19.16",
           "date": "03 juin 2026",
@@ -99,11 +134,32 @@ const achievements = {
       ],
       "Perche": [
         {
+          "name": "Anthony Ammirati",
+          "perf": "5.82",
+          "date": "13 juin 2026",
+          "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
+          "raw_date": "13 JUN 2026"
+        },
+        {
+          "name": "Zackaria Dia",
+          "perf": "5.82",
+          "date": "13 juin 2026",
+          "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
+          "raw_date": "13 JUN 2026"
+        },
+        {
           "name": "Renaud Lavillenie",
           "perf": "5.70",
           "date": "07 juin 2026",
           "place": "Olympiastadion, Stockholm (SWE)",
           "raw_date": "07 JUN 2026"
+        },
+        {
+          "name": "Matthias Orban",
+          "perf": "5.70",
+          "date": "13 juin 2026",
+          "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
+          "raw_date": "13 JUN 2026"
         }
       ],
       "Triple": [
@@ -127,10 +183,10 @@ const achievements = {
       "Marteau": [
         {
           "name": "Yann Chaussinand",
-          "perf": "81.07",
-          "date": "28 mai 2026",
-          "place": "Fana Stadion, Bergen (NOR)",
-          "raw_date": "28 MAY 2026"
+          "perf": "82.44",
+          "date": "13 juin 2026",
+          "place": "Colich Throws Center, Wilmington, CA (USA)",
+          "raw_date": "13 JUN 2026"
         }
       ],
       "Decathlon": [
@@ -231,6 +287,36 @@ const achievements = {
           "place": "Stade Omnisports de La Source, Orléans (FRA)",
           "raw_date": "05 JUN 2026"
         }
+      ],
+      "Longueur": [
+        {
+          "name": "Rogilia-chriss Bissemo",
+          "perf": "6.80",
+          "date": "13 juin 2026",
+          "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
+          "raw_date": "13 JUN 2026"
+        },
+        {
+          "name": "Rogilia Bissemo",
+          "perf": "6.80",
+          "date": "13 juin 2026",
+          "raw_date": "13/06/26",
+          "place": "Oullins"
+        },
+        {
+          "name": "Yanis David",
+          "perf": "6.70",
+          "date": "13 juin 2026",
+          "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
+          "raw_date": "13 JUN 2026"
+        },
+        {
+          "name": "Yanis esmeralda David",
+          "perf": "6.70",
+          "date": "13 juin 2026",
+          "raw_date": "13/06/26",
+          "place": "Oullins"
+        }
       ]
     }
   },
@@ -285,6 +371,13 @@ const achievements = {
         }
       ],
       "1500m": [
+        {
+          "name": "Yannis Le ruyet",
+          "perf": "3:49.62",
+          "date": "13 juin 2026",
+          "raw_date": "13/06/26",
+          "place": "Nice"
+        },
         {
           "name": "Youenn Thetiot",
           "perf": "3:49.67",
@@ -374,10 +467,10 @@ const achievements = {
       "Triple": [
         {
           "name": "Jayden Metainville",
-          "perf": "15.40",
-          "date": "17 mai 2026",
-          "place": "Stade L. Lagrange, Toulon (FRA)",
-          "raw_date": "17 MAY 2026"
+          "perf": "15.49",
+          "date": "13 juin 2026",
+          "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
+          "raw_date": "13 JUN 2026"
         }
       ],
       "5000m Marche": [
@@ -480,6 +573,15 @@ const achievements = {
           "place": "Cambrai"
         }
       ],
+      "Triple": [
+        {
+          "name": "Suzanne Cornelie-lenoir",
+          "perf": "12.86",
+          "date": "13 juin 2026",
+          "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
+          "raw_date": "13 JUN 2026"
+        }
+      ],
       "Marteau": [
         {
           "name": "Loan Rodride",
@@ -509,6 +611,15 @@ const achievements = {
   },
   "u20": {
     "m": {
+      "400m": [
+        {
+          "name": "Milann Klemenic",
+          "perf": "46.66",
+          "date": "13 juin 2026",
+          "raw_date": "13/06/26",
+          "place": "Beaupreau en mauges"
+        }
+      ],
       "1500m": [
         {
           "name": "Alois Abraham",
@@ -580,6 +691,15 @@ const achievements = {
           "date": "30 mai 2026",
           "place": "Carl-Kaufmann-Stadion, Karlsruhe (GER)",
           "raw_date": "30 MAY 2026"
+        }
+      ],
+      "Perche": [
+        {
+          "name": "Zackaria Dia",
+          "perf": "5.82",
+          "date": "13 juin 2026",
+          "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
+          "raw_date": "13 JUN 2026"
         }
       ],
       "Decathlon": [
