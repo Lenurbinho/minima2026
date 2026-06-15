@@ -506,6 +506,15 @@ const achievements = {
           "raw_date": "06 JUN 2026"
         }
       ],
+      "400mH": [
+        {
+          "name": "Judicael Sauvaget",
+          "perf": "52.52",
+          "date": "14 juin 2026",
+          "place": "Stade Complexe Sportif Jean-Paul Chasseboeuf, Pacé (FRA)",
+          "raw_date": "14 JUN 2026"
+        }
+      ],
       "2000m Steeple": [
         {
           "name": "Maxence Bal",
