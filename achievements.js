@@ -446,6 +446,13 @@ const achievements = {
           "place": "Mauges sur loire"
         },
         {
+          "name": "Loan Di sanza",
+          "perf": "3:49.70",
+          "date": "14 juin 2026",
+          "raw_date": "14/06/26",
+          "place": "Persan"
+        },
+        {
           "name": "Malo Kerhamon",
           "perf": "3:49.95",
           "date": "23 mai 2026",
@@ -538,8 +545,8 @@ const achievements = {
           "name": "Tim Lartigaut",
           "perf": "59.07",
           "date": "14 juin 2026",
-          "raw_date": "14/06/26",
-          "place": "Castres"
+          "place": "Stade Municipal Du Travet, Castres (FRA)",
+          "raw_date": "14 JUN 2026"
         }
       ],
       "5000m Marche": [
