@@ -112,10 +112,17 @@ const achievements = {
         },
         {
           "name": "Baptiste Fourmont",
-          "perf": "8:18.46",
-          "date": "31 mai 2026",
-          "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)",
-          "raw_date": "31 MAY 2026"
+          "perf": "8:13.80",
+          "date": "16 juin 2026",
+          "place": "Mestský Stadion, Ostrava (CZE)",
+          "raw_date": "16 JUN 2026"
+        },
+        {
+          "name": "Oscar Thebaud",
+          "perf": "8:17.40",
+          "date": "16 juin 2026",
+          "place": "Mestský Stadion, Ostrava (CZE)",
+          "raw_date": "16 JUN 2026"
         },
         {
           "name": "Pierre Boudy",
