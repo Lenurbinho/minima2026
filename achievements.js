@@ -15,6 +15,13 @@ const achievements = {
           "date": "17 juin 2026",
           "place": "Stade Jean Delbert, Montreuil (FRA)",
           "raw_date": "17 JUN 2026"
+        },
+        {
+          "name": "Muhammad abdall Kounta",
+          "perf": "44.86",
+          "date": "17 juin 2026",
+          "raw_date": "17/06/26",
+          "place": "Montreuil"
         }
       ],
       "800m": [
@@ -682,11 +689,11 @@ const achievements = {
           "raw_date": "17 MAY 2026"
         },
         {
-          "name": "Jade El himer",
+          "name": "Jade El Himer",
           "perf": "9:34.38",
           "date": "17 juin 2026",
-          "raw_date": "17/06/26",
-          "place": "Saint maur des fosse"
+          "place": "Stade Adolphe Cheron, St-Maur (FRA)",
+          "raw_date": "17 JUN 2026"
         },
         {
           "name": "Rose Simonneau violleau",
