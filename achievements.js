@@ -8,6 +8,13 @@ const achievements = {
           "date": "12 juin 2026",
           "place": "Hayward Field, Eugene, OR (USA)",
           "raw_date": "12 JUN 2026"
+        },
+        {
+          "name": "Muhammad Abdallah Kounta",
+          "perf": "44.86",
+          "date": "17 juin 2026",
+          "place": "Stade Jean Delbert, Montreuil (FRA)",
+          "raw_date": "17 JUN 2026"
         }
       ],
       "800m": [
@@ -274,6 +281,27 @@ const achievements = {
           "date": "31 mai 2026",
           "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)",
           "raw_date": "31 MAY 2026"
+        },
+        {
+          "name": "Agathe Guillemot",
+          "perf": "1:59.05",
+          "date": "17 juin 2026",
+          "place": "Stade Jean Delbert, Montreuil (FRA)",
+          "raw_date": "17 JUN 2026"
+        },
+        {
+          "name": "Charlotte Dumas",
+          "perf": "1:59.09",
+          "date": "17 juin 2026",
+          "place": "Stade Jean Delbert, Montreuil (FRA)",
+          "raw_date": "17 JUN 2026"
+        },
+        {
+          "name": "Clara Liberman",
+          "perf": "1:59.39",
+          "date": "17 juin 2026",
+          "place": "Stade Jean Delbert, Montreuil (FRA)",
+          "raw_date": "17 JUN 2026"
         }
       ],
       "1500m": [
@@ -308,6 +336,13 @@ const achievements = {
           "date": "31 mai 2026",
           "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)",
           "raw_date": "31 MAY 2026"
+        },
+        {
+          "name": "Laeticia Bapté",
+          "perf": "12.72",
+          "date": "17 juin 2026",
+          "place": "Stade Jean Delbert, Montreuil (FRA)",
+          "raw_date": "17 JUN 2026"
         }
       ],
       "400mH": [
@@ -467,6 +502,13 @@ const achievements = {
           "place": "Mauges sur loire"
         },
         {
+          "name": "Safir Ferrere",
+          "perf": "3:50.54",
+          "date": "17 juin 2026",
+          "raw_date": "17/06/26",
+          "place": "Saint maur des fosse"
+        },
+        {
           "name": "Esteban Pannier",
           "perf": "3:50.63",
           "date": "10 juin 2026",
@@ -611,10 +653,10 @@ const achievements = {
       "1500m": [
         {
           "name": "Alice Penciu-jurin",
-          "perf": "4:17.16",
-          "date": "06 juin 2026",
-          "place": "Stade d'Athlétisme Hautepierre, Strasbourg (FRA)",
-          "raw_date": "06 JUN 2026"
+          "perf": "4:11.42",
+          "date": "17 juin 2026",
+          "place": "Stade Jean Delbert, Montreuil (FRA)",
+          "raw_date": "17 JUN 2026"
         },
         {
           "name": "Léa Eid",
@@ -638,6 +680,13 @@ const achievements = {
           "date": "17 mai 2026",
           "place": "Stade des Frères Lauvaux, Chalons-en-Champagne (FRA)",
           "raw_date": "17 MAY 2026"
+        },
+        {
+          "name": "Jade El himer",
+          "perf": "9:34.38",
+          "date": "17 juin 2026",
+          "raw_date": "17/06/26",
+          "place": "Saint maur des fosse"
         },
         {
           "name": "Rose Simonneau violleau",
@@ -940,8 +989,8 @@ const achievements = {
           "name": "Djelika Diarra",
           "perf": "6.37",
           "date": "14 juin 2026",
-          "raw_date": "14/06/26",
-          "place": "Venissieux"
+          "place": "Stade du Rhône, Vénissieux (FRA)",
+          "raw_date": "14 JUN 2026"
         },
         {
           "name": "Soudatou Niang",
