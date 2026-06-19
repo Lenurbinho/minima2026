@@ -87,10 +87,10 @@ const achievements = {
       "110mH": [
         {
           "name": "Thomas Wilkes",
-          "perf": "13.38",
-          "date": "17 mai 2026",
-          "place": "Stade Charles Costa, Orange (FRA)",
-          "raw_date": "17 MAY 2026"
+          "perf": "13.28",
+          "date": "19 juin 2026",
+          "place": "Suhaim bin Hamad Stadium, Doha (QAT)",
+          "raw_date": "19 JUN 2026"
         },
         {
           "name": "Romain Lecoeur",
@@ -302,6 +302,13 @@ const achievements = {
           "date": "17 juin 2026",
           "place": "Stade Jean Delbert, Montreuil (FRA)",
           "raw_date": "17 JUN 2026"
+        },
+        {
+          "name": "Rénelle Lamote",
+          "perf": "1:59.21",
+          "date": "19 juin 2026",
+          "place": "Suhaim bin Hamad Stadium, Doha (QAT)",
+          "raw_date": "19 JUN 2026"
         },
         {
           "name": "Clara Liberman",
