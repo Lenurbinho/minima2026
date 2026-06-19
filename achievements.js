@@ -433,6 +433,13 @@ const achievements = {
     "m": {
       "100m": [
         {
+          "name": "Dylan Telo",
+          "perf": "10.29",
+          "date": "17 juin 2026",
+          "place": "Stade Antonin Berliat, Bourgoin-Jallieu (FRA)",
+          "raw_date": "17 JUN 2026"
+        },
+        {
           "name": "Andrea Jolevot",
           "perf": "10.62",
           "date": "23 mai 2026",
@@ -454,6 +461,15 @@ const achievements = {
           "date": "10 juin 2026",
           "raw_date": "10/06/26",
           "place": "Chassieu"
+        }
+      ],
+      "400m": [
+        {
+          "name": "Antoine Marx",
+          "perf": "48.08",
+          "date": "17 juin 2026",
+          "raw_date": "17/06/26",
+          "place": "Talence"
         }
       ],
       "800m": [
@@ -871,6 +887,13 @@ const achievements = {
           "date": "13 juin 2026",
           "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
           "raw_date": "13 JUN 2026"
+        },
+        {
+          "name": "Alois Gellens",
+          "perf": "5.35",
+          "date": "18 juin 2026",
+          "raw_date": "18/06/26",
+          "place": "Talence"
         }
       ],
       "Decathlon": [
@@ -994,10 +1017,10 @@ const achievements = {
       "Longueur": [
         {
           "name": "Djelika Diarra",
-          "perf": "6.37",
-          "date": "14 juin 2026",
-          "place": "Stade du Rhône, Vénissieux (FRA)",
-          "raw_date": "14 JUN 2026"
+          "perf": "6.38",
+          "date": "17 juin 2026",
+          "place": "Stade Antonin Berliat, Bourgoin-Jallieu (FRA)",
+          "raw_date": "17 JUN 2026"
         },
         {
           "name": "Soudatou Niang",
