@@ -45,6 +45,13 @@ const achievements = {
           "date": "16 mai 2026",
           "place": "China Textile City Sports Centre, Shaoxing/Keqiao (CHN)",
           "raw_date": "16 MAY 2026"
+        },
+        {
+          "name": "Jordan Terrasse",
+          "perf": "1:44.41",
+          "date": "19 juin 2026",
+          "place": "Paul-Greifzu-Stadion, Dessau (GER)",
+          "raw_date": "19 JUN 2026"
         }
       ],
       "1500m": [
@@ -91,6 +98,20 @@ const achievements = {
           "date": "19 juin 2026",
           "place": "Suhaim bin Hamad Stadium, Doha (QAT)",
           "raw_date": "19 JUN 2026"
+        },
+        {
+          "name": "Erwann Cinna",
+          "perf": "13.29",
+          "date": "19 juin 2026",
+          "raw_date": "19/06/26",
+          "place": "Montgeron"
+        },
+        {
+          "name": "Aurel Manga",
+          "perf": "13.34",
+          "date": "19 juin 2026",
+          "raw_date": "19/06/26",
+          "place": "Montgeron"
         },
         {
           "name": "Romain Lecoeur",
@@ -151,6 +172,13 @@ const achievements = {
           "date": "03 juin 2026",
           "place": "Paavo Nurmen Stadion, Turku (FIN)",
           "raw_date": "03 JUN 2026"
+        },
+        {
+          "name": "Djilali Bedrani",
+          "perf": "8:19.18",
+          "date": "19 juin 2026",
+          "place": "Paul-Greifzu-Stadion, Dessau (GER)",
+          "raw_date": "19 JUN 2026"
         }
       ],
       "Perche": [
@@ -338,18 +366,18 @@ const achievements = {
       ],
       "100mH": [
         {
+          "name": "Sacha Alessandrini",
+          "perf": "12.53",
+          "date": "19 juin 2026",
+          "raw_date": "19/06/26",
+          "place": "Montgeron"
+        },
+        {
           "name": "Cyréna Samba-mayela",
           "perf": "12.62",
           "date": "14 juin 2026",
           "place": "USC Allyson Felix at Loker Track Stadium, Los Angeles, CA (USA)",
           "raw_date": "14 JUN 2026"
-        },
-        {
-          "name": "Sacha Alessandrini",
-          "perf": "12.70",
-          "date": "31 mai 2026",
-          "place": "Complexe Sportif Prince Moulay Abdellah, Rabat (MAR)",
-          "raw_date": "31 MAY 2026"
         },
         {
           "name": "Laeticia Bapté",
@@ -489,10 +517,10 @@ const achievements = {
         },
         {
           "name": "Yannis Le ruyet",
-          "perf": "1:50.19",
-          "date": "30 mai 2026",
-          "raw_date": "30/05/26",
-          "place": "Toulouse"
+          "perf": "1:49.51",
+          "date": "19 juin 2026",
+          "raw_date": "19/06/26",
+          "place": "Grasse"
         },
         {
           "name": "Louis Estublier",
@@ -737,18 +765,18 @@ const achievements = {
       ],
       "Perche": [
         {
+          "name": "Julie Bourgis",
+          "perf": "4.30",
+          "date": "19 juin 2026",
+          "raw_date": "19/06/26",
+          "place": "Valenciennes"
+        },
+        {
           "name": "Isild Drouet",
           "perf": "4.15",
           "date": "30 mai 2026",
           "place": "Stade de la Rudelière, Les Sables d'Olonne (FRA)",
           "raw_date": "30 MAY 2026"
-        },
-        {
-          "name": "Julie Bourgis",
-          "perf": "4.11",
-          "date": "14 juin 2026",
-          "raw_date": "14/06/26",
-          "place": "Tourcoing"
         }
       ],
       "Triple": [
