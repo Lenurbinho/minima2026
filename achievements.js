@@ -52,6 +52,13 @@ const achievements = {
           "date": "19 juin 2026",
           "place": "Paul-Greifzu-Stadion, Dessau (GER)",
           "raw_date": "19 JUN 2026"
+        },
+        {
+          "name": "Corentin Le clezio",
+          "perf": "1:44.68",
+          "date": "20 juin 2026",
+          "raw_date": "20/06/26",
+          "place": "Pontoise"
         }
       ],
       "1500m": [
@@ -318,6 +325,13 @@ const achievements = {
           "raw_date": "31 MAY 2026"
         },
         {
+          "name": "Clara Liberman",
+          "perf": "1:58.69",
+          "date": "21 juin 2026",
+          "place": "FBK Stadium, Hengelo (NED)",
+          "raw_date": "21 JUN 2026"
+        },
+        {
           "name": "Agathe Guillemot",
           "perf": "1:59.05",
           "date": "17 juin 2026",
@@ -337,13 +351,6 @@ const achievements = {
           "date": "19 juin 2026",
           "place": "Suhaim bin Hamad Stadium, Doha (QAT)",
           "raw_date": "19 JUN 2026"
-        },
-        {
-          "name": "Clara Liberman",
-          "perf": "1:59.39",
-          "date": "17 juin 2026",
-          "place": "Stade Jean Delbert, Montreuil (FRA)",
-          "raw_date": "17 JUN 2026"
         }
       ],
       "1500m": [
@@ -366,18 +373,18 @@ const achievements = {
       ],
       "100mH": [
         {
+          "name": "Cyréna Samba-mayela",
+          "perf": "12.50",
+          "date": "20 juin 2026",
+          "place": "Southwestern University Track Stadium, Georgetown, TX (USA)",
+          "raw_date": "20 JUN 2026"
+        },
+        {
           "name": "Sacha Alessandrini",
           "perf": "12.53",
           "date": "19 juin 2026",
           "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
           "raw_date": "19 JUN 2026"
-        },
-        {
-          "name": "Cyréna Samba-mayela",
-          "perf": "12.62",
-          "date": "14 juin 2026",
-          "place": "USC Allyson Felix at Loker Track Stadium, Los Angeles, CA (USA)",
-          "raw_date": "14 JUN 2026"
         },
         {
           "name": "Laeticia Bapté",
@@ -492,10 +499,10 @@ const achievements = {
       "200m": [
         {
           "name": "Dylan Telo",
-          "perf": "21.21",
-          "date": "10 juin 2026",
-          "raw_date": "10/06/26",
-          "place": "Chassieu"
+          "perf": "21.19",
+          "date": "20 juin 2026",
+          "raw_date": "20/06/26",
+          "place": "Saint etienne"
         }
       ],
       "400m": [
@@ -521,6 +528,13 @@ const achievements = {
           "date": "19 juin 2026",
           "raw_date": "19/06/26",
           "place": "Grasse"
+        },
+        {
+          "name": "Clement Maspimby",
+          "perf": "1:51.02",
+          "date": "20 juin 2026",
+          "raw_date": "20/06/26",
+          "place": "Saint etienne"
         },
         {
           "name": "Louis Estublier",
@@ -620,6 +634,20 @@ const achievements = {
           "date": "14 juin 2026",
           "place": "Stade Complexe Sportif Jean-Paul Chasseboeuf, Pacé (FRA)",
           "raw_date": "14 JUN 2026"
+        },
+        {
+          "name": "Jules Romanet",
+          "perf": "52.99",
+          "date": "20 juin 2026",
+          "place": "Stade L. Masson, Tarare (FRA)",
+          "raw_date": "20 JUN 2026"
+        },
+        {
+          "name": "Lucien Coq",
+          "perf": "53.27",
+          "date": "20 juin 2026",
+          "place": "Stade L. Masson, Tarare (FRA)",
+          "raw_date": "20 JUN 2026"
         }
       ],
       "2000m Steeple": [
@@ -629,6 +657,15 @@ const achievements = {
           "date": "11 avr 2026",
           "raw_date": "11/04/26",
           "place": "Perpignan"
+        }
+      ],
+      "Perche": [
+        {
+          "name": "Axel Faye",
+          "perf": "5.00",
+          "date": "20 juin 2026",
+          "raw_date": "20/06/26",
+          "place": "Saint etienne"
         }
       ],
       "Longueur": [
@@ -643,8 +680,8 @@ const achievements = {
           "name": "Nathan Pertays",
           "perf": "7.44",
           "date": "20 juin 2026",
-          "raw_date": "20/06/26",
-          "place": "Ales"
+          "place": "Stade Raphaël Pujazon, Ales (FRA)",
+          "raw_date": "20 JUN 2026"
         },
         {
           "name": "Kays Flamand",
@@ -750,8 +787,8 @@ const achievements = {
           "name": "Pauline Daumas",
           "perf": "9:21.23",
           "date": "20 juin 2026",
-          "raw_date": "20/06/26",
-          "place": "Ales"
+          "place": "Stade Raphaël Pujazon, Ales (FRA)",
+          "raw_date": "20 JUN 2026"
         },
         {
           "name": "Jade El Himer",
@@ -916,10 +953,10 @@ const achievements = {
       "3000m Steeple": [
         {
           "name": "Basile Astier",
-          "perf": "8:48.60",
-          "date": "30 mai 2026",
-          "place": "Stade Universitaire D. Faucher, Toulouse (FRA)",
-          "raw_date": "30 MAY 2026"
+          "perf": "8:41.14",
+          "date": "20 juin 2026",
+          "raw_date": "20/06/26",
+          "place": "Saint etienne"
         },
         {
           "name": "Mathis Dubois",
@@ -1020,6 +1057,15 @@ const achievements = {
           "date": "14 mai 2026",
           "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)",
           "raw_date": "14 MAY 2026"
+        }
+      ],
+      "400mH": [
+        {
+          "name": "Talyna Ligier",
+          "perf": "58.74",
+          "date": "20 juin 2026",
+          "place": "Stade L. Masson, Tarare (FRA)",
+          "raw_date": "20 JUN 2026"
         }
       ],
       "3000m Steeple": [
