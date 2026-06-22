@@ -614,10 +614,10 @@ const achievements = {
         },
         {
           "name": "Orfeo Chandler",
-          "perf": "13.76",
-          "date": "06 juin 2026",
-          "place": "Stade Roger Rochard, Evreux (FRA)",
-          "raw_date": "06 JUN 2026"
+          "perf": "13.68",
+          "date": "21 juin 2026",
+          "raw_date": "21/06/26",
+          "place": "Reims"
         },
         {
           "name": "Pierre Ivanes",
