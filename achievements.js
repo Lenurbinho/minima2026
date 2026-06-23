@@ -410,6 +410,13 @@ const achievements = {
           "date": "03 juin 2026",
           "place": "Paavo Nurmen Stadion, Turku (FIN)",
           "raw_date": "03 JUN 2026"
+        },
+        {
+          "name": "Flavie Renouard",
+          "perf": "9:26.63",
+          "date": "22 juin 2026",
+          "place": "Østerbro Stadium, Copenhagen (DEN)",
+          "raw_date": "22 JUN 2026"
         }
       ],
       "Perche": [
@@ -616,8 +623,8 @@ const achievements = {
           "name": "Orfeo Chandler",
           "perf": "13.68",
           "date": "21 juin 2026",
-          "raw_date": "21/06/26",
-          "place": "Reims"
+          "place": "Stade Régional G. Hebert, Reims (FRA)",
+          "raw_date": "21 JUN 2026"
         },
         {
           "name": "Pierre Ivanes",
@@ -750,6 +757,13 @@ const achievements = {
           "date": "30 mai 2026",
           "place": "Carl-Kaufmann-Stadion, Karlsruhe (GER)",
           "raw_date": "30 MAY 2026"
+        },
+        {
+          "name": "Alice Penciu jurin",
+          "perf": "2:06.27",
+          "date": "20 juin 2026",
+          "raw_date": "20/06/26",
+          "place": "Ciney (BEL)"
         }
       ],
       "1500m": [
@@ -939,6 +953,13 @@ const achievements = {
           "date": "14 juin 2026",
           "place": "Michael-Hoffmann-Stadion, Mannheim (GER)",
           "raw_date": "14 JUN 2026"
+        },
+        {
+          "name": "Mael bephassou Lannurien",
+          "perf": "13.50",
+          "date": "21 juin 2026",
+          "raw_date": "21/06/26",
+          "place": "Lamballe"
         }
       ],
       "400mH": [
