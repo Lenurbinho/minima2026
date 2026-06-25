@@ -350,18 +350,41 @@ def name_match_key(name):
     tokens = sorted(str(name).lower().split())
     return " ".join(tokens)
 
-def format_time_display(seconds):
-    """Reformate une durée (en secondes) vers le format d'affichage standard du site
-    (M:SS ou H:MM:SS), pour que toutes les sources (WA, FFA, Tilastopaja) affichent
-    une perf chronométrique dans un format identique."""
+def perf_has_centiseconds(perf_text):
+    """Détecte si le texte source d'une perf chronométrée contient des centièmes
+    (ex: '10.05', '1:43.21') par opposition aux formats sans décimales
+    (ex: '26:43', '26\'52\'\'', '2:05:58' — typiquement 10km route et marathon)."""
+    if not perf_text:
+        return False
+    return bool(re.search(r'\.\d', str(perf_text)))
+
+def format_running_perf(seconds, has_centiseconds=True):
+    """Reformate une durée (en secondes) au format standard du site pour les courses :
+    [Hh][MM]'SS"[CC] — avec centièmes seulement si la source en fournissait.
+    - < 60s  : SS"[CC]
+    - < 1h   : M'SS"[CC]
+    - >= 1h  : HhMM'SS"[CC]
+    """
     if seconds is None:
         return None
-    total = int(round(seconds))
-    h, rem = divmod(total, 3600)
+
+    # Passage en centièmes entiers pour éviter les soucis d'arrondi flottant
+    total_cs = int(round(seconds * 100))
+    cs = total_cs % 100
+    total_s = total_cs // 100
+    h, rem = divmod(total_s, 3600)
     m, s = divmod(rem, 60)
+
     if h > 0:
-        return f"{h}:{m:02d}:{s:02d}"
-    return f"{m}:{s:02d}"
+        base = f"{h}h{m:02d}'{s:02d}\""
+    elif m > 0:
+        base = f"{m}'{s:02d}\""
+    else:
+        base = f"{s}\""
+
+    if has_centiseconds:
+        base += f"{cs:02d}"
+    return base
 
 def format_seconds_for_display(seconds, event_name):
     """Formate les performances selon l'épreuve."""
@@ -586,10 +609,13 @@ def merge_and_filter_athletes(wa_list, tila_list, event_name, limit_to_check, ch
 
     # Standardisation du format d'affichage des perfs chronométrées (M:SS ou H:MM:SS),
     # pour que toutes les sources (WA "26:43", FFA "26'43''"...) s'affichent identiquement.
+    # Standardisation du format d'affichage des perfs chronométrées : [Hh][M]'SS"[CC],
+    # avec centièmes uniquement si la source en fournissait (ex: pas pour le 10km route/marathon).
     if is_running:
         for ath in results_list:
+            has_cs = perf_has_centiseconds(ath["perf"])
             perf_v = time_to_seconds(ath["perf"])
-            formatted = format_time_display(perf_v)
+            formatted = format_running_perf(perf_v, has_cs)
             if formatted:
                 ath["perf"] = formatted
 
