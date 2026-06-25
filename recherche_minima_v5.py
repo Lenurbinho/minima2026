@@ -341,6 +341,28 @@ def time_to_seconds(time_str):
     except Exception:
         return None
 
+def name_match_key(name):
+    """Clé de comparaison de nom insensible à l'ordre des mots (Prénom Nom vs NOM Prénom),
+    utilisée pour le dédoublonnage entre sources qui n'ordonnent pas les noms pareil
+    (World Athletics donne 'Prénom Nom', les bilans FFA donnent 'NOM Prénom')."""
+    if not name:
+        return ""
+    tokens = sorted(str(name).lower().split())
+    return " ".join(tokens)
+
+def format_time_display(seconds):
+    """Reformate une durée (en secondes) vers le format d'affichage standard du site
+    (M:SS ou H:MM:SS), pour que toutes les sources (WA, FFA, Tilastopaja) affichent
+    une perf chronométrique dans un format identique."""
+    if seconds is None:
+        return None
+    total = int(round(seconds))
+    h, rem = divmod(total, 3600)
+    m, s = divmod(rem, 60)
+    if h > 0:
+        return f"{h}:{m:02d}:{s:02d}"
+    return f"{m}:{s:02d}"
+
 def format_seconds_for_display(seconds, event_name):
     """Formate les performances selon l'épreuve."""
     if seconds is None or seconds == "-": return "-"
@@ -532,7 +554,7 @@ def merge_and_filter_athletes(wa_list, tila_list, event_name, limit_to_check, ch
     
     for ath in wa_list + tila_list:
         name = ath["name"].strip()
-        name_lower = name.lower()
+        name_key = name_match_key(name)
         perf_v = time_to_seconds(ath["perf"])
         if perf_v is None: continue
         
@@ -548,19 +570,29 @@ def merge_and_filter_athletes(wa_list, tila_list, event_name, limit_to_check, ch
             continue
             
         # Conservation de la meilleure performance uniquement
-        if name_lower not in unique_athletes:
-            unique_athletes[name_lower] = ath
+        # (clé insensible à l'ordre des mots : WA donne "Prénom Nom", la FFA donne "NOM Prénom")
+        if name_key not in unique_athletes:
+            unique_athletes[name_key] = ath
         else:
-            existing_perf_v = time_to_seconds(unique_athletes[name_lower]["perf"])
+            existing_perf_v = time_to_seconds(unique_athletes[name_key]["perf"])
             if is_running:
-                if perf_v < existing_perf_v: unique_athletes[name_lower] = ath
+                if perf_v < existing_perf_v: unique_athletes[name_key] = ath
             else:
-                if perf_v > existing_perf_v: unique_athletes[name_lower] = ath
+                if perf_v > existing_perf_v: unique_athletes[name_key] = ath
                 
     # Trie des résultats finaux (du meilleur au moins bon)
     results_list = list(unique_athletes.values())
     results_list.sort(key=lambda x: time_to_seconds(x["perf"]) or 999999 if is_running else -(time_to_seconds(x["perf"]) or 0))
-    
+
+    # Standardisation du format d'affichage des perfs chronométrées (M:SS ou H:MM:SS),
+    # pour que toutes les sources (WA "26:43", FFA "26'43''"...) s'affichent identiquement.
+    if is_running:
+        for ath in results_list:
+            perf_v = time_to_seconds(ath["perf"])
+            formatted = format_time_display(perf_v)
+            if formatted:
+                ath["perf"] = formatted
+
     return results_list
 
 def _fetch_wa_slug(slug, champ, gender, event, limit_to_check, is_running):
@@ -688,9 +720,10 @@ def fetch_wa_event(champ, gender, event):
             athletes.extend(_fetch_wa_slug(s, champ, gender, event, limit_to_check, is_running))
 
         # Déduplication et conservation de la meilleure perf (toutes sources confondues)
+        # Clé insensible à l'ordre des mots (Prénom Nom / NOM Prénom selon la source)
         unique_athletes = {}
         for ath in athletes:
-            name = ath["name"]
+            name = name_match_key(ath["name"])
             perf_v = time_to_seconds(ath["perf"])
             if name not in unique_athletes:
                 unique_athletes[name] = ath
