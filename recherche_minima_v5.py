@@ -206,6 +206,16 @@ MAP_WA_SLUGS_OVERRIDES = {
     ("u18", "f", "Heptathlon"):"combined-events/heptathlon-girls",
 }
 
+MAP_WA_SLUGS_SECONDAIRES = {
+    # Le minima FFA "10000m" du CE est explicitement libellé "10000m - 10km" en annexe :
+    # les performances réalisées sur route (10km) comptent donc aussi bien que sur piste.
+    "10000m": ["road-running/10-kilometres"],
+}
+
+def get_wa_slugs_secondaires(event):
+    """Retourne la liste des slugs WA additionnels à interroger pour une épreuve donnée."""
+    return MAP_WA_SLUGS_SECONDAIRES.get(event, [])
+
 def get_wa_slug(champ, gender, event):
     """Retourne le slug WA approprié en tenant compte des variantes d'engins par catégorie."""
     override = MAP_WA_SLUGS_OVERRIDES.get((champ, gender, event))
@@ -553,11 +563,8 @@ def merge_and_filter_athletes(wa_list, tila_list, event_name, limit_to_check, ch
     
     return results_list
 
-def fetch_wa_event(champ, gender, event):
-    """Scrape le site de World Athletics et filtre strictement par catégorie d'âge, lieu et date."""
-    slug = get_wa_slug(champ, gender, event)
-    if not slug: return []
-
+def _fetch_wa_slug(slug, champ, gender, event, limit_to_check, is_running):
+    """Scrape une seule URL World Athletics (un seul slug/discipline) et retourne les athlètes qualifiés."""
     wa_gender = "women" if gender == "f" else "men"
     wa_category = "senior"
     if champ == "u18": wa_category = "u18"
@@ -565,107 +572,122 @@ def fetch_wa_event(champ, gender, event):
 
     year = "2026"
     url = f"https://worldathletics.org/records/toplists/{slug}/all/{wa_gender}/{wa_category}/{year}?regionType=countries&region=fra&timing=electronic&windReading=regular&page=1&bestResultsOnly=true"
-    
+
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
         "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
     }
-    
+
+    athletes = []
+    response = requests.get(url, headers=headers, timeout=15)
+    if response.status_code != 200: return athletes
+
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    table = soup.find('table', {'class': 'records-table'})
+    if not table: return athletes
+
+    # Cartographie intelligente des colonnes pour trouver DOB, Lieu et Date
+    col_map = {}
+    thead = table.find('thead')
+    if thead:
+        for i, th in enumerate(thead.find_all(['th', 'td'])):
+            col_map[th.text.strip().lower()] = i
+
+    tbody = table.find('tbody')
+    rows = tbody.find_all('tr') if tbody else table.find_all('tr')[1:]
+
+    for row in rows:
+        cols = row.find_all('td')
+        if len(cols) < 4: continue
+
+        # Identifier la colonne de la Performance
+        mark_col = cols[col_map['mark']] if 'mark' in col_map and col_map['mark'] < len(cols) else cols[1]
+
+        # Identifier la colonne de l'athlète
+        competitor_col = None
+        if 'competitor' in col_map and col_map['competitor'] < len(cols):
+            competitor_col = cols[col_map['competitor']]
+        else:
+            for c in cols:
+                if c.find('a', href=re.compile(r"/athletes/")):
+                    competitor_col = c
+                    break
+        if not competitor_col: continue
+
+        # Récupérer Lieu (Venue) et Date
+        venue_text = cols[col_map['venue']].text.strip() if 'venue' in col_map and col_map['venue'] < len(cols) else cols[-2].text.strip()
+        date_text = cols[col_map['date']].text.strip() if 'date' in col_map and col_map['date'] < len(cols) else cols[-1].text.strip()
+
+        # FILTRAGE PAR PÉRIODE DE RÉALISATION
+        if not is_perf_in_period(date_text, champ, gender, event):
+            continue
+
+        # Récupérer l'année de naissance pour un filtrage strict (DOB)
+        dob_text = ""
+        if 'dob' in col_map and col_map['dob'] < len(cols):
+            dob_text = cols[col_map['dob']].text.strip()
+        else:
+            comp_idx = cols.index(competitor_col) if competitor_col in cols else -1
+            if comp_idx != -1 and comp_idx + 1 < len(cols):
+                dob_text = cols[comp_idx + 1].text.strip()
+
+        # Filtrage EXCLUSIF des catégories (U18 = 2009-2010 | U20 = 2007-2008)
+        if champ in ['u18', 'u20']:
+            dob_match = re.search(r'\b(19|20)\d{2}\b', dob_text)
+            if dob_match:
+                dob_year = int(dob_match.group(0))
+                if champ == 'u18' and dob_year not in [2009, 2010]:
+                    continue
+                if champ == 'u20' and dob_year not in [2007, 2008]:
+                    continue
+
+        name_text = competitor_col.text.strip()
+        perf_text = mark_col.text.strip().replace('A', '').strip()
+
+        perf_val = time_to_seconds(perf_text)
+        if perf_val is None: continue
+
+        is_qualified = False
+        if is_running:
+            if perf_val <= limit_to_check: is_qualified = True
+        else:
+            if perf_val >= limit_to_check: is_qualified = True
+
+        if is_qualified:
+            name_clean = " ".join([w.capitalize() for w in name_text.split()])
+            athletes.append({
+                "name": name_clean,
+                "perf": perf_text,
+                "date": translate_date_fr(date_text),
+                "place": venue_text,
+                "raw_date": date_text
+            })
+
+    return athletes
+
+def fetch_wa_event(champ, gender, event):
+    """Scrape le site de World Athletics (et ses sources alternatives, ex: route pour le 10000m)
+    et filtre strictement par catégorie d'âge, lieu et date."""
+    slug = get_wa_slug(champ, gender, event)
+    if not slug: return []
+
+    limit_tuple = MINIMA_FFA[champ][gender][event]
+    limit_a, limit_b = limit_tuple[0], limit_tuple[1]
+    limit_to_check = limit_b if limit_b is not None else limit_a
+
+    is_running = event in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m", "100mH", "110mH", "400mH", "2000m Steeple", "3000m Steeple", "5000m Marche", "10000m Marche", "20km Marche", "Semi-marathon Marche", "35km Marche", "Marathon Marche", "Marathon"]
+
+    # Liste de tous les slugs à interroger pour cette épreuve (piste + route, ex: 10000m + 10km)
+    tous_les_slugs = [slug] + get_wa_slugs_secondaires(event)
+
     try:
-        response = requests.get(url, headers=headers, timeout=15)
-        if response.status_code != 200: return []
-        
-        soup = BeautifulSoup(response.content, 'html.parser')
         athletes = []
-        
-        limit_tuple = MINIMA_FFA[champ][gender][event]
-        limit_a, limit_b = limit_tuple[0], limit_tuple[1]
-        limit_to_check = limit_b if limit_b is not None else limit_a
-        
-        is_running = event in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m", "100mH", "110mH", "400mH", "2000m Steeple", "3000m Steeple", "5000m Marche", "10000m Marche", "20km Marche", "Semi-marathon Marche", "35km Marche", "Marathon Marche", "Marathon"]
-        
-        table = soup.find('table', {'class': 'records-table'})
-        if not table: return []
+        for s in tous_les_slugs:
+            athletes.extend(_fetch_wa_slug(s, champ, gender, event, limit_to_check, is_running))
 
-        # Cartographie intelligente des colonnes pour trouver DOB, Lieu et Date
-        col_map = {}
-        thead = table.find('thead')
-        if thead:
-            for i, th in enumerate(thead.find_all(['th', 'td'])):
-                col_map[th.text.strip().lower()] = i
-
-        tbody = table.find('tbody')
-        rows = tbody.find_all('tr') if tbody else table.find_all('tr')[1:]
-
-        for row in rows:
-            cols = row.find_all('td')
-            if len(cols) < 4: continue
-            
-            # Identifier la colonne de la Performance
-            mark_col = cols[col_map['mark']] if 'mark' in col_map and col_map['mark'] < len(cols) else cols[1]
-            
-            # Identifier la colonne de l'athlète
-            competitor_col = None
-            if 'competitor' in col_map and col_map['competitor'] < len(cols):
-                competitor_col = cols[col_map['competitor']]
-            else:
-                for c in cols:
-                    if c.find('a', href=re.compile(r"/athletes/")):
-                        competitor_col = c
-                        break
-            if not competitor_col: continue
-            
-            # Récupérer Lieu (Venue) et Date
-            venue_text = cols[col_map['venue']].text.strip() if 'venue' in col_map and col_map['venue'] < len(cols) else cols[-2].text.strip()
-            date_text = cols[col_map['date']].text.strip() if 'date' in col_map and col_map['date'] < len(cols) else cols[-1].text.strip()
-
-            # FILTRAGE PAR PÉRIODE DE RÉALISATION
-            if not is_perf_in_period(date_text, champ, gender, event):
-                continue
-
-            # Récupérer l'année de naissance pour un filtrage strict (DOB)
-            dob_text = ""
-            if 'dob' in col_map and col_map['dob'] < len(cols):
-                dob_text = cols[col_map['dob']].text.strip()
-            else:
-                comp_idx = cols.index(competitor_col) if competitor_col in cols else -1
-                if comp_idx != -1 and comp_idx + 1 < len(cols):
-                    dob_text = cols[comp_idx + 1].text.strip()
-
-            # Filtrage EXCLUSIF des catégories (U18 = 2009-2010 | U20 = 2007-2008)
-            if champ in ['u18', 'u20']:
-                dob_match = re.search(r'\b(19|20)\d{2}\b', dob_text)
-                if dob_match:
-                    dob_year = int(dob_match.group(0))
-                    if champ == 'u18' and dob_year not in [2009, 2010]:
-                        continue
-                    if champ == 'u20' and dob_year not in [2007, 2008]:
-                        continue
-
-            name_text = competitor_col.text.strip()
-            perf_text = mark_col.text.strip().replace('A', '').strip()
-
-            perf_val = time_to_seconds(perf_text)
-            if perf_val is None: continue
-                
-            is_qualified = False
-            if is_running:
-                if perf_val <= limit_to_check: is_qualified = True
-            else:
-                if perf_val >= limit_to_check: is_qualified = True
-                    
-            if is_qualified:
-                name_clean = " ".join([w.capitalize() for w in name_text.split()])
-                athletes.append({
-                    "name": name_clean, 
-                    "perf": perf_text, 
-                    "date": translate_date_fr(date_text), 
-                    "place": venue_text,
-                    "raw_date": date_text
-                })
-        
-        # Déduplication et conservation de la meilleure perf
+        # Déduplication et conservation de la meilleure perf (toutes sources confondues)
         unique_athletes = {}
         for ath in athletes:
             name = ath["name"]
@@ -678,12 +700,87 @@ def fetch_wa_event(champ, gender, event):
                     if perf_v < existing_perf_v: unique_athletes[name] = ath
                 else:
                     if perf_v > existing_perf_v: unique_athletes[name] = ath
-                        
+
         return list(unique_athletes.values())
 
     except Exception as e:
         print(f"❌ Erreur lors de la récupération de {champ}-{gender}-{event}: {e}")
         return []
+
+# ==========================================
+# SCRAPING ATHLE.FR (BILANS FFA) — 10km route
+# ==========================================
+# Le minima FFA CE pour "10000m" est explicitement libellé "10000m - 10km" en
+# annexe : les performances réalisées sur route comptent aussi bien que sur piste.
+# La page athle.fr/bases/liste.aspx?frmbase=bilans est rendue côté serveur (un
+# simple GET suffit, malgré le paramètre frmpostback=true qui n'est qu'un nom
+# de paramètre et non un vrai mécanisme ASP.NET WebForms à VIEWSTATE).
+FFA_EPREUVE_10KM_ROUTE = "261"
+
+def fetch_ffa_10km_route(gender, annee="2026"):
+    """Scrape les bilans FFA (athle.fr) du 10km route pour les athlètes français.
+    Vient compléter le 10000m piste de World Athletics."""
+    ffa_sexe = "F" if gender == "f" else "M"
+    url = (
+        "https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans"
+        f"&frmmode=1&frmespace=0&frmannee={annee}&frmepreuve={FFA_EPREUVE_10KM_ROUTE}"
+        f"&frmsexe={ffa_sexe}&frmcategorie=&frmdepartement=&frmligue="
+        "&frmnationalite=1&frmvent=VR&frmamaxi="
+    )
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
+    }
+
+    athletes = []
+    try:
+        response = requests.get(url, headers=headers, timeout=15)
+        if response.status_code != 200:
+            return athletes
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        table = soup.find('table', {'id': 'ctnBilans'})
+        if not table:
+            return athletes
+
+        for row in table.find_all('tr'):
+            if 'detail-row' in (row.get('class') or []):
+                continue
+
+            cols = row.find_all('td')
+            # Une ligne athlète a 10 colonnes : Place, Perf, Nom, Club, Ligue,
+            # Dep., Infos, Date, Lieu, (icône mobile). Les lignes d'en-tête/
+            # pagination n'ont qu'une seule cellule (colspan) et sont ignorées.
+            if len(cols) < 9:
+                continue
+
+            name_link = cols[2].find('a')
+            name_text = name_link.get_text(strip=True) if name_link else cols[2].get_text(strip=True)
+            if not name_text:
+                continue
+
+            perf_b = cols[1].find('b')
+            perf_text = perf_b.get_text(strip=True) if perf_b else cols[1].get_text(strip=True)
+            if not perf_text:
+                continue
+
+            date_text = cols[7].get_text(strip=True)      # format DD/MM/YY
+            venue_text = cols[8].get_text(strip=True)
+            date_dots = date_text.replace('/', '.')        # -> DD.MM.YY (reconnu par parse_date_universal)
+
+            name_clean = " ".join([w.capitalize() for w in name_text.split()])
+            athletes.append({
+                "name": name_clean,
+                "perf": perf_text,
+                "date": date_dots,
+                "place": venue_text,
+                "raw_date": date_dots
+            })
+
+    except Exception as e:
+        print(f"❌ Erreur lors de la récupération FFA 10km route ({gender}): {e}")
+
+    return athletes
 
 # ==========================================
 # GESTION DES CORRESPONDANCES & DES STYLES EXCEL
@@ -953,7 +1050,13 @@ def run_scraping():
             
             # Récupérer les résultats Tilastopaja correspondants
             tila_resultats = tila_data.get(champ, {}).get(gender, {}).get(event, [])
-            
+
+            # Pour le 10000m CE, le minima FFA accepte aussi le 10km route :
+            # on ajoute les bilans FFA (athle.fr) à la liste World Athletics.
+            if champ == "ce" and event == "10000m":
+                ffa_resultats = fetch_ffa_10km_route(gender)
+                wa_resultats = wa_resultats + ffa_resultats
+
             # Limite FFA pour filtrage lors de la fusion
             limit_tuple = MINIMA_FFA[champ][gender][event]
             limit_to_check = limit_tuple[1] if limit_tuple[1] is not None else limit_tuple[0]
