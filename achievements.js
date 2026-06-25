@@ -84,6 +84,15 @@ const achievements = {
           "raw_date": "13 JUN 2026"
         }
       ],
+      "Marathon": [
+        {
+          "name": "Emmanuel Roudolff",
+          "perf": "2:05:58",
+          "date": "12 avr 2026",
+          "place": "Paris (FRA)",
+          "raw_date": "12 APR 2026"
+        }
+      ],
       "110mH": [
         {
           "name": "Thomas Wilkes",
@@ -176,13 +185,6 @@ const achievements = {
       ],
       "Perche": [
         {
-          "name": "Thibaut Collet",
-          "perf": "5.82",
-          "date": "13 juin 2026",
-          "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
-          "raw_date": "13 JUN 2026"
-        },
-        {
           "name": "Anthony Ammirati",
           "perf": "5.82",
           "date": "13 juin 2026",
@@ -197,39 +199,11 @@ const achievements = {
           "raw_date": "13 JUN 2026"
         },
         {
-          "name": "Baptiste Thiery",
-          "perf": "5.80",
-          "date": "07 juin 2026",
-          "place": "Olympiastadion, Stockholm (SWE)",
-          "raw_date": "07 JUN 2026"
-        },
-        {
-          "name": "Ethan Cormont",
-          "perf": "5.75",
-          "date": "24 mai 2026",
-          "place": "Centrum Animacji Kultury, Duszniki (POL)",
-          "raw_date": "24 MAY 2026"
-        },
-        {
-          "name": "Mathieu Collet",
-          "perf": "5.72",
-          "date": "31 mai 2026",
-          "place": "Market square, Białystok (POL)",
-          "raw_date": "31 MAY 2026"
-        },
-        {
           "name": "Renaud Lavillenie",
           "perf": "5.70",
           "date": "07 juin 2026",
           "place": "Olympiastadion, Stockholm (SWE)",
           "raw_date": "07 JUN 2026"
-        },
-        {
-          "name": "Ismaila Sawaneh",
-          "perf": "5.70",
-          "date": "10 juin 2026",
-          "place": "Hayward Field, Eugene, OR (USA)",
-          "raw_date": "10 JUN 2026"
         },
         {
           "name": "Matthias Orban",
@@ -246,13 +220,6 @@ const achievements = {
           "date": "31 mai 2026",
           "place": "Stade Omnisports Schlossberg, Forbach (FRA)",
           "raw_date": "31 MAY 2026"
-        },
-        {
-          "name": "Jonathan Seremes",
-          "perf": "17.09",
-          "date": "16 mai 2026",
-          "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)",
-          "raw_date": "16 MAY 2026"
         }
       ],
       "Disque": [
@@ -430,22 +397,13 @@ const achievements = {
           "raw_date": "13 JUN 2026"
         }
       ],
-      "Disque": [
+      "Semi-marathon Marche": [
         {
-          "name": "Melina Robert-michon",
-          "perf": "62.08",
-          "date": "13 juin 2026",
-          "place": "Stade Municipal Du Travet, Castres (FRA)",
-          "raw_date": "13 JUN 2026"
-        }
-      ],
-      "Marteau": [
-        {
-          "name": "Rose Loga",
-          "perf": "73.68",
-          "date": "03 juin 2026",
-          "place": "Paavo Nurmen Stadion, Turku (FIN)",
-          "raw_date": "03 JUN 2026"
+          "name": "Pauline Stey",
+          "perf": "1:33:54",
+          "date": "08 mar 2026",
+          "place": "Lens (FRA)",
+          "raw_date": "08 MAR 2026"
         }
       ]
     }
@@ -466,6 +424,13 @@ const achievements = {
           "date": "23 mai 2026",
           "place": "Stade Michel Lecointre, Nantes (FRA)",
           "raw_date": "23 MAY 2026"
+        },
+        {
+          "name": "Maidis Gorrillot",
+          "perf": "10.65",
+          "date": "03 mai 2026",
+          "place": "Stade de Petite Ile, Petite Ile (FRA)",
+          "raw_date": "03 MAY 2026"
         }
       ],
       "200m": [
@@ -477,7 +442,30 @@ const achievements = {
           "raw_date": "13 JUN 2026"
         }
       ],
+      "800m": [
+        {
+          "name": "Axel Mougel-depoutot",
+          "perf": "1:48.79",
+          "date": "06 juin 2026",
+          "place": "Stade d'Athlétisme Hautepierre, Strasbourg (FRA)",
+          "raw_date": "06 JUN 2026"
+        },
+        {
+          "name": "Yannis Le Ruyet",
+          "perf": "1:50.19",
+          "date": "30 mai 2026",
+          "place": "Stade Universitaire D. Faucher, Toulouse (FRA)",
+          "raw_date": "30 MAY 2026"
+        }
+      ],
       "3000m": [
+        {
+          "name": "Abdallah Abubakr",
+          "perf": "8:04.39",
+          "date": "06 juin 2026",
+          "place": "Putbosstadion, Oordegem (BEL)",
+          "raw_date": "06 JUN 2026"
+        },
         {
           "name": "Meziane Benhammou",
           "perf": "8:05.06",
@@ -607,6 +595,13 @@ const achievements = {
           "date": "30 mai 2026",
           "place": "Carl-Kaufmann-Stadion, Karlsruhe (GER)",
           "raw_date": "30 MAY 2026"
+        },
+        {
+          "name": "Alice Penciu-jurin",
+          "perf": "2:06.27",
+          "date": "20 juin 2026",
+          "place": "Stade Rebompré, Ciney (BEL)",
+          "raw_date": "20 JUN 2026"
         }
       ],
       "1500m": [
@@ -664,13 +659,6 @@ const achievements = {
           "date": "19 juin 2026",
           "place": "Stade Pierre Carous, Valenciennes (FRA)",
           "raw_date": "19 JUN 2026"
-        },
-        {
-          "name": "Isild Drouet",
-          "perf": "4.15",
-          "date": "30 mai 2026",
-          "place": "Stade de la Rudelière, Les Sables d'Olonne (FRA)",
-          "raw_date": "30 MAY 2026"
         }
       ],
       "Triple": [
@@ -817,15 +805,6 @@ const achievements = {
           "place": "Stade Georges Carcassone, Aix-en-Provence (FRA)",
           "raw_date": "14 JUN 2026"
         }
-      ],
-      "5000m Marche": [
-        {
-          "name": "Clement Rabreau",
-          "perf": "19:58.20",
-          "date": "17 mai 2026",
-          "place": "Stade de Courtemanche, Rennes (FRA)",
-          "raw_date": "17 MAY 2026"
-        }
       ]
     },
     "f": {
@@ -914,13 +893,6 @@ const achievements = {
         }
       ],
       "Perche": [
-        {
-          "name": "Moana Peyrard",
-          "perf": "4.35",
-          "date": "06 juin 2026",
-          "place": "Stade Gillardeaux, Avignon (FRA)",
-          "raw_date": "06 JUN 2026"
-        },
         {
           "name": "Astrid Abeele",
           "perf": "4.15",
