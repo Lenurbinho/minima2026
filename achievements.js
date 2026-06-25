@@ -516,10 +516,10 @@ const achievements = {
       "200m": [
         {
           "name": "Dylan Telo",
-          "perf": "21\"23",
-          "date": "13 juin 2026",
-          "place": "Stade Paul Rebeilleau, Poitiers (FRA)",
-          "raw_date": "13 JUN 2026"
+          "perf": "21\"19",
+          "date": "20 juin 2026",
+          "place": "Stade Henri Lux, St-Etienne (FRA)",
+          "raw_date": "20 JUN 2026"
         }
       ],
       "800m": [
@@ -616,6 +616,15 @@ const achievements = {
           "place": "Dresden (GER)",
           "raw_date": "31.05.26",
           "source": "FFA-421"
+        }
+      ],
+      "Perche": [
+        {
+          "name": "Axel Faye",
+          "perf": "5.00",
+          "date": "20 juin 2026",
+          "place": "Stade Henri Lux, St-Etienne (FRA)",
+          "raw_date": "20 JUN 2026"
         }
       ],
       "Longueur": [
@@ -1457,9 +1466,8 @@ const achievements = {
           "name": "Mael-bephassou Lannurien",
           "perf": "13\"50",
           "date": "21 juin 2026",
-          "place": "Lamballe",
-          "raw_date": "21.06.26",
-          "source": "FFA-315"
+          "place": "Complexe Sportif Du Penthièvre, Lamballe (FRA)",
+          "raw_date": "21 JUN 2026"
         }
       ],
       "400mH": [
@@ -1738,11 +1746,10 @@ const achievements = {
         },
         {
           "name": "Basile Astier",
-          "perf": "8'41\"",
+          "perf": "8'41\"14",
           "date": "20 juin 2026",
-          "place": "Saint etienne",
-          "raw_date": "20.06.26",
-          "source": "FFA-430"
+          "place": "Stade Henri Lux, St-Etienne (FRA)",
+          "raw_date": "20 JUN 2026"
         },
         {
           "name": "Matteo Dahmani",
