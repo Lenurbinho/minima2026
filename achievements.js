@@ -84,6 +84,22 @@ const achievements = {
           "raw_date": "13 JUN 2026"
         }
       ],
+      "10000m": [
+        {
+          "name": "Yann Schrub",
+          "perf": "26:43",
+          "date": "22 fév 2026",
+          "place": "Castellón (ESP)",
+          "raw_date": "22 FEB 2026"
+        },
+        {
+          "name": "Schrub Yann",
+          "perf": "26'43''",
+          "date": "22.02.26",
+          "place": "Castellon (ESP)",
+          "raw_date": "22.02.26"
+        }
+      ],
       "Marathon": [
         {
           "name": "Emmanuel Roudolff",
