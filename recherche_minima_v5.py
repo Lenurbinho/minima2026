@@ -1,5 +1,6 @@
 import json
 import re
+import unicodedata
 import requests
 import concurrent.futures
 from bs4 import BeautifulSoup
@@ -341,14 +342,47 @@ def time_to_seconds(time_str):
     except Exception:
         return None
 
+def _ascii_lower(s):
+    """Minuscules + suppression des accents (NFD → ASCII)."""
+    return unicodedata.normalize("NFD", str(s).lower()).encode("ascii", "ignore").decode("ascii")
+
+def _name_tokens(name):
+    """Tokens d'un nom après normalisation des accents et découpe sur espaces ET tirets."""
+    return set(re.split(r"[\s\-]+", _ascii_lower(name.strip()))) - {""}
+
 def name_match_key(name):
-    """Clé de comparaison de nom insensible à l'ordre des mots (Prénom Nom vs NOM Prénom),
-    utilisée pour le dédoublonnage entre sources qui n'ordonnent pas les noms pareil
-    (World Athletics donne 'Prénom Nom', les bilans FFA donnent 'NOM Prénom')."""
+    """Clé de comparaison de nom insensible à l'ordre des mots (Prénom Nom vs NOM Prénom)
+    et aux accents. Utilisée pour le dédoublonnage entre WA et FFA."""
     if not name:
         return ""
-    tokens = sorted(str(name).lower().split())
+    tokens = sorted(_ascii_lower(str(name)).split())
     return " ".join(tokens)
+
+def _same_perf(secs_a, secs_b):
+    """Vrai si les deux valeurs en secondes diffèrent de moins d'une seconde
+    (couvre la troncature FFA : '50"' → 50.0 vs WA '50"56' → 50.56)."""
+    if secs_a is None or secs_b is None:
+        return False
+    return abs(int(secs_a) - int(secs_b)) <= 1
+
+def _same_date(d1, d2):
+    """Vrai si les deux chaînes de date réfèrent au même jour calendaire."""
+    p1 = parse_date_universal(d1)
+    p2 = parse_date_universal(d2)
+    return p1 is not None and p2 is not None and p1 == p2
+
+def _is_fuzzy_duplicate(a, b):
+    """Retourne True si deux entrées représentent le même athlète malgré des noms légèrement
+    différents. Conditions : même perf (±1 s), même date, et ≥ 2 tokens de nom en commun
+    (après normalisation des accents + découpe sur tirets)."""
+    secs_a = time_to_seconds(a["perf"])
+    secs_b = time_to_seconds(b["perf"])
+    if not _same_perf(secs_a, secs_b):
+        return False
+    if not _same_date(a.get("raw_date", ""), b.get("raw_date", "")):
+        return False
+    common = _name_tokens(a["name"]) & _name_tokens(b["name"])
+    return len(common) >= 2
 
 def perf_has_centiseconds(perf_text):
     """Détecte si le texte source d'une perf chronométrée contient des centièmes
@@ -418,164 +452,14 @@ def format_seconds_for_display(seconds, event_name):
         return f"{h_val}h{m_val:02d}'{s_val:02d}\"{c_val:02d}"
     else:
         return f"{m_val}'{s_val:02d}\"{c_val:02d}"
-        
-# ==============================================================================
-# SCRAPING TILASTOPAJA
-# ==============================================================================
 
-TILASTOPAJA_URLS = {
-    "ce": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=99",
-    "u20": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=19",
-    "u18": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=17"
-}
-
-def map_tilastopaja_event(text):
-    """Mappe un nom d'épreuve issu du HTML Tilastopaja vers la nomenclature du script."""
-    t = text.lower().replace(",", "").replace("'", "").strip()
-    
-    # Rapprocher le chiffre du 'm' si un espace s'y trouve (ex: "1500 m" -> "1500m")
-    t = re.sub(r'(\d+)\s+m\b', r'\1m', t)
-    
-    if "steeple" in t or "sc" in t:
-        if "2000" in t: return "2000m Steeple"
-        return "3000m Steeple"
-        
-    if "walk" in t:
-        if "5000" in t: return "5000m Marche"
-        if "10000" in t: return "10000m Marche"
-        if "20km" in t or "20 km" in t: return "20km Marche"
-        if "35km" in t or "35 km" in t: return "35km Marche"
-        if "half" in t: return "Semi-marathon Marche"
-        
-    if "marathon" in t and "half" not in t: return "Marathon"
-    if "110m" in t and ("h" in t or "hurdles" in t): return "110mH"
-    if "100m" in t and ("h" in t or "hurdles" in t): return "100mH"
-    if "400m" in t and ("h" in t or "hurdles" in t): return "400mH"
-    
-    if "high jump" in t: return "Hauteur"
-    if "pole vault" in t: return "Perche"
-    if "long jump" in t: return "Longueur"
-    if "triple jump" in t: return "Triple"
-    
-    if "shot" in t: return "Poids"
-    if "discus" in t: return "Disque"
-    if "hammer" in t: return "Marteau"
-    if "javelin" in t: return "Javelot"
-    
-    if "decathlon" in t: return "Decathlon"
-    if "heptathlon" in t: return "Heptathlon"
-    
-    for e in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m"]:
-        if re.search(r'\b' + e + r'\b', t):
-            if "4x" in t or "4 x" in t: continue
-            return e
-            
-    return None
-
-def fetch_tilastopaja_all(champ, url):
-    """Scrape une page complète Tilastopaja Europe Top 20 et extrait les FRA par épreuve et par sexe."""
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml"
-    }
-    
-    results = {'m': {}, 'f': {}}
-    try:
-        response = requests.get(url, headers=headers, timeout=15)
-        if response.status_code != 200: return results
-        
-        soup = BeautifulSoup(response.content, 'html.parser')
-        
-        current_gender = None
-        current_event = None
-        
-        for el in soup.find_all(['tr', 'h1', 'h2', 'h3', 'div', 'b', 'strong']):
-            text = el.get_text(separator=' ', strip=True)
-            if not text: continue
-            
-            # Détection d'un titre/en-tête (genre + épreuve)
-            is_heading = False
-            if el.name in ['h1', 'h2', 'h3', 'b', 'strong']:
-                is_heading = True
-            elif el.name == 'tr' and len(el.find_all('td')) <= 2:
-                is_heading = True
-            elif el.name == 'div' and len(text) < 50:
-                is_heading = True
-                
-            if is_heading:
-                lower_text = text.lower()
-                if "women" in lower_text or "girls" in lower_text: current_gender = 'f'
-                elif "men" in lower_text or "boys" in lower_text: current_gender = 'm'
-                
-                ev = map_tilastopaja_event(text)
-                if ev: current_event = ev
-                continue
-                
-               # Traitement d'une ligne de résultat
-            if el.name == 'tr' and current_gender and current_event:
-                tds = el.find_all('td')
-                if len(tds) < 5: continue
-                
-                td_texts = [td.get_text(strip=True) for td in tds]
-                
-                # C'est un athlète français !
-                if "FRA" in td_texts:
-                    fra_idx = td_texts.index("FRA")
-                    
-                    # Performance : premier élément numérique avant FRA
-                    perf_text = ""
-                    for t in td_texts[1:fra_idx]:
-                        if re.search(r'\d', t) and not re.search(r'[a-zA-Z]{3,}', t):
-                            perf_text = t
-                            break
-                            
-                    # Nom : Recherche dynamique (on recule à partir de FRA jusqu'à trouver une cellule SANS chiffre)
-                    # Cela évite de confondre le nom avec la date de naissance ou le vent
-                    name_text = ""
-                    for i in range(fra_idx - 1, 0, -1):
-                        if not re.search(r'\d', td_texts[i]):
-                            name_text = td_texts[i]
-                            break
-                    
-                    date_text = td_texts[-1] if len(td_texts) > 0 else ""
-                    venue_text = td_texts[-2] if len(td_texts) >= 2 else ""
-                    
-                    clean_date = date_text
-                    try:
-                        # Gestion des dates sur plusieurs jours pour les combinés (ex: 25-26.05.26)
-                        m_date = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{2,4})', date_text.strip())
-                        if m_date:
-                            d_num, m_num, y_num = int(m_date.group(1)), int(m_date.group(2)), int(m_date.group(3))
-                            y_num = 2000 + y_num if y_num < 100 else y_num
-                            clean_date = f"{d_num} {MOIS_FR[m_num]} {y_num}"
-                    except Exception:
-                        pass
-
-                    name_clean = " ".join([w.capitalize() for w in name_text.split()])
-                    
-                    if current_event not in results[current_gender]:
-                        results[current_gender][current_event] = []
-                        
-                    results[current_gender][current_event].append({
-                        "name": name_clean,
-                        "perf": perf_text,
-                        "date": clean_date,
-                        "place": venue_text,
-                        "raw_date": date_text
-                    })
-                    
-        return results
-    except Exception as e:
-        print(f"❌ Erreur scraping Tilastopaja pour {champ}: {e}")
-        return results
-
-def merge_and_filter_athletes(wa_list, tila_list, event_name, limit_to_check, champ, gender=None):
-    """Fusionne intelligemment les deux listes, filtre par minima et période, et ne garde que la meilleure perf."""
+def merge_and_filter_athletes(wa_list, event_name, limit_to_check, champ, gender=None):
+    """Filtre par minima et période et ne garde que la meilleure perf par athlète."""
     unique_athletes = {}
-    
+
     is_running = event_name in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m", "100mH", "110mH", "400mH", "2000m Steeple", "3000m Steeple", "5000m Marche", "10000m Marche", "20km Marche", "Semi-marathon Marche", "35km Marche", "Marathon Marche", "Marathon"]
-    
-    for ath in wa_list + tila_list:
+
+    for ath in wa_list:
         name = ath["name"].strip()
         name_key = name_match_key(name)
         perf_v = time_to_seconds(ath["perf"])
@@ -603,9 +487,33 @@ def merge_and_filter_athletes(wa_list, tila_list, event_name, limit_to_check, ch
             else:
                 if perf_v > existing_perf_v: unique_athletes[name_key] = ath
                 
-    # Trie des résultats finaux (du meilleur au moins bon)
+    # Tri des résultats (du meilleur au moins bon)
     results_list = list(unique_athletes.values())
     results_list.sort(key=lambda x: time_to_seconds(x["perf"]) or 999999 if is_running else -(time_to_seconds(x["perf"]) or 0))
+
+    # Deuxième passe : fusion des doublons résiduels non détectés par name_match_key.
+    # Règle : même perf (±1 s) + même date + ≥ 2 tokens de nom en commun → même athlète.
+    # On préfère l'entrée ayant la perf la plus précise (avec centièmes > sans centièmes),
+    # et en cas d'égalité on préfère la source WA (pas de champ "source").
+    absorbed = set()
+    deduped = []
+    for i, a in enumerate(results_list):
+        if i in absorbed:
+            continue
+        best = a
+        for j, b in enumerate(results_list):
+            if j <= i or j in absorbed:
+                continue
+            if _is_fuzzy_duplicate(best, b):
+                absorbed.add(j)
+                # Garder la perf la plus précise (centièmes > pas de centièmes, WA > FFA)
+                if not perf_has_centiseconds(best["perf"]) and perf_has_centiseconds(b["perf"]):
+                    best = b
+                elif perf_has_centiseconds(best["perf"]) == perf_has_centiseconds(b["perf"]):
+                    if best.get("source") and not b.get("source"):
+                        best = b  # préfère WA (pas de source) si précision égale
+        deduped.append(best)
+    results_list = deduped
 
     # Standardisation du format d'affichage des perfs chronométrées (M:SS ou H:MM:SS),
     # pour que toutes les sources (WA "26:43", FFA "26'43''"...) s'affichent identiquement.
@@ -767,33 +675,131 @@ def fetch_wa_event(champ, gender, event):
         return []
 
 # ==========================================
-# SCRAPING ATHLE.FR (BILANS FFA) — 10km route
+# SCRAPING ATHLE.FR (BILANS FFA)
 # ==========================================
-# Le minima FFA CE pour "10000m" est explicitement libellé "10000m - 10km" en
-# annexe : les performances réalisées sur route comptent aussi bien que sur piste.
-# La page athle.fr/bases/liste.aspx?frmbase=bilans est rendue côté serveur (un
-# simple GET suffit, malgré le paramètre frmpostback=true qui n'est qu'un nom
-# de paramètre et non un vrai mécanisme ASP.NET WebForms à VIEWSTATE).
-FFA_EPREUVE_10KM_ROUTE = "261"
+# La page athle.fr/bases/liste.aspx?frmbase=bilans est rendue côté serveur :
+# un simple GET suffit (frmnationalite=1 pour n'avoir que les Français).
+#
+# Mapping (champ, gender, event) -> liste de codes frmepreuve à interroger.
+# Règle d'inclusion :
+#   • CE (senior) : tous les événements — pas de restriction d'âge.
+#   • U20 / U18   : uniquement les codes à impléments SPÉCIFIQUES à la catégorie
+#     (hauteur de haie, poids de l'engin, épreuve combinée) où le code FFA
+#     filtre naturellement par catégorie. Les sprints, demi-fond, distance et
+#     sauts (même code pour toutes catégories) sont exclus car FFA ne permet
+#     pas de filtrer par année de naissance.
+FFA_CODES = {
+    # ── CE Senior Hommes ────────────────────────────────────────────────
+    ("ce","m","100m"):                 [110],
+    ("ce","m","200m"):                 [120],
+    ("ce","m","400m"):                 [140],
+    ("ce","m","800m"):                 [208],
+    ("ce","m","1500m"):                [215],
+    ("ce","m","5000m"):                [250],
+    ("ce","m","10000m"):               [260, 261],  # piste + 10 km route
+    ("ce","m","Marathon"):             [295],
+    ("ce","m","110mH"):                [313],        # 106 cm senior H
+    ("ce","m","400mH"):                [342],        # 91 cm
+    ("ce","m","3000m Steeple"):        [430],        # 91 cm
+    ("ce","m","Hauteur"):              [501],
+    ("ce","m","Perche"):               [502],
+    ("ce","m","Longueur"):             [503],
+    ("ce","m","Triple"):               [504],
+    ("ce","m","Poids"):                [607],        # 7,26 kg
+    ("ce","m","Disque"):               [620],        # 2,0 kg
+    ("ce","m","Marteau"):              [637],        # 7,26 kg
+    ("ce","m","Javelot"):              [681],        # 800 g
+    ("ce","m","Decathlon"):            [710],
+    ("ce","m","20km Marche"):          [971],
+    ("ce","m","Semi-marathon Marche"): [972],
+    ("ce","m","35km Marche"):          [976],
+    ("ce","m","Marathon Marche"):      [979],
+    # ── CE Senior Femmes ────────────────────────────────────────────────
+    ("ce","f","100m"):                 [110],
+    ("ce","f","200m"):                 [120],
+    ("ce","f","400m"):                 [140],
+    ("ce","f","800m"):                 [208],
+    ("ce","f","1500m"):                [215],
+    ("ce","f","5000m"):                [250],
+    ("ce","f","10000m"):               [260, 261],
+    ("ce","f","Marathon"):             [295],
+    ("ce","f","100mH"):                [310],        # 84 cm
+    ("ce","f","400mH"):                [340],        # 76 cm
+    ("ce","f","3000m Steeple"):        [431],        # 76 cm
+    ("ce","f","Hauteur"):              [501],
+    ("ce","f","Perche"):               [502],
+    ("ce","f","Longueur"):             [503],
+    ("ce","f","Triple"):               [504],
+    ("ce","f","Poids"):                [604],        # 4 kg
+    ("ce","f","Disque"):               [610],        # 1,0 kg
+    ("ce","f","Marteau"):              [634],        # 4 kg
+    ("ce","f","Javelot"):              [660],        # 600 g
+    ("ce","f","Heptathlon"):           [717],
+    ("ce","f","20km Marche"):          [971],
+    ("ce","f","Semi-marathon Marche"): [972],
+    ("ce","f","35km Marche"):          [976],
+    ("ce","f","Marathon Marche"):      [979],
+    # ── U20 Hommes — uniquement impléments spécifiques ──────────────────
+    ("u20","m","110mH"):               [315],        # 99 cm Junior H
+    ("u20","m","400mH"):               [342],        # 91 cm
+    ("u20","m","3000m Steeple"):       [430],        # 91 cm
+    ("u20","m","Poids"):               [606],        # 6 kg Junior H
+    ("u20","m","Disque"):              [617],        # 1,75 kg Junior H
+    ("u20","m","Marteau"):             [636],        # 6 kg Junior H
+    ("u20","m","Javelot"):             [681],        # 800 g
+    ("u20","m","Decathlon"):           [730],        # Décathlon JH
+    # ── U20 Femmes — uniquement impléments spécifiques ──────────────────
+    ("u20","f","100mH"):               [310],        # 84 cm
+    ("u20","f","400mH"):               [340],        # 76 cm
+    ("u20","f","3000m Steeple"):       [431],        # 76 cm
+    ("u20","f","Poids"):               [604],        # 4 kg
+    ("u20","f","Disque"):              [610],        # 1,0 kg
+    ("u20","f","Marteau"):             [634],        # 4 kg
+    ("u20","f","Javelot"):             [660],        # 600 g
+    ("u20","f","Heptathlon"):          [717],
+    # ── U18 Hommes — uniquement impléments spécifiques ──────────────────
+    ("u18","m","110mH"):               [312],        # 91 cm Cadet H
+    ("u18","m","400mH"):               [341],        # 84 cm Cadet H
+    ("u18","m","2000m Steeple"):       [421],        # 91 cm Cadet H
+    ("u18","m","Poids"):               [605],        # 5 kg Cadet H
+    ("u18","m","Disque"):              [615],        # 1,5 kg Cadet H
+    ("u18","m","Marteau"):             [635],        # 5 kg Cadet H
+    ("u18","m","Javelot"):             [670],        # 700 g Cadet H
+    ("u18","m","Decathlon"):           [731],        # Décathlon CH
+    # ── U18 Femmes — uniquement impléments spécifiques ──────────────────
+    ("u18","f","100mH"):               [311],        # 76,2 cm Cadet F
+    ("u18","f","400mH"):               [340],        # 76 cm
+    ("u18","f","2000m Steeple"):       [420],        # 76 cm Cadet F
+    ("u18","f","Poids"):               [604],        # 4 kg
+    ("u18","f","Disque"):              [610],        # 1,0 kg
+    ("u18","f","Marteau"):             [633],        # 3 kg Cadet F (internat. U18)
+    ("u18","f","Javelot"):             [650],        # 500 g Cadet F
+    ("u18","f","Heptathlon"):          [776],        # Heptathlon CF
+}
 
-def fetch_ffa_10km_route(gender, annee="2026"):
-    """Scrape les bilans FFA (athle.fr) du 10km route pour les athlètes français.
-    Vient compléter le 10000m piste de World Athletics."""
+MOIS_FR_DISPLAY = ["jan", "fév", "mar", "avr", "mai", "juin",
+                   "juil", "août", "sep", "oct", "nov", "déc"]
+
+FFA_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
+}
+
+
+def fetch_ffa_event(ffa_code, gender, annee="2026"):
+    """Scrape les bilans FFA (athle.fr) pour un code épreuve donné.
+    Retourne tous les athlètes français de l'année demandée."""
     ffa_sexe = "F" if gender == "f" else "M"
     url = (
         "https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans"
-        f"&frmmode=1&frmespace=0&frmannee={annee}&frmepreuve={FFA_EPREUVE_10KM_ROUTE}"
+        f"&frmmode=1&frmespace=0&frmannee={annee}&frmepreuve={ffa_code}"
         f"&frmsexe={ffa_sexe}&frmcategorie=&frmdepartement=&frmligue="
         "&frmnationalite=1&frmvent=VR&frmamaxi="
     )
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
-    }
 
     athletes = []
     try:
-        response = requests.get(url, headers=headers, timeout=15)
+        response = requests.get(url, headers=FFA_HEADERS, timeout=15)
         if response.status_code != 200:
             return athletes
 
@@ -807,9 +813,6 @@ def fetch_ffa_10km_route(gender, annee="2026"):
                 continue
 
             cols = row.find_all('td')
-            # Une ligne athlète a 10 colonnes : Place, Perf, Nom, Club, Ligue,
-            # Dep., Infos, Date, Lieu, (icône mobile). Les lignes d'en-tête/
-            # pagination n'ont qu'une seule cellule (colspan) et sont ignorées.
             if len(cols) < 9:
                 continue
 
@@ -823,21 +826,33 @@ def fetch_ffa_10km_route(gender, annee="2026"):
             if not perf_text:
                 continue
 
-            date_text = cols[7].get_text(strip=True)      # format DD/MM/YY
+            date_text = cols[7].get_text(strip=True)
             venue_text = cols[8].get_text(strip=True)
-            date_dots = date_text.replace('/', '.')        # -> DD.MM.YY (reconnu par parse_date_universal)
+            date_dots = date_text.replace('/', '.')
 
-            name_clean = " ".join([w.capitalize() for w in name_text.split()])
+            parsed_date = parse_date_universal(date_dots)
+            date_display = (f"{parsed_date.day} {MOIS_FR_DISPLAY[parsed_date.month - 1]} {parsed_date.year}"
+                            if parsed_date else date_dots)
+
+            parts = name_text.split()
+            if parts and parts[0].isupper() and len(parts) > 1:
+                nom = parts[0].capitalize()
+                prenoms = " ".join(w.capitalize() for w in parts[1:])
+                name_clean = f"{prenoms} {nom}"
+            else:
+                name_clean = " ".join(w.capitalize() for w in parts)
+
             athletes.append({
                 "name": name_clean,
                 "perf": perf_text,
-                "date": date_dots,
+                "date": date_display,
                 "place": venue_text,
-                "raw_date": date_dots
+                "raw_date": date_dots,
+                "source": f"FFA-{ffa_code}",
             })
 
     except Exception as e:
-        print(f"❌ Erreur lors de la récupération FFA 10km route ({gender}): {e}")
+        print(f"❌ Erreur FFA code {ffa_code} gender={gender} annee={annee}: {e}")
 
     return athletes
 
@@ -1084,20 +1099,13 @@ def beautify_and_format_sheet(sheet, champ_key):
 
 def run_scraping():
     """Fonction principale de scraping qui tourne en arrière-plan"""
-    print("🚀 Début de la veille globale (World Athletics + Tilastopaja)...")
-    
-    # --- 1. Scraping Tilastopaja ---
-    tila_data = {}
-    print("\n🌍 Récupération des listes Tilastopaja...")
-    for champ, url in TILASTOPAJA_URLS.items():
-        tila_data[champ] = fetch_tilastopaja_all(champ, url)
-        print(f"✔️ Données Tilastopaja chargées pour {champ.upper()}")
+    print("🚀 Début de la veille globale (World Athletics + FFA)...")
 
-    # --- 2. Scraping World Athletics & Fusion ---
-    print("\n🌐 Récupération World Athletics et croisement des données...")
+    # Scraping World Athletics & FFA, puis filtrage
+    print("\n🌐 Récupération World Athletics...")
     final_data = {"ce": {"m": {}, "f": {}}, "u18": {"m": {}, "f": {}}, "u20": {"m": {}, "f": {}}}
     taches = []
-    
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         for champ in MINIMA_FFA.keys():
             for gender in ["m", "f"]:
@@ -1105,27 +1113,24 @@ def run_scraping():
                     taches.append((champ, gender, event, executor.submit(fetch_wa_event, champ, gender, event)))
 
         for champ, gender, event, future in taches:
-            wa_resultats = future.result()
-            
-            # Récupérer les résultats Tilastopaja correspondants
-            tila_resultats = tila_data.get(champ, {}).get(gender, {}).get(event, [])
+            tous_resultats = future.result()
 
-            # Pour le 10000m CE, le minima FFA accepte aussi le 10km route :
-            # on ajoute les bilans FFA (athle.fr) à la liste World Athletics.
-            if champ == "ce" and event == "10000m":
-                ffa_resultats = fetch_ffa_10km_route(gender)
-                wa_resultats = wa_resultats + ffa_resultats
+            # Complète WA avec les bilans FFA pour toutes les épreuves référencées dans FFA_CODES.
+            ffa_codes = FFA_CODES.get((champ, gender, event))
+            if ffa_codes:
+                for code in ffa_codes:
+                    ffa_resultats = fetch_ffa_event(code, gender, "2026")
+                    tous_resultats = tous_resultats + ffa_resultats
 
-            # Limite FFA pour filtrage lors de la fusion
+            # Limite FFA pour filtrage
             limit_tuple = MINIMA_FFA[champ][gender][event]
             limit_to_check = limit_tuple[1] if limit_tuple[1] is not None else limit_tuple[0]
-            
-            # Fusion intelligente et filtrage strict
-            resultats_fusionnes = merge_and_filter_athletes(wa_resultats, tila_resultats, event, limit_to_check, champ, gender)
-            
+
+            resultats_fusionnes = merge_and_filter_athletes(tous_resultats, event, limit_to_check, champ, gender)
+
             if resultats_fusionnes:
                 final_data[champ][gender][event] = resultats_fusionnes
-                print(f"✅ {len(resultats_fusionnes)} qualifié(s) (WA+Tila) pour {champ.upper()} - {gender.upper()} - {event}")
+                print(f"✅ {len(resultats_fusionnes)} qualifié(s) (WA+FFA) pour {champ.upper()} - {gender.upper()} - {event}")
 
     contenu_js = f"const achievements = {json.dumps(final_data, indent=2, ensure_ascii=False)};"
     with open("achievements.js", "w", encoding="utf-8") as f: f.write(contenu_js)
