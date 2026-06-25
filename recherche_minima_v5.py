@@ -29,12 +29,58 @@ def resource_path(relative_path):
 # ==============================================================================
 # CONFIGURATION DES PÉRIODES DE RÉALISATION
 # ==============================================================================
-# Format : (Date Début, Date Fin)
-PERIODES_MINIMA = {
+# Source : Annexes 1 "Modalités de sélection" FFA 2026 (CE.pdf, CMU20.pdf, CEU18.pdf)
+#
+# Le script ne retient que le Minima B comme seuil de qualification quand il existe
+# (cf. limit_to_check = limit_b or limit_a), donc la période appliquée ici est
+# systématiquement celle du Minima B quand les deux périodes diffèrent (U20).
+# Pour CE et U18, il n'existe qu'une seule période par catégorie d'épreuves
+# (indépendante du fait que le seuil utilisé soit A ou B).
+
+# Période par défaut = Catégorie 1 (sprint, haies, sauts, lancers, 800m-1500m, steeple court)
+PERIODES_MINIMA_DEFAUT = {
     "ce":  (datetime(2026, 5, 1), datetime(2026, 7, 26)),
-    "u20": (datetime(2026, 4, 1), datetime(2026, 7, 19)),
+    "u20": (datetime(2026, 4, 1), datetime(2026, 7, 19)),   # période Minima B générale
     "u18": (datetime(2026, 4, 1), datetime(2026, 7, 5))
 }
+
+# Périodes spécifiques par épreuve, qui dérogent à la période par défaut.
+# Clé : (champ, genre ou None si identique pour les deux genres, épreuve)
+PERIODES_MINIMA_SPECIFIQUES = {
+    # ---------------------- CE (Birmingham) — Annexe 1 ----------------------
+    ("ce", None, "5000m"):                 (datetime(2026, 1, 1), datetime(2026, 7, 26)),
+    ("ce", None, "10000m"):                (datetime(2026, 1, 1), datetime(2026, 5, 31)),
+    ("ce", None, "Heptathlon"):             (datetime(2026, 4, 20), datetime(2026, 7, 26)),
+    ("ce", None, "Decathlon"):              (datetime(2026, 4, 20), datetime(2026, 7, 19)),
+    ("ce", None, "Marathon"):               (datetime(2025, 9, 1), datetime(2026, 4, 19)),
+    ("ce", None, "20km Marche"):            (datetime(2025, 9, 1), datetime(2026, 5, 23)),
+    ("ce", None, "Semi-marathon Marche"):   (datetime(2025, 9, 1), datetime(2026, 5, 23)),
+    ("ce", None, "35km Marche"):            (datetime(2025, 9, 1), datetime(2026, 5, 23)),
+    ("ce", None, "Marathon Marche"):        (datetime(2025, 9, 1), datetime(2026, 5, 23)),
+
+    # ---------------------- U20 (Eugene) — Annexe 1 (période Minima B) ----------------------
+    # Catégorie 2 : 3000m hommes - 5000m femmes - 3000m steeple femmes -> période B raccourcie
+    ("u20", "m", "3000m"):                 (datetime(2026, 4, 1), datetime(2026, 7, 4)),
+    ("u20", "f", "5000m"):                 (datetime(2026, 4, 1), datetime(2026, 7, 4)),
+    ("u20", "f", "3000m Steeple"):          (datetime(2026, 4, 1), datetime(2026, 7, 4)),
+    # Catégorie 3 : épreuves combinées -> période B propre (France Epreuves Combinées 4-5 juillet)
+    ("u20", "m", "Decathlon"):              (datetime(2026, 4, 1), datetime(2026, 7, 5)),
+    ("u20", "f", "Heptathlon"):             (datetime(2026, 4, 1), datetime(2026, 7, 5)),
+
+    # ---------------------- U18 (Rieti) — Annexe 1 ----------------------
+    # Catégorie 2 : épreuves combinées
+    ("u18", "m", "Decathlon"):              (datetime(2026, 4, 1), datetime(2026, 6, 28)),
+    ("u18", "f", "Heptathlon"):             (datetime(2026, 4, 1), datetime(2026, 6, 28)),
+}
+
+def get_periode_minima(champ, gender, event):
+    """Retourne la période de réalisation (start, end) applicable à une épreuve donnée,
+    en tenant compte des dérogations par catégorie définies par la FFA."""
+    if (champ, gender, event) in PERIODES_MINIMA_SPECIFIQUES:
+        return PERIODES_MINIMA_SPECIFIQUES[(champ, gender, event)]
+    if (champ, None, event) in PERIODES_MINIMA_SPECIFIQUES:
+        return PERIODES_MINIMA_SPECIFIQUES[(champ, None, event)]
+    return PERIODES_MINIMA_DEFAUT.get(champ)
 
 # ==========================================
 # CONFIGURATION & CRITÈRES FFA 2026
@@ -49,7 +95,7 @@ MINIMA_FFA = {
             "1500m": (210.50, 213.50), "5000m": (776.00, None), "10000m": (1650.00, None), "Marathon": (7590.00, None),
             "110mH": (13.20, 13.40), "400mH": (48.20, 49.00), "3000m Steeple": (491.00, 500.00), "Hauteur": (2.27, 2.24),
             "Perche": (5.82, 5.70), "Longueur": (8.20, 8.05), "Triple": (17.20, 16.80), "Poids": (21.30, 20.80),
-            "Disque": (68.50, 65.00), "Marteau": (80.00, 77.00), "Javelot": (85.00, 83.00), "Decathlon": (8400, 8200),
+            "Disque": (68.50, 65.50), "Marteau": (80.00, 77.00), "Javelot": (85.00, 83.00), "Decathlon": (8400, 8200),
             "20km Marche": (4800.00, None),
             "Semi-marathon Marche": (5070.00, None),
             "35km Marche": (8760.00, None),
@@ -181,33 +227,30 @@ MOIS_FR = {
     "SEP": "sep", "OCT": "oct", "NOV": "nov", "DEC": "déc"
 }
 
-# Même mapping indexé par numéro de mois (pour les dates FFA au format JJ/MM/AA)
-MOIS_FR_NUM = {
-    1: "jan", 2: "fév", 3: "mar", 4: "avr",
-    5: "mai", 6: "juin", 7: "juil", 8: "août",
-    9: "sep", 10: "oct", 11: "nov", 12: "déc"
-}
-
 def parse_date_universal(date_str):
-    """Convertit une date WA (15 MAY 2026) ou FFA (15/05/2026) en datetime."""
+    """Convertit une date WA (15 MAY 2026) ou Tilastopaja (15.05.26 / 15.05.2026) en datetime."""
     if not date_str:
         return None
-    # Essai format World Athletics : "15 MAY 2026"
     try:
-        clean = date_str.replace(",", "").strip()
-        return datetime.strptime(clean, "%d %b %Y")
+        clean_date = str(date_str).replace(",", "").strip()
+        
+        # Format Tilastopaja (DD.MM.YY ou DD-DD.MM.YY pour les épreuves combinées)
+        # L'utilisation de re.search plutôt que re.match permet d'ignorer le premier jour d'un décathlon
+        m = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{2,4})', clean_date)
+        if m:
+            d_num, m_num, y_num = int(m.group(1)), int(m.group(2)), int(m.group(3))
+            y_num = 2000 + y_num if y_num < 100 else y_num
+            return datetime(y_num, m_num, d_num)
+            
+        # Format WA (15 MAY 2026 ou multi-jours 15-16 MAY 2026)
+        m_wa = re.search(r'(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})', clean_date)
+        if m_wa:
+            return datetime.strptime(f"{m_wa.group(1)} {m_wa.group(2)} {m_wa.group(3)}", "%d %b %Y")
+            
+        return datetime.strptime(clean_date, "%d %b %Y")
     except Exception:
-        pass
-    # Essai format FFA : "15/05/2026" ou "15/05/26"
-    try:
-        m_date = re.match(r'^(\d{1,2})/(\d{1,2})/(\d{2,4})$', date_str.strip())
-        if m_date:
-            d, m, y = int(m_date.group(1)), int(m_date.group(2)), int(m_date.group(3))
-            y = 2000 + y if y < 100 else y
-            return datetime(y, m, d)
-    except Exception:
-        pass
-    return None
+        return None
+        
 def translate_date_fr(date_str):
     """Traduit une date WA (ex: 17 MAY 2026) en français (ex: 17 mai 2026)."""
     if not date_str:
@@ -219,52 +262,72 @@ def translate_date_fr(date_str):
             return f"{parts[0]} {MOIS_FR[mois_en]} {parts[2]}"
     return date_str
 
-def is_perf_in_period(date_str, champ):
-    """Vérifie si la date de performance est comprise dans la période définie."""
-    if champ not in PERIODES_MINIMA:
+def is_perf_in_period(date_str, champ, gender=None, event=None):
+    """Vérifie si la date de performance est comprise dans la période définie
+    pour cette épreuve (en tenant compte des dérogations par catégorie FFA)."""
+    periode = get_periode_minima(champ, gender, event)
+    if not periode:
         return True
-    
+
     perf_date = parse_date_universal(date_str)
     if not perf_date:
         return False
-        
-    start, end = PERIODES_MINIMA[champ]
+
+    start, end = periode
     return start <= perf_date <= end
 
-def time_to_seconds(time_str, event=None):
-    """Convertit une chaîne de performance en secondes (float). 
-    Filtre strict : rejette les chronos manuels (1 décimale ou 'm') pour les sprints."""
-    if not time_str:
-        return None
+def time_to_seconds(time_str):
+    """Parseur robuste pour comprendre les formats bruts."""
+    if isinstance(time_str, (int, float)): return float(time_str)
     
-    s = str(time_str).strip().lower()
-    is_sprint = event in ["100m", "200m", "400m", "110mH", "100mH", "400mH"]
+    time_str = str(time_str).strip().lower().replace(',', '.')
+    if not time_str or time_str == "-": return None
     
-    # Les chronos manuels finissent parfois par 'm' (ex: 10"4m)
-    if is_sprint and s.endswith('m'):
-        return None
-        
-    s = s.replace('m', '')
-    s = s.replace(',', '.')
-    s = s.replace('"', '.')
-    s = s.replace("''", '.')
-    s = s.replace("'", ':')
-    s = s.replace('h', ':')
+    # Séparer les +, -, et autres annotations (exclut les (w))
+    time_str = re.split(r'\s*\+|\s*\-|\s*\(', time_str)[0].strip()
+    
+    # SUPPRESSION CRITIQUE : enlever le 'i' (indoor), 'a' (altitude), et '*' des perfs Tilastopaja
+    time_str = re.sub(r'[a-z\*\+]+$', '', time_str).strip()
     
     try:
-        parts = s.split(':')
-        if len(parts) == 3:  # HH:MM:SS.xx
-            h, m, sec = parts
-            if is_sprint and ('.' not in sec or len(sec.split('.')[1]) < 2): return None
-            return float(h) * 3600 + float(m) * 60 + float(sec)
-        elif len(parts) == 2:  # MM:SS.xx
-            m, sec = parts
-            if is_sprint and ('.' not in sec or len(sec.split('.')[1]) < 2): return None
-            return float(m) * 60 + float(sec)
-        else:  # SS.xx
-            sec = parts[0]
-            if is_sprint and ('.' not in sec or len(sec.split('.')[1]) < 2): return None
-            return float(sec)
+        if 'm' in time_str and 'h' not in time_str and "'" not in time_str:
+            parts = time_str.split('m')
+            m = float(parts[0]) if parts[0] else 0
+            cm = float(parts[1]) if len(parts) > 1 and parts[1] else 0
+            return float(f"{int(m)}.{int(cm):02d}")
+            
+        if re.match(r"^\d+(\.\d+)?$", time_str):
+            return float(time_str)
+
+        if ':' in time_str:
+            parts = time_str.split(':')
+            if len(parts) == 3:
+                return float(parts[0])*3600 + float(parts[1])*60 + float(parts[2])
+            elif len(parts) == 2:
+                return float(parts[0])*60 + float(parts[1])
+            
+        time_str = time_str.replace("''", '"').replace("’", "'").replace("´", "'")
+        h, m, s, c = 0, 0, 0, 0
+        
+        if 'h' in time_str:
+            parts = time_str.split('h')
+            h = float(parts[0])
+            time_str = parts[1]
+            
+        if "'" in time_str:
+            parts = time_str.split("'")
+            m = float(parts[0]) if parts[0] else 0
+            time_str = parts[1]
+            
+        if '"' in time_str:
+            parts = time_str.split('"')
+            s = float(parts[0]) if parts[0] else 0
+            c = float(parts[1]) if len(parts) > 1 and parts[1] else 0
+        elif time_str:
+            s = float(time_str)
+                
+        return h * 3600 + m * 60 + s + c / 100.0
+
     except Exception:
         return None
 
@@ -302,223 +365,165 @@ def format_seconds_for_display(seconds, event_name):
         return f"{m_val}'{s_val:02d}\"{c_val:02d}"
         
 # ==============================================================================
-# SCRAPING FFA (Remplace Tilastopaja)
+# SCRAPING TILASTOPAJA
 # ==============================================================================
 
-import os
-import openpyxl
-import requests
-from requests.adapters import HTTPAdapter
-
-# --- OPTIMISATION DU RÉSEAU (Anti-Timeout) ---
-# Création d'une session globale pour éviter d'ouvrir/fermer 140 connexions.
-# Cela empêche le pare-feu de la FFA de bloquer le script et accélère massivement le scraping.
-FFA_SESSION = requests.Session()
-_adapter = HTTPAdapter(pool_connections=20, pool_maxsize=20)
-FFA_SESSION.mount('http://', _adapter)
-FFA_SESSION.mount('https://', _adapter)
-FFA_SESSION.headers.update({
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-})
-
-# Session partagée pour World Athletics (keep-alive + pool de connexions)
-WA_SESSION = requests.Session()
-_wa_adapter = HTTPAdapter(pool_connections=20, pool_maxsize=20)
-WA_SESSION.mount('http://', _wa_adapter)
-WA_SESSION.mount('https://', _wa_adapter)
-WA_SESSION.headers.update({
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-    "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
-})
-
-def load_ffa_epreuves_dict():
-    """Charge les codes épreuves depuis le fichier Excel s'il existe pour éviter les erreurs de code."""
-    filepath = "Dictionnaire_Epreuves_FFA_3.xlsx"  # Mise à jour avec la version 3
-    mapping = {}
-    if os.path.exists(filepath):
-        try:
-            wb = openpyxl.load_workbook(filepath, data_only=True)
-            sheet = wb.active
-            for row in sheet.iter_rows(min_row=2, values_only=True):
-                if row[0] is not None and row[1] is not None:
-                    mapping[str(row[0]).strip()] = str(row[1]).strip()
-            print(f"✅ Dictionnaire FFA chargé depuis {filepath} ({len(mapping)} épreuves).")
-            return mapping
-        except Exception as e:
-            print(f"⚠️ Erreur de lecture de {filepath} : {e}")
-            
-    print("⚠️ Fichier Excel FFA introuvable, utilisation du dictionnaire par défaut.")
-    return {
-        "100m": "110", "200m": "120", "400m": "140",
-        "800m": "208", "1500m": "215", "3000m": "230",
-        "5000m": "250", "10000m": "260", "Marathon": "295",
-        "100mH": "310", "110mH": "313", "400mH": "342",
-        "2000m Steeple": "422", "3000m Steeple": "430",
-        "Hauteur": "501", "Perche": "502", "Longueur": "503", "Triple": "504",
-        "Poids": "607", "Disque": "620", "Marteau": "637", "Javelot": "681",
-        "Heptathlon": "717", "Decathlon": "710",
-        "5000m Marche": "905", "10000m Marche": "910", "20km Marche": "971",
-        "35km Marche": "976", "Semi-marathon Marche": "972", "Marathon Marche": "979"
-    }
-
-# Dictionnaire dynamique des codes épreuves FFA
-MAP_FFA_EPREUVES = load_ffa_epreuves_dict()
-
-# ------------------------------------------------------------------------------
-# SURCHARGES SPÉCIFIQUES FFA (Codes officiels Logica FFA corrigés)
-# ------------------------------------------------------------------------------
-MAP_FFA_OVERRIDES = {
-    # ================= GARÇONS =================
-    # --- U18 (Cadets) - Garçons ---
-    ("u18", "m", "110mH"): "312",     # Haies 91 cm
-    ("u18", "m", "Poids"): "605",     # Poids 5 kg
-    ("u18", "m", "Disque"): "615",    # Disque 1.5 kg
-    ("u18", "m", "Marteau"): "635",   # Marteau 5 kg
-    ("u18", "m", "Javelot"): "670",   # Javelot 700 g
-    
-    # --- U20 (Juniors) - Garçons ---
-    ("u20", "m", "110mH"): "315",     # Haies 99 cm
-    ("u20", "m", "Poids"): "606",     # Poids 6 kg
-    ("u20", "m", "Disque"): "617",    # Disque 1.75 kg
-    ("u20", "m", "Marteau"): "636",   # Marteau 6 kg
-    # Note : Le javelot U20M est à 800g (comme Senior, code 681 par défaut)
-    
-    # ================= FILLES =================
-    # Les codes du dictionnaire par défaut (ex: 620 pour Disque) visent souvent les hommes.
-    # Il est crucial d'écraser les lancers pour toutes les catégories féminines.
-    
-    # --- U18 (Cadettes) - Filles ---
-    ("u18", "f", "100mH"): "311",     # Haies 76 cm
-    ("u18", "f", "Poids"): "603",     # Poids 3 kg
-    ("u18", "f", "Disque"): "610",    # Disque 1 kg (Standard F)
-    ("u18", "f", "Marteau"): "633",   # Marteau 3 kg
-    ("u18", "f", "Javelot"): "650",   # Javelot 500 g
-    
-    # --- U20 (Juniors) - Filles ---
-    ("u20", "f", "100mH"): "310",     # Haies 84 cm (Standard F)
-    ("u20", "f", "Poids"): "604",     # Poids 4 kg (Standard F)
-    ("u20", "f", "Disque"): "610",    # Disque 1 kg (Standard F)
-    ("u20", "f", "Marteau"): "634",   # Marteau 4 kg (Standard F)
-    ("u20", "f", "Javelot"): "660",   # Javelot 600 g (Standard F)
-    
-    # --- Seniors / Championnats d'Europe (ce) - Filles ---
-    ("ce", "f", "100mH"): "310",
-    ("ce", "f", "Poids"): "604",
-    ("ce", "f", "Disque"): "610",
-    ("ce", "f", "Marteau"): "634",
-    ("ce", "f", "Javelot"): "660",
+TILASTOPAJA_URLS = {
+    "ce": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=99",
+    "u20": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=19",
+    "u18": "https://www.tilastopaja.info/db/europetop20.php?Season=2026&Ind=0&Age=17"
 }
 
-def get_ffa_code(champ, gender, event):
-    """Retourne le code FFA exact en tenant compte des spécificités de catégories."""
-    override_key = (champ.lower(), gender.lower(), event)
-    if override_key in MAP_FFA_OVERRIDES:
-        return MAP_FFA_OVERRIDES[override_key]
-    return MAP_FFA_EPREUVES.get(event, "")
-
-def fetch_ffa_event(champ, gender, event):
-    """Scrape le bilan FFA pour une épreuve, un sexe et un championnat donnés."""
-    epreuve_code = get_ffa_code(champ, gender, event)
-    if not epreuve_code:
-        return []
-
-    # Détermination du code catégorie pour l'URL FFA
-    cat_code = ""
-    if champ.lower() == "u18":
-        cat_code = "CA"
-    elif champ.lower() == "u20":
-        cat_code = "JU"
+def map_tilastopaja_event(text):
+    """Mappe un nom d'épreuve issu du HTML Tilastopaja vers la nomenclature du script."""
+    t = text.lower().replace(",", "").replace("'", "").strip()
+    
+    # Rapprocher le chiffre du 'm' si un espace s'y trouve (ex: "1500 m" -> "1500m")
+    t = re.sub(r'(\d+)\s+m\b', r'\1m', t)
+    
+    if "steeple" in t or "sc" in t:
+        if "2000" in t: return "2000m Steeple"
+        return "3000m Steeple"
         
-    sexe_code = "M" if gender.lower() == "m" else "F"
+    if "walk" in t:
+        if "5000" in t: return "5000m Marche"
+        if "10000" in t: return "10000m Marche"
+        if "20km" in t or "20 km" in t: return "20km Marche"
+        if "35km" in t or "35 km" in t: return "35km Marche"
+        if "half" in t: return "Semi-marathon Marche"
+        
+    if "marathon" in t and "half" not in t: return "Marathon"
+    if "110m" in t and ("h" in t or "hurdles" in t): return "110mH"
+    if "100m" in t and ("h" in t or "hurdles" in t): return "100mH"
+    if "400m" in t and ("h" in t or "hurdles" in t): return "400mH"
     
-    # Gestion du Vent Régulier (VR)
-    vent_param = ""
-    epreuves_avec_vent = ["100m", "200m", "100mH", "110mH", "Longueur", "Triple"]
-    if event in epreuves_avec_vent:
-        vent_param = "&frmvent=VR"
+    if "high jump" in t: return "Hauteur"
+    if "pole vault" in t: return "Perche"
+    if "long jump" in t: return "Longueur"
+    if "triple jump" in t: return "Triple"
     
-    url = f"https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee=2026&frmepreuve={epreuve_code}&frmsexe={sexe_code}&frmcategorie={cat_code}&frmnationalite=1{vent_param}"
+    if "shot" in t: return "Poids"
+    if "discus" in t: return "Disque"
+    if "hammer" in t: return "Marteau"
+    if "javelin" in t: return "Javelot"
     
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+    if "decathlon" in t: return "Decathlon"
+    if "heptathlon" in t: return "Heptathlon"
     
+    for e in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m"]:
+        if re.search(r'\b' + e + r'\b', t):
+            if "4x" in t or "4 x" in t: continue
+            return e
+            
+    return None
+
+def fetch_tilastopaja_all(champ, url):
+    """Scrape une page complète Tilastopaja Europe Top 20 et extrait les FRA par épreuve et par sexe."""
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml"
+    }
+    
+    results = {'m': {}, 'f': {}}
     try:
-        resp = FFA_SESSION.get(url, headers=headers, timeout=15)
-        resp.raise_for_status()
-    except Exception as e:
-        print(f"  [FFA] Erreur de connexion : {e}")
-        return []
+        response = requests.get(url, headers=headers, timeout=15)
+        if response.status_code != 200: return results
         
-    soup = BeautifulSoup(resp.text, 'html.parser')
-    results = []
-    import unicodedata
-    
-    for tr in soup.find_all('tr'):
-        if 'detail-row' in tr.get('class', []):
-            continue
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        current_gender = None
+        current_event = None
+        
+        for el in soup.find_all(['tr', 'h1', 'h2', 'h3', 'div', 'b', 'strong']):
+            text = el.get_text(separator=' ', strip=True)
+            if not text: continue
             
-        tds = tr.find_all('td')
-        if len(tds) >= 9:
-            perf_raw = tds[1].get_text(strip=True)
-            perf_clean = perf_raw.split('(')[0].replace('RP', '').strip()
-            
-            # Homogénéisation des perfs
-            perf_clean = perf_clean.replace("''", ".").replace("m", ".").replace("h", ":").rstrip('.')
-            if "'" in perf_clean and "." not in perf_clean:
-                perf_clean = perf_clean.replace("'", ":") + ".00"
-            elif "'" in perf_clean:
-                perf_clean = perf_clean.replace("'", ":")
-            
-            a_tag = tds[2].find('a')
-            if not a_tag: continue
+            # Détection d'un titre/en-tête (genre + épreuve)
+            is_heading = False
+            if el.name in ['h1', 'h2', 'h3', 'b', 'strong']:
+                is_heading = True
+            elif el.name == 'tr' and len(el.find_all('td')) <= 2:
+                is_heading = True
+            elif el.name == 'div' and len(text) < 50:
+                is_heading = True
                 
-            # Formatage Prénom Nom
-            name_raw = a_tag.get_text(strip=True)
-            name_no_accents = ''.join(c for c in unicodedata.normalize('NFD', name_raw) if unicodedata.category(c) != 'Mn')
-            parts = name_no_accents.replace('-', ' ').split()
-            nom = " ".join([p for p in parts if p.isupper()])
-            prenom = " ".join([p for p in parts if not p.isupper()])
-            final_name = f"{prenom.capitalize()} {nom.capitalize()}".strip()
-            
-            date_text = tds[7].get_text(strip=True)
-            # Conversion du format FFA (25/04/26) vers le format lisible (25 avr 2026)
-            display_date = date_text
-            try:
-                m_date = re.match(r'^(\d{1,2})/(\d{1,2})/(\d{2,4})$', date_text.strip())
-                if m_date:
-                    d_num, m_num, y_num = int(m_date.group(1)), int(m_date.group(2)), int(m_date.group(3))
-                    y_num = 2000 + y_num if y_num < 100 else y_num
-                    display_date = f"{d_num} {MOIS_FR_NUM[m_num]} {y_num}"
-            except Exception:
-                pass
-            results.append({
-                "name": final_name,
-                "perf": perf_clean,
-                "date": display_date,
-                "raw_date": date_text,
-                "place": tds[8].get_text(strip=True)
-            })
-            
-    return results
+            if is_heading:
+                lower_text = text.lower()
+                if "women" in lower_text or "girls" in lower_text: current_gender = 'f'
+                elif "men" in lower_text or "boys" in lower_text: current_gender = 'm'
+                
+                ev = map_tilastopaja_event(text)
+                if ev: current_event = ev
+                continue
+                
+               # Traitement d'une ligne de résultat
+            if el.name == 'tr' and current_gender and current_event:
+                tds = el.find_all('td')
+                if len(tds) < 5: continue
+                
+                td_texts = [td.get_text(strip=True) for td in tds]
+                
+                # C'est un athlète français !
+                if "FRA" in td_texts:
+                    fra_idx = td_texts.index("FRA")
+                    
+                    # Performance : premier élément numérique avant FRA
+                    perf_text = ""
+                    for t in td_texts[1:fra_idx]:
+                        if re.search(r'\d', t) and not re.search(r'[a-zA-Z]{3,}', t):
+                            perf_text = t
+                            break
+                            
+                    # Nom : Recherche dynamique (on recule à partir de FRA jusqu'à trouver une cellule SANS chiffre)
+                    # Cela évite de confondre le nom avec la date de naissance ou le vent
+                    name_text = ""
+                    for i in range(fra_idx - 1, 0, -1):
+                        if not re.search(r'\d', td_texts[i]):
+                            name_text = td_texts[i]
+                            break
+                    
+                    date_text = td_texts[-1] if len(td_texts) > 0 else ""
+                    venue_text = td_texts[-2] if len(td_texts) >= 2 else ""
+                    
+                    clean_date = date_text
+                    try:
+                        # Gestion des dates sur plusieurs jours pour les combinés (ex: 25-26.05.26)
+                        m_date = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{2,4})', date_text.strip())
+                        if m_date:
+                            d_num, m_num, y_num = int(m_date.group(1)), int(m_date.group(2)), int(m_date.group(3))
+                            y_num = 2000 + y_num if y_num < 100 else y_num
+                            clean_date = f"{d_num} {MOIS_FR[m_num]} {y_num}"
+                    except Exception:
+                        pass
 
-def merge_and_filter_athletes(wa_list, ffa_list, event_name, limit_to_check, champ):
+                    name_clean = " ".join([w.capitalize() for w in name_text.split()])
+                    
+                    if current_event not in results[current_gender]:
+                        results[current_gender][current_event] = []
+                        
+                    results[current_gender][current_event].append({
+                        "name": name_clean,
+                        "perf": perf_text,
+                        "date": clean_date,
+                        "place": venue_text,
+                        "raw_date": date_text
+                    })
+                    
+        return results
+    except Exception as e:
+        print(f"❌ Erreur scraping Tilastopaja pour {champ}: {e}")
+        return results
+
+def merge_and_filter_athletes(wa_list, tila_list, event_name, limit_to_check, champ, gender=None):
     """Fusionne intelligemment les deux listes, filtre par minima et période, et ne garde que la meilleure perf."""
-    import unicodedata
     unique_athletes = {}
     
     is_running = event_name in ["100m", "200m", "400m", "800m", "1500m", "3000m", "5000m", "10000m", "100mH", "110mH", "400mH", "2000m Steeple", "3000m Steeple", "5000m Marche", "10000m Marche", "20km Marche", "Semi-marathon Marche", "35km Marche", "Marathon Marche", "Marathon"]
     
-    for ath in wa_list + ffa_list:
-        name_raw = ath["name"].strip()
-        
-        # Création d'une clé robuste anti-doublons (sans accents, sans tirets)
-        # "Jean-Baptiste Écuyer" ou "Jean Baptiste Ecuyer" deviennent tous les deux "jean baptiste ecuyer"
-        name_key = ''.join(c for c in unicodedata.normalize('NFD', name_raw) if unicodedata.category(c) != 'Mn')
-        name_key = name_key.lower().replace("-", " ")
-        name_key = " ".join(name_key.split()) # Retire les éventuels doubles espaces
-        
-        # Le nom de l'épreuve est passé ici pour exiger les chronos électriques
-        perf_v = time_to_seconds(ath["perf"], event_name)
+    for ath in wa_list + tila_list:
+        name = ath["name"].strip()
+        name_lower = name.lower()
+        perf_v = time_to_seconds(ath["perf"])
         if perf_v is None: continue
         
         # Filtrage par Minima
@@ -529,27 +534,24 @@ def merge_and_filter_athletes(wa_list, ffa_list, event_name, limit_to_check, cha
             
         # Filtrage par Date (période de réalisation)
         date_str = ath.get("raw_date", ath.get("date"))
-        if not is_perf_in_period(date_str, champ):
+        if not is_perf_in_period(date_str, champ, gender, event_name):
             continue
             
-        # Conservation de la meilleure performance (utilisation de name_key)
-        if name_key not in unique_athletes:
-            unique_athletes[name_key] = ath
+        # Conservation de la meilleure performance uniquement
+        if name_lower not in unique_athletes:
+            unique_athletes[name_lower] = ath
         else:
-            existing_perf_v = time_to_seconds(unique_athletes[name_key]["perf"], event_name)
+            existing_perf_v = time_to_seconds(unique_athletes[name_lower]["perf"])
             if is_running:
-                if perf_v < existing_perf_v: unique_athletes[name_key] = ath
+                if perf_v < existing_perf_v: unique_athletes[name_lower] = ath
             else:
-                if perf_v > existing_perf_v: unique_athletes[name_key] = ath
+                if perf_v > existing_perf_v: unique_athletes[name_lower] = ath
                 
     # Trie des résultats finaux (du meilleur au moins bon)
     results_list = list(unique_athletes.values())
-    results_list.sort(key=lambda x: time_to_seconds(x["perf"], event_name) or 999999 if is_running else -(time_to_seconds(x["perf"], event_name) or 0))
+    results_list.sort(key=lambda x: time_to_seconds(x["perf"]) or 999999 if is_running else -(time_to_seconds(x["perf"]) or 0))
     
     return results_list
-# ==============================================================================
-# SCRAPING WORLD ATHLETICS
-# ==============================================================================
 
 def fetch_wa_event(champ, gender, event):
     """Scrape le site de World Athletics et filtre strictement par catégorie d'âge, lieu et date."""
@@ -562,10 +564,16 @@ def fetch_wa_event(champ, gender, event):
     elif champ == "u20": wa_category = "u20"
 
     year = "2026"
-    url = f"https://worldathletics.org/records/toplists/{slug}/all/{wa_gender}/{wa_category}/{year}?regionType=countries&region=fra&timing=electronic&windReading=regular&page=1&bestResultsOnly=false"
+    url = f"https://worldathletics.org/records/toplists/{slug}/all/{wa_gender}/{wa_category}/{year}?regionType=countries&region=fra&timing=electronic&windReading=regular&page=1&bestResultsOnly=true"
+    
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
+    }
     
     try:
-        response = WA_SESSION.get(url, timeout=15)
+        response = requests.get(url, headers=headers, timeout=15)
         if response.status_code != 200: return []
         
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -613,7 +621,7 @@ def fetch_wa_event(champ, gender, event):
             date_text = cols[col_map['date']].text.strip() if 'date' in col_map and col_map['date'] < len(cols) else cols[-1].text.strip()
 
             # FILTRAGE PAR PÉRIODE DE RÉALISATION
-            if not is_perf_in_period(date_text, champ):
+            if not is_perf_in_period(date_text, champ, gender, event):
                 continue
 
             # Récupérer l'année de naissance pour un filtrage strict (DOB)
@@ -628,14 +636,12 @@ def fetch_wa_event(champ, gender, event):
             # Filtrage EXCLUSIF des catégories (U18 = 2009-2010 | U20 = 2007-2008)
             if champ in ['u18', 'u20']:
                 dob_match = re.search(r'\b(19|20)\d{2}\b', dob_text)
-                if not dob_match:
-                    # Pas de date de naissance connue : on ne peut pas vérifier la catégorie → on exclut
-                    continue
-                dob_year = int(dob_match.group(0))
-                if champ == 'u18' and dob_year not in [2009, 2010]:
-                    continue
-                if champ == 'u20' and dob_year not in [2007, 2008]:
-                    continue
+                if dob_match:
+                    dob_year = int(dob_match.group(0))
+                    if champ == 'u18' and dob_year not in [2009, 2010]:
+                        continue
+                    if champ == 'u20' and dob_year not in [2007, 2008]:
+                        continue
 
             name_text = competitor_col.text.strip()
             perf_text = mark_col.text.strip().replace('A', '').strip()
@@ -922,52 +928,42 @@ def beautify_and_format_sheet(sheet, champ_key):
 
 def run_scraping():
     """Fonction principale de scraping qui tourne en arrière-plan"""
-    print("🚀 Début de la veille globale (World Athletics + FFA)...")
+    print("🚀 Début de la veille globale (World Athletics + Tilastopaja)...")
     
-    final_data = {"ce": {"m": {}, "f": {}}, "u18": {"m": {}, "f": {}}, "u20": {"m": {}, "f": {}}}
-    taches_wa = []
-    taches_ffa = []
-    
-    print("\n🌐 Récupération simultanée WA et FFA et croisement des données...")
-    
-    # Nous lançons les requêtes en parallèle (5 requêtes à la fois pour ne pas surcharger les serveurs)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-        
-        # 1. Planification de toutes les requêtes (WA et FFA)
-        for champ in MINIMA_FFA.keys():
-            for gender in ["m", "f"]:
-                for event in MINIMA_FFA[champ][gender].keys():
-                    taches_wa.append((champ, gender, event, executor.submit(fetch_wa_event, champ, gender, event)))
-                    taches_ffa.append((champ, gender, event, executor.submit(fetch_ffa_event, champ, gender, event)))
+    # --- 1. Scraping Tilastopaja ---
+    tila_data = {}
+    print("\n🌍 Récupération des listes Tilastopaja...")
+    for champ, url in TILASTOPAJA_URLS.items():
+        tila_data[champ] = fetch_tilastopaja_all(champ, url)
+        print(f"✔️ Données Tilastopaja chargées pour {champ.upper()}")
 
-        # 2. Récolte des résultats de World Athletics
-        results_wa = {}
-        for champ, gender, event, future in taches_wa:
-            if champ not in results_wa: results_wa[champ] = {"m":{}, "f":{}}
-            results_wa[champ][gender][event] = future.result()
-            
-        # 3. Récolte des résultats de la FFA
-        results_ffa = {}
-        for champ, gender, event, future in taches_ffa:
-            if champ not in results_ffa: results_ffa[champ] = {"m":{}, "f":{}}
-            results_ffa[champ][gender][event] = future.result()
-            
-        # 4. Fusion et filtrage
+    # --- 2. Scraping World Athletics & Fusion ---
+    print("\n🌐 Récupération World Athletics et croisement des données...")
+    final_data = {"ce": {"m": {}, "f": {}}, "u18": {"m": {}, "f": {}}, "u20": {"m": {}, "f": {}}}
+    taches = []
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         for champ in MINIMA_FFA.keys():
             for gender in ["m", "f"]:
                 for event in MINIMA_FFA[champ][gender].keys():
-                    wa_res = results_wa.get(champ, {}).get(gender, {}).get(event, [])
-                    ffa_res = results_ffa.get(champ, {}).get(gender, {}).get(event, [])
-                    
-                    limit_tuple = MINIMA_FFA[champ][gender][event]
-                    limit_to_check = limit_tuple[1] if limit_tuple[1] is not None else limit_tuple[0]
-                    
-                    # Fusion intelligente WA + FFA
-                    resultats_fusionnes = merge_and_filter_athletes(wa_res, ffa_res, event, limit_to_check, champ)
-                    
-                    if resultats_fusionnes:
-                        final_data[champ][gender][event] = resultats_fusionnes
-                        print(f"✅ {len(resultats_fusionnes)} qualifié(s) (WA+FFA) pour {champ.upper()} - {gender.upper()} - {event}")
+                    taches.append((champ, gender, event, executor.submit(fetch_wa_event, champ, gender, event)))
+
+        for champ, gender, event, future in taches:
+            wa_resultats = future.result()
+            
+            # Récupérer les résultats Tilastopaja correspondants
+            tila_resultats = tila_data.get(champ, {}).get(gender, {}).get(event, [])
+            
+            # Limite FFA pour filtrage lors de la fusion
+            limit_tuple = MINIMA_FFA[champ][gender][event]
+            limit_to_check = limit_tuple[1] if limit_tuple[1] is not None else limit_tuple[0]
+            
+            # Fusion intelligente et filtrage strict
+            resultats_fusionnes = merge_and_filter_athletes(wa_resultats, tila_resultats, event, limit_to_check, champ, gender)
+            
+            if resultats_fusionnes:
+                final_data[champ][gender][event] = resultats_fusionnes
+                print(f"✅ {len(resultats_fusionnes)} qualifié(s) (WA+Tila) pour {champ.upper()} - {gender.upper()} - {event}")
 
     contenu_js = f"const achievements = {json.dumps(final_data, indent=2, ensure_ascii=False)};"
     with open("achievements.js", "w", encoding="utf-8") as f: f.write(contenu_js)
