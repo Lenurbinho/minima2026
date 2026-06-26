@@ -777,42 +777,36 @@ FFA_CODES = {
     ("ce","f","Semi-marathon Marche"): [972],
     ("ce","f","35km Marche"):          [976],
     ("ce","f","Marathon Marche"):      [979],
-    # ── U20 Hommes — uniquement impléments spécifiques ──────────────────
-    ("u20","m","110mH"):               [315],        # 99 cm Junior H
-    ("u20","m","400mH"):               [342],        # 91 cm
-    ("u20","m","3000m Steeple"):       [430],        # 91 cm
-    ("u20","m","Poids"):               [606],        # 6 kg Junior H
-    ("u20","m","Disque"):              [617],        # 1,75 kg Junior H
-    ("u20","m","Marteau"):             [636],        # 6 kg Junior H
-    ("u20","m","Javelot"):             [681],        # 800 g
-    ("u20","m","Decathlon"):           [730],        # Décathlon JH
-    # ── U20 Femmes — uniquement impléments spécifiques ──────────────────
-    ("u20","f","100mH"):               [310],        # 84 cm
-    ("u20","f","400mH"):               [340],        # 76 cm
-    ("u20","f","3000m Steeple"):       [431],        # 76 cm
-    ("u20","f","Poids"):               [604],        # 4 kg
-    ("u20","f","Disque"):              [610],        # 1,0 kg
-    ("u20","f","Marteau"):             [634],        # 4 kg
-    ("u20","f","Javelot"):             [660],        # 600 g
-    ("u20","f","Heptathlon"):          [717],
-    # ── U18 Hommes — uniquement impléments spécifiques ──────────────────
-    ("u18","m","110mH"):               [312],        # 91 cm Cadet H
-    ("u18","m","400mH"):               [341],        # 84 cm Cadet H
-    ("u18","m","2000m Steeple"):       [421],        # 91 cm Cadet H
-    ("u18","m","Poids"):               [605],        # 5 kg Cadet H
-    ("u18","m","Disque"):              [615],        # 1,5 kg Cadet H
-    ("u18","m","Marteau"):             [635],        # 5 kg Cadet H
-    ("u18","m","Javelot"):             [670],        # 700 g Cadet H
-    ("u18","m","Decathlon"):           [731],        # Décathlon CH
-    # ── U18 Femmes — uniquement impléments spécifiques ──────────────────
-    ("u18","f","100mH"):               [311],        # 76,2 cm Cadet F
-    ("u18","f","400mH"):               [340],        # 76 cm
-    ("u18","f","2000m Steeple"):       [420],        # 76 cm Cadet F
-    ("u18","f","Poids"):               [604],        # 4 kg
-    ("u18","f","Disque"):              [610],        # 1,0 kg
-    ("u18","f","Marteau"):             [633],        # 3 kg Cadet F (internat. U18)
-    ("u18","f","Javelot"):             [650],        # 500 g Cadet F
-    ("u18","f","Heptathlon"):          [776],        # Heptathlon CF
+    # ── U20 Hommes — uniquement impléments DIFFÉRENTS du senior ──────────
+    # Exclus (même hauteur/poids que CE M, FFA ne filtre pas par âge) :
+    #   400mH (342=91cm=CE), 3000mSt (430=CE), Javelot (681=800g=CE)
+    ("u20","m","110mH"):               [315],        # 99 cm Junior H (≠ 106 cm CE)
+    ("u20","m","Poids"):               [606],        # 6 kg Junior H (≠ 7,26 kg CE)
+    ("u20","m","Disque"):              [617],        # 1,75 kg Junior H (≠ 2 kg CE)
+    ("u20","m","Marteau"):             [636],        # 6 kg Junior H (≠ 7,26 kg CE)
+    ("u20","m","Decathlon"):           [730],        # Décathlon JH (≠ 710 CE)
+    # ── U20 Femmes — uniquement impléments DIFFÉRENTS du senior ──────────
+    # Exclus (même spec que CE F) : 100mH (310=84cm), 400mH (340=76cm),
+    #   3000mSt (431=76cm), Poids (604=4kg), Disque (610=1kg),
+    #   Marteau (634=4kg), Javelot (660=600g), Heptathlon (717=CE)
+    # → Aucune épreuve U20 F ne peut être filtrée par FFA, on s'appuie sur WA
+    # ── U18 Hommes — uniquement impléments DIFFÉRENTS du senior ──────────
+    ("u18","m","110mH"):               [312],        # 91 cm Cadet H (≠ 106 cm CE, ≠ 99 cm U20)
+    ("u18","m","400mH"):               [341],        # 84 cm Cadet H (≠ 91 cm CE/U20)
+    ("u18","m","2000m Steeple"):       [421],        # 2000 m Cadet H (≠ 3000 m CE/U20)
+    ("u18","m","Poids"):               [605],        # 5 kg Cadet H (≠ 7,26 kg CE, ≠ 6 kg U20)
+    ("u18","m","Disque"):              [615],        # 1,5 kg Cadet H (≠ 2 kg CE, ≠ 1,75 kg U20)
+    ("u18","m","Marteau"):             [635],        # 5 kg Cadet H (≠ 7,26 kg CE, ≠ 6 kg U20)
+    ("u18","m","Javelot"):             [670],        # 700 g Cadet H (≠ 800 g CE/U20)
+    ("u18","m","Decathlon"):           [731],        # Décathlon CH (≠ 710 CE, ≠ 730 U20)
+    # ── U18 Femmes — uniquement impléments DIFFÉRENTS du senior ──────────
+    # Exclus (même spec que CE F) : 400mH (340=76cm), Disque (610=1kg),
+    #   Poids (604=4kg mais U18 utilise 3kg — aucun code FFA fiable identifié)
+    ("u18","f","100mH"):               [311],        # 76,2 cm Cadet F (≠ 84 cm CE/U20)
+    ("u18","f","2000m Steeple"):       [420],        # 2000 m Cadet F (≠ 3000 m CE/U20)
+    ("u18","f","Marteau"):             [633],        # 3 kg Cadet F (≠ 4 kg CE/U20)
+    ("u18","f","Javelot"):             [650],        # 500 g Cadet F (≠ 600 g CE/U20)
+    ("u18","f","Heptathlon"):          [776],        # Heptathlon CF (≠ 717 CE/U20)
 }
 
 MOIS_FR_DISPLAY = ["jan", "fév", "mar", "avr", "mai", "juin",
