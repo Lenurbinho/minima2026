@@ -1,15 +1,14 @@
 name: 🏃 Mise à jour des minima FFA
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Déclenchement :
-# Automatique : Tous les jours à 03h37 UTC (soit 04h37/05h37 heure de Paris)
-# Manuel : Via le bouton "Run workflow" ou appel API
-# /!\ ATTENTION : Ce fichier doit être sur la branche 'main' ou 'master' pour que le déclenchement automatique (cron) fonctionne.
+# Déclenchement UNIQUEMENT manuel :
+#   • Via le bouton "Recherche minima" de la page web  (appel API)
+#   • Via l'onglet Actions de GitHub  (bouton "Run workflow")
 # ─────────────────────────────────────────────────────────────────────────────
 on:
   workflow_dispatch:
   schedule:
-    - cron: '37 3 * * *'
+    - cron: '0 6 * * *'
 
 permissions:
   contents: write   # nécessaire pour git push
@@ -19,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TZ: "Europe/Paris"
-    timeout-minutes: 15   # sécurité anti-boucle infinie
+    timeout-minutes: 30   # bestResultsOnly=false nécessite plus de temps (~15-20 min)
 
     steps:
 
