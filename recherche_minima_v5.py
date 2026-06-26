@@ -727,16 +727,16 @@ def fetch_wa_event(champ, gender, event):
 #     sauts (même code pour toutes catégories) sont exclus car FFA ne permet
 #     pas de filtrer par année de naissance.
 FFA_CODES = {
-    # ── CE Senior Hommes ────────────────────────────────────────────────
+    # ── CE Senior Hommes (frmcategorie vide = toutes catégories) ────────
     ("ce","m","100m"):                 [110],
     ("ce","m","200m"):                 [120],
     ("ce","m","400m"):                 [140],
     ("ce","m","800m"):                 [208],
     ("ce","m","1500m"):                [215],
     ("ce","m","5000m"):                [250],
-    ("ce","m","10000m"):               [260, 261],  # piste + 10 km route
+    ("ce","m","10000m"):               [260, 261],   # piste + 10 km route
     ("ce","m","Marathon"):             [295],
-    ("ce","m","110mH"):                [313],        # 106 cm senior H
+    ("ce","m","110mH"):                [313],        # 106 cm
     ("ce","m","400mH"):                [342],        # 91 cm
     ("ce","m","3000m Steeple"):        [430],        # 91 cm
     ("ce","m","Hauteur"):              [501],
@@ -752,7 +752,7 @@ FFA_CODES = {
     ("ce","m","Semi-marathon Marche"): [972],
     ("ce","m","35km Marche"):          [976],
     ("ce","m","Marathon Marche"):      [979],
-    # ── CE Senior Femmes ────────────────────────────────────────────────
+    # ── CE Senior Femmes (frmcategorie vide = toutes catégories) ────────
     ("ce","f","100m"):                 [110],
     ("ce","f","200m"):                 [120],
     ("ce","f","400m"):                 [140],
@@ -777,36 +777,88 @@ FFA_CODES = {
     ("ce","f","Semi-marathon Marche"): [972],
     ("ce","f","35km Marche"):          [976],
     ("ce","f","Marathon Marche"):      [979],
-    # ── U20 Hommes — uniquement impléments DIFFÉRENTS du senior ──────────
-    # Exclus (même hauteur/poids que CE M, FFA ne filtre pas par âge) :
-    #   400mH (342=91cm=CE), 3000mSt (430=CE), Javelot (681=800g=CE)
-    ("u20","m","110mH"):               [315],        # 99 cm Junior H (≠ 106 cm CE)
-    ("u20","m","Poids"):               [606],        # 6 kg Junior H (≠ 7,26 kg CE)
-    ("u20","m","Disque"):              [617],        # 1,75 kg Junior H (≠ 2 kg CE)
-    ("u20","m","Marteau"):             [636],        # 6 kg Junior H (≠ 7,26 kg CE)
-    ("u20","m","Decathlon"):           [730],        # Décathlon JH (≠ 710 CE)
-    # ── U20 Femmes — uniquement impléments DIFFÉRENTS du senior ──────────
-    # Exclus (même spec que CE F) : 100mH (310=84cm), 400mH (340=76cm),
-    #   3000mSt (431=76cm), Poids (604=4kg), Disque (610=1kg),
-    #   Marteau (634=4kg), Javelot (660=600g), Heptathlon (717=CE)
-    # → Aucune épreuve U20 F ne peut être filtrée par FFA, on s'appuie sur WA
-    # ── U18 Hommes — uniquement impléments DIFFÉRENTS du senior ──────────
-    ("u18","m","110mH"):               [312],        # 91 cm Cadet H (≠ 106 cm CE, ≠ 99 cm U20)
-    ("u18","m","400mH"):               [341],        # 84 cm Cadet H (≠ 91 cm CE/U20)
-    ("u18","m","2000m Steeple"):       [421],        # 2000 m Cadet H (≠ 3000 m CE/U20)
-    ("u18","m","Poids"):               [605],        # 5 kg Cadet H (≠ 7,26 kg CE, ≠ 6 kg U20)
-    ("u18","m","Disque"):              [615],        # 1,5 kg Cadet H (≠ 2 kg CE, ≠ 1,75 kg U20)
-    ("u18","m","Marteau"):             [635],        # 5 kg Cadet H (≠ 7,26 kg CE, ≠ 6 kg U20)
-    ("u18","m","Javelot"):             [670],        # 700 g Cadet H (≠ 800 g CE/U20)
-    ("u18","m","Decathlon"):           [731],        # Décathlon CH (≠ 710 CE, ≠ 730 U20)
-    # ── U18 Femmes — uniquement impléments DIFFÉRENTS du senior ──────────
-    # Exclus (même spec que CE F) : 400mH (340=76cm), Disque (610=1kg),
-    #   Poids (604=4kg mais U18 utilise 3kg — aucun code FFA fiable identifié)
-    ("u18","f","100mH"):               [311],        # 76,2 cm Cadet F (≠ 84 cm CE/U20)
-    ("u18","f","2000m Steeple"):       [420],        # 2000 m Cadet F (≠ 3000 m CE/U20)
-    ("u18","f","Marteau"):             [633],        # 3 kg Cadet F (≠ 4 kg CE/U20)
-    ("u18","f","Javelot"):             [650],        # 500 g Cadet F (≠ 600 g CE/U20)
-    ("u18","f","Heptathlon"):          [776],        # Heptathlon CF (≠ 717 CE/U20)
+    # ── U20 Hommes (frmcategorie=JU) ────────────────────────────────────
+    ("u20","m","100m"):                [110],
+    ("u20","m","200m"):                [120],
+    ("u20","m","400m"):                [140],
+    ("u20","m","800m"):                [208],
+    ("u20","m","1500m"):               [215],
+    ("u20","m","3000m"):               [230],
+    ("u20","m","5000m"):               [250],
+    ("u20","m","110mH"):               [315],        # 99 cm Junior H
+    ("u20","m","400mH"):               [342],        # 91 cm (filtré JU)
+    ("u20","m","3000m Steeple"):       [430],        # 91 cm (filtré JU)
+    ("u20","m","Hauteur"):             [501],
+    ("u20","m","Perche"):              [502],
+    ("u20","m","Longueur"):            [503],
+    ("u20","m","Triple"):              [504],
+    ("u20","m","Poids"):               [606],        # 6 kg Junior H
+    ("u20","m","Disque"):              [617],        # 1,75 kg Junior H
+    ("u20","m","Marteau"):             [636],        # 6 kg Junior H
+    ("u20","m","Javelot"):             [681],        # 800 g (filtré JU)
+    ("u20","m","Decathlon"):           [730],
+    ("u20","m","5000m Marche"):        [905],
+    # ── U20 Femmes (frmcategorie=JU) ────────────────────────────────────
+    ("u20","f","100m"):                [110],
+    ("u20","f","200m"):                [120],
+    ("u20","f","400m"):                [140],
+    ("u20","f","800m"):                [208],
+    ("u20","f","1500m"):               [215],
+    ("u20","f","3000m"):               [230],
+    ("u20","f","5000m"):               [250],
+    ("u20","f","100mH"):               [310],        # 84 cm (filtré JU)
+    ("u20","f","400mH"):               [340],        # 76 cm (filtré JU)
+    ("u20","f","3000m Steeple"):       [431],        # 76 cm (filtré JU)
+    ("u20","f","Hauteur"):             [501],
+    ("u20","f","Perche"):              [502],
+    ("u20","f","Longueur"):            [503],
+    ("u20","f","Triple"):              [504],
+    ("u20","f","Poids"):               [604],        # 4 kg (filtré JU)
+    ("u20","f","Disque"):              [610],        # 1,0 kg (filtré JU)
+    ("u20","f","Marteau"):             [634],        # 4 kg (filtré JU)
+    ("u20","f","Javelot"):             [660],        # 600 g (filtré JU)
+    ("u20","f","Heptathlon"):          [717],        # (filtré JU)
+    ("u20","f","5000m Marche"):        [905],
+    # ── U18 Hommes (frmcategorie=CA) ────────────────────────────────────
+    ("u18","m","100m"):                [110],
+    ("u18","m","200m"):                [120],
+    ("u18","m","400m"):                [140],
+    ("u18","m","800m"):                [208],
+    ("u18","m","1500m"):               [215],
+    ("u18","m","3000m"):               [230],
+    ("u18","m","110mH"):               [312],        # 91 cm Cadet H
+    ("u18","m","400mH"):               [341],        # 84 cm Cadet H
+    ("u18","m","2000m Steeple"):       [421],        # 91 cm Cadet H
+    ("u18","m","Hauteur"):             [501],
+    ("u18","m","Perche"):              [502],
+    ("u18","m","Longueur"):            [503],
+    ("u18","m","Triple"):              [504],
+    ("u18","m","Poids"):               [605],        # 5 kg Cadet H
+    ("u18","m","Disque"):              [615],        # 1,5 kg Cadet H
+    ("u18","m","Marteau"):             [635],        # 5 kg Cadet H
+    ("u18","m","Javelot"):             [670],        # 700 g Cadet H
+    ("u18","m","Decathlon"):           [731],
+    ("u18","m","5000m Marche"):        [905],
+    # ── U18 Femmes (frmcategorie=CA) ────────────────────────────────────
+    ("u18","f","100m"):                [110],
+    ("u18","f","200m"):                [120],
+    ("u18","f","400m"):                [140],
+    ("u18","f","800m"):                [208],
+    ("u18","f","1500m"):               [215],
+    ("u18","f","3000m"):               [230],
+    ("u18","f","100mH"):               [311],        # 76,2 cm Cadet F
+    ("u18","f","400mH"):               [340],        # 76 cm (filtré CA)
+    ("u18","f","2000m Steeple"):       [420],        # 76 cm Cadet F
+    ("u18","f","Hauteur"):             [501],
+    ("u18","f","Perche"):              [502],
+    ("u18","f","Longueur"):            [503],
+    ("u18","f","Triple"):              [504],
+    ("u18","f","Poids"):               [603],        # 3 kg (internat. U18 F ; filtré CA)
+    ("u18","f","Disque"):              [610],        # 1,0 kg (filtré CA)
+    ("u18","f","Marteau"):             [633],        # 3 kg Cadet F
+    ("u18","f","Javelot"):             [650],        # 500 g Cadet F
+    ("u18","f","Heptathlon"):          [776],
+    ("u18","f","5000m Marche"):        [905],
 }
 
 MOIS_FR_DISPLAY = ["jan", "fév", "mar", "avr", "mai", "juin",
@@ -818,14 +870,16 @@ FFA_HEADERS = {
 }
 
 
-def fetch_ffa_event(ffa_code, gender, annee="2026"):
+def fetch_ffa_event(ffa_code, gender, annee="2026", categorie=""):
     """Scrape les bilans FFA (athle.fr) pour un code épreuve donné.
-    Retourne tous les athlètes français de l'année demandée."""
+    Retourne tous les athlètes français de l'année demandée.
+    categorie : '' (toutes), 'JU' (Junior/U20), 'CA' (Cadet/U18), 'ES' (Espoir/U23)
+    frmsexe FFA : H (hommes) ou F (femmes) — pas M."""
     ffa_sexe = "F" if gender == "f" else "M"
     url = (
         "https://www.athle.fr/bases/liste.aspx?frmpostback=true&frmbase=bilans"
         f"&frmmode=1&frmespace=0&frmannee={annee}&frmepreuve={ffa_code}"
-        f"&frmsexe={ffa_sexe}&frmcategorie=&frmdepartement=&frmligue="
+        f"&frmsexe={ffa_sexe}&frmcategorie={categorie}&frmdepartement=&frmligue="
         "&frmnationalite=1&frmvent=VR&frmamaxi="
     )
 
@@ -1163,8 +1217,9 @@ def run_scraping():
             # Complète WA avec les bilans FFA pour toutes les épreuves référencées dans FFA_CODES.
             ffa_codes = FFA_CODES.get((champ, gender, event))
             if ffa_codes:
+                ffa_categorie = {"ce": "", "u20": "JU", "u18": "CA"}.get(champ, "")
                 for code in ffa_codes:
-                    ffa_resultats = fetch_ffa_event(code, gender, "2026")
+                    ffa_resultats = fetch_ffa_event(code, gender, "2026", categorie=ffa_categorie)
                     tous_resultats = tous_resultats + ffa_resultats
 
             # Limite FFA pour filtrage
