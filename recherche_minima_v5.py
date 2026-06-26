@@ -622,11 +622,24 @@ def _fetch_wa_slug(slug, champ, gender, event, limit_to_check, is_running):
                     break
         if not competitor_col: continue
 
+        # Récupérer la perf en premier pour pouvoir couper la boucle dès qu'on
+        # dépasse le seuil — la liste WA est triée par valeur, donc tout ce qui
+        # suit sera encore moins bon.
+        perf_text = mark_col.text.strip().replace('A', '').strip()
+        perf_val = time_to_seconds(perf_text)
+        if perf_val is None: continue
+
+        if is_running and perf_val > limit_to_check:
+            break  # toutes les perfs suivantes seront encore plus lentes
+        if not is_running and perf_val < limit_to_check:
+            break  # toutes les perfs suivantes seront encore plus courtes
+
         # Récupérer Lieu (Venue) et Date
         venue_text = cols[col_map['venue']].text.strip() if 'venue' in col_map and col_map['venue'] < len(cols) else cols[-2].text.strip()
         date_text = cols[col_map['date']].text.strip() if 'date' in col_map and col_map['date'] < len(cols) else cols[-1].text.strip()
 
-        # FILTRAGE PAR PÉRIODE DE RÉALISATION
+        # FILTRAGE PAR PÉRIODE DE RÉALISATION (continue, pas break : la perf passe
+        # le seuil numérique, mais pas la fenêtre de date — les suivantes peuvent encore passer)
         if not is_perf_in_period(date_text, champ, gender, event):
             continue
 
@@ -650,26 +663,14 @@ def _fetch_wa_slug(slug, champ, gender, event, limit_to_check, is_running):
                     continue
 
         name_text = competitor_col.text.strip()
-        perf_text = mark_col.text.strip().replace('A', '').strip()
-
-        perf_val = time_to_seconds(perf_text)
-        if perf_val is None: continue
-
-        is_qualified = False
-        if is_running:
-            if perf_val <= limit_to_check: is_qualified = True
-        else:
-            if perf_val >= limit_to_check: is_qualified = True
-
-        if is_qualified:
-            name_clean = " ".join([w.capitalize() for w in name_text.split()])
-            athletes.append({
-                "name": name_clean,
-                "perf": perf_text,
-                "date": translate_date_fr(date_text),
-                "place": venue_text,
-                "raw_date": date_text
-            })
+        name_clean = " ".join([w.capitalize() for w in name_text.split()])
+        athletes.append({
+            "name": name_clean,
+            "perf": perf_text,
+            "date": translate_date_fr(date_text),
+            "place": venue_text,
+            "raw_date": date_text
+        })
 
     return athletes
 
