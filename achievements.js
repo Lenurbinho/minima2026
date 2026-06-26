@@ -1,40 +1,6 @@
 const achievements = {
   "ce": {
     "m": {
-      "100m": [
-        {
-          "name": "Kamel Zoubert",
-          "perf": "10\"04",
-          "date": "25 mai 2026",
-          "place": "Labattoir",
-          "raw_date": "25.05.26",
-          "source": "FFA-110"
-        },
-        {
-          "name": "Florian Devillers",
-          "perf": "10\"05",
-          "date": "2 mai 2026",
-          "place": "Douchy les mines",
-          "raw_date": "02.05.26",
-          "source": "FFA-110"
-        },
-        {
-          "name": "Noham Beck",
-          "perf": "10\"06",
-          "date": "2 mai 2026",
-          "place": "Douchy les mines",
-          "raw_date": "02.05.26",
-          "source": "FFA-110"
-        },
-        {
-          "name": "Ranjann William",
-          "perf": "10\"06",
-          "date": "16 mai 2026",
-          "place": "Remire montjoly",
-          "raw_date": "16.05.26",
-          "source": "FFA-110"
-        }
-      ],
       "400m": [
         {
           "name": "Samuel Vessat",
@@ -81,8 +47,8 @@ const achievements = {
           "raw_date": "19 JUN 2026"
         },
         {
-          "name": "Clezio Corentin Le",
-          "perf": "1'44\"",
+          "name": "Corentin Le Clezio",
+          "perf": "1'44\"68",
           "date": "20 juin 2026",
           "place": "Pontoise",
           "raw_date": "20.06.26",
@@ -369,7 +335,7 @@ const achievements = {
         },
         {
           "name": "Renelle Lamote",
-          "perf": "1'59\"",
+          "perf": "1'59\"21",
           "date": "19 juin 2026",
           "place": "Doha (QAT)",
           "raw_date": "19.06.26",
@@ -601,7 +567,7 @@ const achievements = {
         },
         {
           "name": "Gabriel Morelli",
-          "perf": "53\"",
+          "perf": "53\"36",
           "date": "20 juin 2026",
           "place": "Pontoise",
           "raw_date": "20.06.26",
@@ -611,7 +577,7 @@ const achievements = {
       "2000m Steeple": [
         {
           "name": "Pierre Boudy",
-          "perf": "5'25\"",
+          "perf": "5'25\"44",
           "date": "31 mai 2026",
           "place": "Dresden (GER)",
           "raw_date": "31.05.26",
@@ -762,7 +728,7 @@ const achievements = {
       "400mH": [
         {
           "name": "Louise Maraval",
-          "perf": "54\"",
+          "perf": "54\"80",
           "date": "14 juin 2026",
           "place": "Sollentuna (SWE)",
           "raw_date": "14.06.26",
@@ -770,7 +736,7 @@ const achievements = {
         },
         {
           "name": "Meta Tumba",
-          "perf": "56\"",
+          "perf": "56\"24",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -778,7 +744,7 @@ const achievements = {
         },
         {
           "name": "Maelle Quintin",
-          "perf": "56\"",
+          "perf": "56\"32",
           "date": "21 juin 2026",
           "place": "Macon",
           "raw_date": "21.06.26",
@@ -786,23 +752,23 @@ const achievements = {
         },
         {
           "name": "Seynabou Camara",
-          "perf": "56\"",
+          "perf": "56\"85",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
           "source": "FFA-340"
         },
         {
-          "name": "Philippe Ysee Le",
-          "perf": "56\"",
+          "name": "Ysee Le Philippe",
+          "perf": "56\"90",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
           "source": "FFA-340"
         },
         {
-          "name": "Plauen Candice Von",
-          "perf": "57\"",
+          "name": "Candice Von Plauen",
+          "perf": "57\"57",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -810,7 +776,7 @@ const achievements = {
         },
         {
           "name": "Camille Poirier",
-          "perf": "57\"",
+          "perf": "57\"81",
           "date": "21 juin 2026",
           "place": "Macon",
           "raw_date": "21.06.26",
@@ -818,7 +784,7 @@ const achievements = {
         },
         {
           "name": "Farah Clerc",
-          "perf": "57\"",
+          "perf": "57\"92",
           "date": "30 mai 2026",
           "place": "Tergnier",
           "raw_date": "30.05.26",
@@ -826,7 +792,7 @@ const achievements = {
         },
         {
           "name": "Solenn Lamiable",
-          "perf": "58\"",
+          "perf": "58\"10",
           "date": "21 juin 2026",
           "place": "Macon",
           "raw_date": "21.06.26",
@@ -834,7 +800,7 @@ const achievements = {
         },
         {
           "name": "Daphnee Diomande",
-          "perf": "58\"",
+          "perf": "58\"13",
           "date": "30 mai 2026",
           "place": "Tergnier",
           "raw_date": "30.05.26",
@@ -842,7 +808,7 @@ const achievements = {
         },
         {
           "name": "Diane Richard",
-          "perf": "58\"",
+          "perf": "58\"15",
           "date": "17 avr 2026",
           "place": "Walnut (USA)",
           "raw_date": "17.04.26",
@@ -850,7 +816,7 @@ const achievements = {
         },
         {
           "name": "Charlotte Dumas",
-          "perf": "58\"",
+          "perf": "58\"26",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
@@ -858,7 +824,7 @@ const achievements = {
         },
         {
           "name": "Shana Grebo",
-          "perf": "58\"",
+          "perf": "58\"32",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
@@ -866,7 +832,7 @@ const achievements = {
         },
         {
           "name": "Marie Duvigneau",
-          "perf": "58\"",
+          "perf": "58\"35",
           "date": "6 juin 2026",
           "place": "Angouleme",
           "raw_date": "06.06.26",
@@ -874,7 +840,7 @@ const achievements = {
         },
         {
           "name": "Maena Drouin",
-          "perf": "58\"",
+          "perf": "58\"36",
           "date": "6 juin 2026",
           "place": "Angouleme",
           "raw_date": "06.06.26",
@@ -882,7 +848,7 @@ const achievements = {
         },
         {
           "name": "Laura Blanc",
-          "perf": "58\"",
+          "perf": "58\"52",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -890,7 +856,7 @@ const achievements = {
         },
         {
           "name": "Morgane Lenoir",
-          "perf": "58\"",
+          "perf": "58\"55",
           "date": "30 avr 2026",
           "place": "Lubbock (USA)",
           "raw_date": "30.04.26",
@@ -898,7 +864,7 @@ const achievements = {
         },
         {
           "name": "Melisande Bertrand",
-          "perf": "58\"",
+          "perf": "58\"58",
           "date": "3 mai 2026",
           "place": "Venissieux",
           "raw_date": "03.05.26",
@@ -906,7 +872,7 @@ const achievements = {
         },
         {
           "name": "Talyna Ligier",
-          "perf": "58\"",
+          "perf": "58\"74",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -914,7 +880,7 @@ const achievements = {
         },
         {
           "name": "Lisa Blanc",
-          "perf": "58\"",
+          "perf": "58\"76",
           "date": "6 juin 2026",
           "place": "Angouleme",
           "raw_date": "06.06.26",
@@ -922,7 +888,7 @@ const achievements = {
         },
         {
           "name": "Emma Montoya",
-          "perf": "58\"",
+          "perf": "58\"95",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -930,7 +896,7 @@ const achievements = {
         },
         {
           "name": "Loan Ville",
-          "perf": "59\"",
+          "perf": "59\"09",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -938,7 +904,7 @@ const achievements = {
         },
         {
           "name": "Alicia Lopez",
-          "perf": "59\"",
+          "perf": "59\"12",
           "date": "20 juin 2026",
           "place": "Annecy",
           "raw_date": "20.06.26",
@@ -946,7 +912,7 @@ const achievements = {
         },
         {
           "name": "Clara Bonniere",
-          "perf": "59\"",
+          "perf": "59\"13",
           "date": "3 mai 2026",
           "place": "Aulnay sous bois",
           "raw_date": "03.05.26",
@@ -954,7 +920,7 @@ const achievements = {
         },
         {
           "name": "Hoyane Esper",
-          "perf": "59\"",
+          "perf": "59\"18",
           "date": "30 avr 2026",
           "place": "Atlanta (USA)",
           "raw_date": "30.04.26",
@@ -962,7 +928,7 @@ const achievements = {
         },
         {
           "name": "Camille Marsin",
-          "perf": "59\"",
+          "perf": "59\"21",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -970,7 +936,7 @@ const achievements = {
         },
         {
           "name": "Melissa Gomis",
-          "perf": "59\"",
+          "perf": "59\"30",
           "date": "21 juin 2026",
           "place": "Villejuif",
           "raw_date": "21.06.26",
@@ -978,15 +944,15 @@ const achievements = {
         },
         {
           "name": "Doriane Amonkan",
-          "perf": "59\"",
+          "perf": "59\"55",
           "date": "20 juin 2026",
           "place": "Pontoise",
           "raw_date": "20.06.26",
           "source": "FFA-340"
         },
         {
-          "name": "Babayila Iris-lucie Lusakweno",
-          "perf": "59\"",
+          "name": "Iris-Lucie Lusakweno Babayila",
+          "perf": "59\"65",
           "date": "30 mai 2026",
           "place": "Tergnier",
           "raw_date": "30.05.26",
@@ -994,31 +960,23 @@ const achievements = {
         },
         {
           "name": "Jeynael Grangenois",
-          "perf": "59\"",
+          "perf": "59\"75",
           "date": "6 juin 2026",
           "place": "Toul",
           "raw_date": "06.06.26",
           "source": "FFA-340"
         },
         {
-          "name": "Dounia Kenzoua",
-          "perf": "1'00\"",
-          "date": "13 juin 2026",
-          "place": "Maisons alfort",
-          "raw_date": "13.06.26",
-          "source": "FFA-340"
-        },
-        {
           "name": "Lucie Perrin",
-          "perf": "1'00\"",
+          "perf": "1'00\"10",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
           "source": "FFA-340"
         },
         {
-          "name": "Lole-marie Coudeyre",
-          "perf": "1'00\"",
+          "name": "Lole-Marie Coudeyre",
+          "perf": "1'00\"21",
           "date": "3 mai 2026",
           "place": "Saint etienne",
           "raw_date": "03.05.26",
@@ -1026,7 +984,7 @@ const achievements = {
         },
         {
           "name": "Sarah Payeur",
-          "perf": "1'00\"",
+          "perf": "1'00\"27",
           "date": "21 juin 2026",
           "place": "Macon",
           "raw_date": "21.06.26",
@@ -1034,7 +992,7 @@ const achievements = {
         },
         {
           "name": "Ludivine Aubert",
-          "perf": "1'00\"",
+          "perf": "1'00\"31",
           "date": "8 mai 2026",
           "place": "Manhattan (USA)",
           "raw_date": "08.05.26",
@@ -1042,7 +1000,7 @@ const achievements = {
         },
         {
           "name": "Maylis Dalibard",
-          "perf": "1'00\"",
+          "perf": "1'00\"31",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -1052,7 +1010,7 @@ const achievements = {
       "2000m Steeple": [
         {
           "name": "Katia Delarche",
-          "perf": "6'27\"",
+          "perf": "6'27\"56",
           "date": "17 mai 2026",
           "place": "Chalon sur saone",
           "raw_date": "17.05.26",
@@ -1060,7 +1018,7 @@ const achievements = {
         },
         {
           "name": "Jenipher Contois",
-          "perf": "6'33\"",
+          "perf": "6'33\"68",
           "date": "17 mai 2026",
           "place": "Epinal",
           "raw_date": "17.05.26",
@@ -1068,7 +1026,7 @@ const achievements = {
         },
         {
           "name": "Maelle Fuchs",
-          "perf": "6'37\"",
+          "perf": "6'37\"46",
           "date": "17 mai 2026",
           "place": "Epinal",
           "raw_date": "17.05.26",
@@ -1076,7 +1034,7 @@ const achievements = {
         },
         {
           "name": "Elisa Tripotin",
-          "perf": "6'38\"",
+          "perf": "6'38\"61",
           "date": "17 mai 2026",
           "place": "Grenoble",
           "raw_date": "17.05.26",
@@ -1084,7 +1042,7 @@ const achievements = {
         },
         {
           "name": "Nina Guillaud",
-          "perf": "6'38\"",
+          "perf": "6'38\"87",
           "date": "17 mai 2026",
           "place": "Grenoble",
           "raw_date": "17.05.26",
@@ -1092,7 +1050,7 @@ const achievements = {
         },
         {
           "name": "Floriane Quesada",
-          "perf": "6'38\"",
+          "perf": "6'38\"92",
           "date": "17 mai 2026",
           "place": "Grenoble",
           "raw_date": "17.05.26",
@@ -1100,7 +1058,7 @@ const achievements = {
         },
         {
           "name": "Kathleen Dalla",
-          "perf": "6'39\"",
+          "perf": "6'39\"03",
           "date": "17 mai 2026",
           "place": "Montpellier",
           "raw_date": "17.05.26",
@@ -1108,7 +1066,7 @@ const achievements = {
         },
         {
           "name": "Zoe Bourhis",
-          "perf": "6'39\"",
+          "perf": "6'39\"53",
           "date": "3 mai 2026",
           "place": "Maisons alfort",
           "raw_date": "03.05.26",
@@ -1116,7 +1074,7 @@ const achievements = {
         },
         {
           "name": "Jeanne Toullier",
-          "perf": "6'41\"",
+          "perf": "6'41\"25",
           "date": "17 mai 2026",
           "place": "Mantes la jolie",
           "raw_date": "17.05.26",
@@ -1124,7 +1082,7 @@ const achievements = {
         },
         {
           "name": "Margot Guillaumot",
-          "perf": "6'42\"",
+          "perf": "6'42\"28",
           "date": "17 mai 2026",
           "place": "Venissieux",
           "raw_date": "17.05.26",
@@ -1132,15 +1090,15 @@ const achievements = {
         },
         {
           "name": "Lucie Lerebourg",
-          "perf": "6'43\"",
+          "perf": "6'43\"78",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
           "source": "FFA-420"
         },
         {
-          "name": "Bouchard Marie Loheac",
-          "perf": "6'43\"",
+          "name": "Marie Loheac Bouchard",
+          "perf": "6'43\"84",
           "date": "3 mai 2026",
           "place": "Saint renan",
           "raw_date": "03.05.26",
@@ -1148,7 +1106,7 @@ const achievements = {
         },
         {
           "name": "Alice Mugnier",
-          "perf": "6'45\"",
+          "perf": "6'45\"08",
           "date": "17 mai 2026",
           "place": "Challans",
           "raw_date": "17.05.26",
@@ -1156,7 +1114,7 @@ const achievements = {
         },
         {
           "name": "Clara Jobbin",
-          "perf": "6'46\"",
+          "perf": "6'46\"68",
           "date": "17 mai 2026",
           "place": "Caen",
           "raw_date": "17.05.26",
@@ -1164,7 +1122,7 @@ const achievements = {
         },
         {
           "name": "Zoe Douat",
-          "perf": "6'47\"",
+          "perf": "6'47\"66",
           "date": "17 mai 2026",
           "place": "Challans",
           "raw_date": "17.05.26",
@@ -1172,7 +1130,7 @@ const achievements = {
         },
         {
           "name": "Julie Lejarraga",
-          "perf": "6'47\"",
+          "perf": "6'47\"76",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
@@ -1180,7 +1138,7 @@ const achievements = {
         },
         {
           "name": "Jeanne Chuquet",
-          "perf": "6'48\"",
+          "perf": "6'48\"41",
           "date": "17 mai 2026",
           "place": "Saint-lo",
           "raw_date": "17.05.26",
@@ -1188,15 +1146,15 @@ const achievements = {
         },
         {
           "name": "Gwladys Bouzat",
-          "perf": "6'49\"",
+          "perf": "6'49\"00",
           "date": "17 mai 2026",
           "place": "Perpignan",
           "raw_date": "17.05.26",
           "source": "FFA-420"
         },
         {
-          "name": "Judith Ponnou-delaffon",
-          "perf": "6'49\"",
+          "name": "Judith Ponnou-Delaffon",
+          "perf": "6'49\"02",
           "date": "17 mai 2026",
           "place": "Blois",
           "raw_date": "17.05.26",
@@ -1204,7 +1162,7 @@ const achievements = {
         },
         {
           "name": "Valentine Chapelotte",
-          "perf": "6'49\"",
+          "perf": "6'49\"46",
           "date": "17 mai 2026",
           "place": "Chalon sur saone",
           "raw_date": "17.05.26",
@@ -1231,8 +1189,8 @@ const achievements = {
       ],
       "Poids": [
         {
-          "name": "Carine Bacchetta-mekam",
-          "perf": "16m71",
+          "name": "Carine Bacchetta-Mekam",
+          "perf": "16m71(RP)",
           "date": "15 mai 2026",
           "place": "Accra (GHA)",
           "raw_date": "15.05.26",
@@ -1240,7 +1198,7 @@ const achievements = {
         },
         {
           "name": "Naomie Wuta",
-          "perf": "16m15",
+          "perf": "16m15(RP)",
           "date": "12 juin 2026",
           "place": "Avignon",
           "raw_date": "12.06.26",
@@ -1249,7 +1207,7 @@ const achievements = {
       ],
       "Disque": [
         {
-          "name": "Melina Robert-michon",
+          "name": "Melina Robert-Michon",
           "perf": "65m96",
           "date": "9 avr 2026",
           "place": "Ramona (USA)",
@@ -1257,15 +1215,15 @@ const achievements = {
           "source": "FFA-610"
         },
         {
-          "name": "Amanda Ngandu-ntumba",
-          "perf": "64m29",
+          "name": "Amanda Ngandu-Ntumba",
+          "perf": "64m29(RP)",
           "date": "11 avr 2026",
           "place": "Ramona (USA)",
           "raw_date": "11.04.26",
           "source": "FFA-610"
         },
         {
-          "name": "Marie-josee Bovele-linaka",
+          "name": "Marie-Josee Bovele-Linaka",
           "perf": "59m01",
           "date": "16 mai 2026",
           "place": "Lincoln (USA)",
@@ -1282,14 +1240,14 @@ const achievements = {
         },
         {
           "name": "Lea Zomenio",
-          "perf": "54m20",
+          "perf": "54m20(RP)",
           "date": "6 juin 2026",
           "place": "Angers",
           "raw_date": "06.06.26",
           "source": "FFA-610"
         },
         {
-          "name": "Lesly-telesia Filituulaga",
+          "name": "Lesly-Telesia Filituulaga",
           "perf": "50m47",
           "date": "25 avr 2026",
           "place": "Cannes la bocca",
@@ -1298,7 +1256,7 @@ const achievements = {
         },
         {
           "name": "Dolvie Abbas",
-          "perf": "49m18",
+          "perf": "49m18(RP)",
           "date": "20 juin 2026",
           "place": "Salon de provence",
           "raw_date": "20.06.26",
@@ -1313,8 +1271,8 @@ const achievements = {
           "source": "FFA-610"
         },
         {
-          "name": "Ambre Jouand-pucelle",
-          "perf": "48m71",
+          "name": "Ambre Jouand-Pucelle",
+          "perf": "48m71(RP)",
           "date": "25 mai 2026",
           "place": "Montfort le gesnois",
           "raw_date": "25.05.26",
@@ -1346,7 +1304,7 @@ const achievements = {
         },
         {
           "name": "Alexine Larriu",
-          "perf": "46m57",
+          "perf": "46m57(RP)",
           "date": "17 juin 2026",
           "place": "Talence",
           "raw_date": "17.06.26",
@@ -1354,7 +1312,7 @@ const achievements = {
         },
         {
           "name": "Charlotte Perraud",
-          "perf": "45m91",
+          "perf": "45m91(RP)",
           "date": "30 mai 2026",
           "place": "Les sables d'olonne",
           "raw_date": "30.05.26",
@@ -1362,7 +1320,7 @@ const achievements = {
         },
         {
           "name": "Mylene Grangeon",
-          "perf": "45m89",
+          "perf": "45m89(RP)",
           "date": "31 mai 2026",
           "place": "Avignon",
           "raw_date": "31.05.26",
@@ -1473,7 +1431,7 @@ const achievements = {
       "400mH": [
         {
           "name": "Clement Ducos",
-          "perf": "48\"",
+          "perf": "48\"49",
           "date": "6 juin 2026",
           "place": "College station (USA)",
           "raw_date": "06.06.26",
@@ -1481,7 +1439,7 @@ const achievements = {
         },
         {
           "name": "Sebastien Monneret",
-          "perf": "49\"",
+          "perf": "49\"40",
           "date": "20 juin 2026",
           "place": "Kuortane (FIN)",
           "raw_date": "20.06.26",
@@ -1489,7 +1447,7 @@ const achievements = {
         },
         {
           "name": "Fantin Crisci",
-          "perf": "49\"",
+          "perf": "49\"52",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -1497,7 +1455,7 @@ const achievements = {
         },
         {
           "name": "Yanis Dahdah",
-          "perf": "49\"",
+          "perf": "49\"76",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -1505,7 +1463,7 @@ const achievements = {
         },
         {
           "name": "Ludvy Vaillant",
-          "perf": "49\"",
+          "perf": "49\"88",
           "date": "24 mai 2026",
           "place": "Bruxelles (BEL)",
           "raw_date": "24.05.26",
@@ -1513,7 +1471,7 @@ const achievements = {
         },
         {
           "name": "Thomas Canivet",
-          "perf": "50\"",
+          "perf": "50\"04",
           "date": "14 mai 2026",
           "place": "Tucson (USA)",
           "raw_date": "14.05.26",
@@ -1521,7 +1479,7 @@ const achievements = {
         },
         {
           "name": "Anouar Bourahla",
-          "perf": "50\"",
+          "perf": "50\"20",
           "date": "21 juin 2026",
           "place": "Macon",
           "raw_date": "21.06.26",
@@ -1529,7 +1487,7 @@ const achievements = {
         },
         {
           "name": "Hugo Menin",
-          "perf": "50\"",
+          "perf": "50\"25",
           "date": "24 mai 2026",
           "place": "Bruxelles (BEL)",
           "raw_date": "24.05.26",
@@ -1537,7 +1495,7 @@ const achievements = {
         },
         {
           "name": "Simon Deschamps",
-          "perf": "50\"",
+          "perf": "50\"26",
           "date": "13 juin 2026",
           "place": "Poitiers",
           "raw_date": "13.06.26",
@@ -1545,7 +1503,7 @@ const achievements = {
         },
         {
           "name": "Edgar Levard",
-          "perf": "50\"",
+          "perf": "50\"29",
           "date": "20 juin 2026",
           "place": "Annecy",
           "raw_date": "20.06.26",
@@ -1553,7 +1511,7 @@ const achievements = {
         },
         {
           "name": "Lucien Cornebois",
-          "perf": "50\"",
+          "perf": "50\"49",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -1568,7 +1526,7 @@ const achievements = {
         },
         {
           "name": "Aymeric Dutrevis",
-          "perf": "50\"",
+          "perf": "50\"57",
           "date": "14 juin 2026",
           "place": "Saint etienne",
           "raw_date": "14.06.26",
@@ -1576,7 +1534,7 @@ const achievements = {
         },
         {
           "name": "Antonin Laurence",
-          "perf": "50\"",
+          "perf": "50\"72",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -1584,7 +1542,7 @@ const achievements = {
         },
         {
           "name": "Lucas Vivin",
-          "perf": "50\"",
+          "perf": "50\"75",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
@@ -1592,7 +1550,7 @@ const achievements = {
         },
         {
           "name": "Stephane Yato",
-          "perf": "50\"",
+          "perf": "50\"77",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -1600,7 +1558,7 @@ const achievements = {
         },
         {
           "name": "Paul Metayer",
-          "perf": "51\"",
+          "perf": "51\"03",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -1609,8 +1567,8 @@ const achievements = {
       ],
       "3000m Steeple": [
         {
-          "name": "Nicolas-marie Daru",
-          "perf": "8'11\"",
+          "name": "Nicolas-Marie Daru",
+          "perf": "8'11\"81",
           "date": "31 mai 2026",
           "place": "Rabat (MAR)",
           "raw_date": "31.05.26",
@@ -1618,7 +1576,7 @@ const achievements = {
         },
         {
           "name": "Baptiste Fourmont",
-          "perf": "8'13\"",
+          "perf": "8'13\"80",
           "date": "16 juin 2026",
           "place": "Ostrava (CZE)",
           "raw_date": "16.06.26",
@@ -1626,7 +1584,7 @@ const achievements = {
         },
         {
           "name": "Oscar Thebaud",
-          "perf": "8'17\"",
+          "perf": "8'17\"40",
           "date": "16 juin 2026",
           "place": "Ostrava (CZE)",
           "raw_date": "16.06.26",
@@ -1634,15 +1592,15 @@ const achievements = {
         },
         {
           "name": "Pierre Boudy",
-          "perf": "8'18\"",
+          "perf": "8'18\"65",
           "date": "13 juin 2026",
           "place": "Nice",
           "raw_date": "13.06.26",
           "source": "FFA-430"
         },
         {
-          "name": "Baron Luc Le",
-          "perf": "8'19\"",
+          "name": "Luc Le Baron",
+          "perf": "8'19\"16",
           "date": "3 juin 2026",
           "place": "Turku (FIN)",
           "raw_date": "03.06.26",
@@ -1650,7 +1608,7 @@ const achievements = {
         },
         {
           "name": "Djilali Bedrani",
-          "perf": "8'19\"",
+          "perf": "8'19\"18",
           "date": "19 juin 2026",
           "place": "Dessau (GER)",
           "raw_date": "19.06.26",
@@ -1658,31 +1616,31 @@ const achievements = {
         },
         {
           "name": "Felix Perrier",
-          "perf": "8'24\"",
+          "perf": "8'24\"12",
           "date": "24 mai 2026",
           "place": "Bruxelles (BEL)",
           "raw_date": "24.05.26",
           "source": "FFA-430"
         },
         {
-          "name": "Parenti Soheil Boufrizi",
-          "perf": "8'24\"",
+          "name": "Soheil Boufrizi Parenti",
+          "perf": "8'24\"39",
           "date": "13 juin 2026",
           "place": "Nice",
           "raw_date": "13.06.26",
           "source": "FFA-430"
         },
         {
-          "name": "Amani Ayoub El",
-          "perf": "8'24\"",
+          "name": "Ayoub El Amani",
+          "perf": "8'24\"69",
           "date": "13 juin 2026",
           "place": "Nice",
           "raw_date": "13.06.26",
           "source": "FFA-430"
         },
         {
-          "name": "Louis-lys Fanucchi",
-          "perf": "8'26\"",
+          "name": "Louis-Lys Fanucchi",
+          "perf": "8'26\"57",
           "date": "10 juin 2026",
           "place": "Eugene (USA)",
           "raw_date": "10.06.26",
@@ -1690,7 +1648,7 @@ const achievements = {
         },
         {
           "name": "Baptiste Coudert",
-          "perf": "8'28\"",
+          "perf": "8'28\"72",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
@@ -1698,15 +1656,15 @@ const achievements = {
         },
         {
           "name": "Youssef Boutayeb",
-          "perf": "8'28\"",
+          "perf": "8'28\"75",
           "date": "13 juin 2026",
           "place": "Nice",
           "raw_date": "13.06.26",
           "source": "FFA-430"
         },
         {
-          "name": "Grix Titouan Le",
-          "perf": "8'31\"",
+          "name": "Titouan Le Grix",
+          "perf": "8'31\"46",
           "date": "3 mai 2026",
           "place": "Durham (USA)",
           "raw_date": "03.05.26",
@@ -1714,7 +1672,7 @@ const achievements = {
         },
         {
           "name": "Sebastien Nedelec",
-          "perf": "8'38\"",
+          "perf": "8'38\"19",
           "date": "20 juin 2026",
           "place": "Lamballe",
           "raw_date": "20.06.26",
@@ -1722,7 +1680,7 @@ const achievements = {
         },
         {
           "name": "Theo Penard",
-          "perf": "8'38\"",
+          "perf": "8'38\"74",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
@@ -1730,7 +1688,7 @@ const achievements = {
         },
         {
           "name": "Zephirin Darhan",
-          "perf": "8'40\"",
+          "perf": "8'40\"06",
           "date": "13 juin 2026",
           "place": "Nice",
           "raw_date": "13.06.26",
@@ -1738,7 +1696,7 @@ const achievements = {
         },
         {
           "name": "Felix Rivet",
-          "perf": "8'40\"",
+          "perf": "8'40\"15",
           "date": "16 avr 2026",
           "place": "Azusa (USA)",
           "raw_date": "16.04.26",
@@ -1753,7 +1711,7 @@ const achievements = {
         },
         {
           "name": "Matteo Dahmani",
-          "perf": "8'41\"",
+          "perf": "8'41\"23",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
@@ -1761,7 +1719,7 @@ const achievements = {
         },
         {
           "name": "Etienne Nancel",
-          "perf": "8'42\"",
+          "perf": "8'42\"50",
           "date": "13 juin 2026",
           "place": "Nice",
           "raw_date": "13.06.26",
@@ -1769,7 +1727,7 @@ const achievements = {
         },
         {
           "name": "Paul Peysson",
-          "perf": "8'43\"",
+          "perf": "8'43\"84",
           "date": "24 mai 2026",
           "place": "Bruxelles (BEL)",
           "raw_date": "24.05.26",
@@ -1777,7 +1735,7 @@ const achievements = {
         },
         {
           "name": "Marcus Pommier",
-          "perf": "8'45\"",
+          "perf": "8'45\"89",
           "date": "20 juin 2026",
           "place": "Saint etienne",
           "raw_date": "20.06.26",
@@ -1785,7 +1743,7 @@ const achievements = {
         },
         {
           "name": "Gwen Duval",
-          "perf": "8'45\"",
+          "perf": "8'45\"98",
           "date": "20 juin 2026",
           "place": "Lamballe",
           "raw_date": "20.06.26",
@@ -1793,7 +1751,7 @@ const achievements = {
         },
         {
           "name": "Gatien Airiau",
-          "perf": "8'48\"",
+          "perf": "8'48\"22",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
@@ -1801,7 +1759,7 @@ const achievements = {
         },
         {
           "name": "Ethan Piriou",
-          "perf": "8'49\"",
+          "perf": "8'49\"19",
           "date": "20 juin 2026",
           "place": "Lamballe",
           "raw_date": "20.06.26",
@@ -1816,7 +1774,7 @@ const achievements = {
         },
         {
           "name": "Charles Maillard",
-          "perf": "8'49\"",
+          "perf": "8'49\"71",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
@@ -1824,7 +1782,7 @@ const achievements = {
         },
         {
           "name": "Abdellah Riahi",
-          "perf": "8'50\"",
+          "perf": "8'50\"79",
           "date": "20 juin 2026",
           "place": "Vienne (AUT)",
           "raw_date": "20.06.26",
@@ -1842,8 +1800,8 @@ const achievements = {
       ],
       "Javelot": [
         {
-          "name": "Sosaia Felise Vahai",
-          "perf": "82m11",
+          "name": "Felise Vahai Sosaia",
+          "perf": "82m11(RP)",
           "date": "19 juin 2026",
           "place": "Montgeron",
           "raw_date": "19.06.26",
@@ -1912,110 +1870,6 @@ const achievements = {
       ],
       "100mH": [
         {
-          "name": "Cyrena Samba-mayela",
-          "perf": "12\"50",
-          "date": "20 juin 2026",
-          "place": "George town (USA)",
-          "raw_date": "20.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Sacha Alessandrini",
-          "perf": "12\"53",
-          "date": "19 juin 2026",
-          "place": "Montgeron",
-          "raw_date": "19.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Laeticia Bapte",
-          "perf": "12\"72",
-          "date": "17 juin 2026",
-          "place": "Montreuil",
-          "raw_date": "17.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Melissa Benfatah",
-          "perf": "12\"96",
-          "date": "19 juin 2026",
-          "place": "Aix en provence",
-          "raw_date": "19.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Aelys Gente",
-          "perf": "13\"16",
-          "date": "13 juin 2026",
-          "place": "Viry chatillon",
-          "raw_date": "13.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Laura Montauban",
-          "perf": "13\"16",
-          "date": "19 juin 2026",
-          "place": "Montgeron",
-          "raw_date": "19.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Dalhiana Rouvillon",
-          "perf": "13\"23",
-          "date": "13 juin 2026",
-          "place": "Le moule",
-          "raw_date": "13.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Esther Conde-turpin",
-          "perf": "13\"25",
-          "date": "23 mai 2026",
-          "place": "Emporia (USA)",
-          "raw_date": "23.05.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Celia Chausseray",
-          "perf": "13\"27",
-          "date": "27 mai 2026",
-          "place": "Niort",
-          "raw_date": "27.05.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Noemie Thibaud",
-          "perf": "13\"27",
-          "date": "19 juin 2026",
-          "place": "Montgeron",
-          "raw_date": "19.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Marine Jacob",
-          "perf": "13\"28",
-          "date": "13 juin 2026",
-          "place": "Poitiers",
-          "raw_date": "13.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Solenn Compper",
-          "perf": "13\"30",
-          "date": "17 juin 2026",
-          "place": "Montreuil",
-          "raw_date": "17.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Auceane Bouijoux",
-          "perf": "13\"32",
-          "date": "15 mai 2026",
-          "place": "Tucson (USA)",
-          "raw_date": "15.05.26",
-          "source": "FFA-310"
-        },
-        {
           "name": "Lenny Pawlowicz",
           "perf": "13\"33",
           "date": "29 mai 2026",
@@ -2028,92 +1882,12 @@ const achievements = {
           "date": "14 mai 2026",
           "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)",
           "raw_date": "14 MAY 2026"
-        },
-        {
-          "name": "Mathilde Guillaume",
-          "perf": "13\"40",
-          "date": "25 avr 2026",
-          "place": "Barcelone (ESP)",
-          "raw_date": "25.04.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Amara Idinna",
-          "perf": "13\"42",
-          "date": "16 mai 2026",
-          "place": "Nacogdoches (USA)",
-          "raw_date": "16.05.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Aurore Avezou",
-          "perf": "13\"43",
-          "date": "16 mai 2026",
-          "place": "Montelimar",
-          "raw_date": "16.05.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Philippe Ysee Le",
-          "perf": "13\"44",
-          "date": "13 juin 2026",
-          "place": "Oullins",
-          "raw_date": "13.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Clara Ingoglia",
-          "perf": "13\"44",
-          "date": "19 juin 2026",
-          "place": "Montgeron",
-          "raw_date": "19.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Malorie Jue",
-          "perf": "13\"45",
-          "date": "23 juin 2026",
-          "place": "Romans sur isere",
-          "raw_date": "23.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Maeva Bastien",
-          "perf": "13\"49",
-          "date": "6 juin 2026",
-          "place": "Arona (ESP)",
-          "raw_date": "06.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Laura Valette",
-          "perf": "13\"50",
-          "date": "31 mai 2026",
-          "place": "Forbach",
-          "raw_date": "31.05.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Sabrina Gros",
-          "perf": "13\"53",
-          "date": "13 juin 2026",
-          "place": "Oullins",
-          "raw_date": "13.06.26",
-          "source": "FFA-310"
-        },
-        {
-          "name": "Saskia Ozdoba",
-          "perf": "13\"53",
-          "date": "17 juin 2026",
-          "place": "Bourgoin jallieu",
-          "raw_date": "17.06.26",
-          "source": "FFA-310"
         }
       ],
       "400mH": [
         {
           "name": "Louise Maraval",
-          "perf": "54\"",
+          "perf": "54\"80",
           "date": "14 juin 2026",
           "place": "Sollentuna (SWE)",
           "raw_date": "14.06.26",
@@ -2121,7 +1895,7 @@ const achievements = {
         },
         {
           "name": "Meta Tumba",
-          "perf": "56\"",
+          "perf": "56\"24",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -2129,7 +1903,7 @@ const achievements = {
         },
         {
           "name": "Maelle Quintin",
-          "perf": "56\"",
+          "perf": "56\"32",
           "date": "21 juin 2026",
           "place": "Macon",
           "raw_date": "21.06.26",
@@ -2137,23 +1911,23 @@ const achievements = {
         },
         {
           "name": "Seynabou Camara",
-          "perf": "56\"",
+          "perf": "56\"85",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
           "source": "FFA-340"
         },
         {
-          "name": "Philippe Ysee Le",
-          "perf": "56\"",
+          "name": "Ysee Le Philippe",
+          "perf": "56\"90",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
           "source": "FFA-340"
         },
         {
-          "name": "Plauen Candice Von",
-          "perf": "57\"",
+          "name": "Candice Von Plauen",
+          "perf": "57\"57",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -2161,7 +1935,7 @@ const achievements = {
         },
         {
           "name": "Camille Poirier",
-          "perf": "57\"",
+          "perf": "57\"81",
           "date": "21 juin 2026",
           "place": "Macon",
           "raw_date": "21.06.26",
@@ -2169,7 +1943,7 @@ const achievements = {
         },
         {
           "name": "Farah Clerc",
-          "perf": "57\"",
+          "perf": "57\"92",
           "date": "30 mai 2026",
           "place": "Tergnier",
           "raw_date": "30.05.26",
@@ -2177,7 +1951,7 @@ const achievements = {
         },
         {
           "name": "Solenn Lamiable",
-          "perf": "58\"",
+          "perf": "58\"10",
           "date": "21 juin 2026",
           "place": "Macon",
           "raw_date": "21.06.26",
@@ -2185,7 +1959,7 @@ const achievements = {
         },
         {
           "name": "Daphnee Diomande",
-          "perf": "58\"",
+          "perf": "58\"13",
           "date": "30 mai 2026",
           "place": "Tergnier",
           "raw_date": "30.05.26",
@@ -2193,7 +1967,7 @@ const achievements = {
         },
         {
           "name": "Diane Richard",
-          "perf": "58\"",
+          "perf": "58\"15",
           "date": "17 avr 2026",
           "place": "Walnut (USA)",
           "raw_date": "17.04.26",
@@ -2201,7 +1975,7 @@ const achievements = {
         },
         {
           "name": "Charlotte Dumas",
-          "perf": "58\"",
+          "perf": "58\"26",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
@@ -2209,7 +1983,7 @@ const achievements = {
         },
         {
           "name": "Shana Grebo",
-          "perf": "58\"",
+          "perf": "58\"32",
           "date": "17 mai 2026",
           "place": "Montreuil",
           "raw_date": "17.05.26",
@@ -2217,7 +1991,7 @@ const achievements = {
         },
         {
           "name": "Marie Duvigneau",
-          "perf": "58\"",
+          "perf": "58\"35",
           "date": "6 juin 2026",
           "place": "Angouleme",
           "raw_date": "06.06.26",
@@ -2225,7 +1999,7 @@ const achievements = {
         },
         {
           "name": "Maena Drouin",
-          "perf": "58\"",
+          "perf": "58\"36",
           "date": "6 juin 2026",
           "place": "Angouleme",
           "raw_date": "06.06.26",
@@ -2233,7 +2007,7 @@ const achievements = {
         },
         {
           "name": "Laura Blanc",
-          "perf": "58\"",
+          "perf": "58\"52",
           "date": "20 juin 2026",
           "place": "Tarare",
           "raw_date": "20.06.26",
@@ -2241,7 +2015,7 @@ const achievements = {
         },
         {
           "name": "Morgane Lenoir",
-          "perf": "58\"",
+          "perf": "58\"55",
           "date": "30 avr 2026",
           "place": "Lubbock (USA)",
           "raw_date": "30.04.26",
@@ -2249,7 +2023,7 @@ const achievements = {
         },
         {
           "name": "Melisande Bertrand",
-          "perf": "58\"",
+          "perf": "58\"58",
           "date": "3 mai 2026",
           "place": "Venissieux",
           "raw_date": "03.05.26",
@@ -2264,7 +2038,7 @@ const achievements = {
         },
         {
           "name": "Lisa Blanc",
-          "perf": "58\"",
+          "perf": "58\"76",
           "date": "6 juin 2026",
           "place": "Angouleme",
           "raw_date": "06.06.26",
@@ -2274,7 +2048,7 @@ const achievements = {
       "3000m Steeple": [
         {
           "name": "Clara Entresangle",
-          "perf": "9'23\"",
+          "perf": "9'23\"43",
           "date": "3 juin 2026",
           "place": "Turku (FIN)",
           "raw_date": "03.06.26",
@@ -2282,7 +2056,7 @@ const achievements = {
         },
         {
           "name": "Alice Finot",
-          "perf": "9'34\"",
+          "perf": "9'34\"30",
           "date": "7 juin 2026",
           "place": "Stockholm (SWE)",
           "raw_date": "07.06.26",
@@ -2290,15 +2064,15 @@ const achievements = {
         },
         {
           "name": "Katia Delarche",
-          "perf": "9'52\"",
+          "perf": "9'52\"60",
           "date": "24 mai 2026",
           "place": "Bruxelles (BEL)",
           "raw_date": "24.05.26",
           "source": "FFA-431"
         },
         {
-          "name": "Bouchard Marie Loheac",
-          "perf": "9'53\"",
+          "name": "Marie Loheac Bouchard",
+          "perf": "9'53\"97",
           "date": "24 mai 2026",
           "place": "Bruxelles (BEL)",
           "raw_date": "24.05.26",
@@ -2306,7 +2080,7 @@ const achievements = {
         },
         {
           "name": "Kathleen Dalla",
-          "perf": "10'06\"",
+          "perf": "10'06\"26",
           "date": "24 mai 2026",
           "place": "Bruxelles (BEL)",
           "raw_date": "24.05.26",
@@ -2314,7 +2088,7 @@ const achievements = {
         },
         {
           "name": "Elisa Tripotin",
-          "perf": "10'06\"",
+          "perf": "10'06\"58",
           "date": "24 mai 2026",
           "place": "Bruxelles (BEL)",
           "raw_date": "24.05.26",
@@ -2322,7 +2096,7 @@ const achievements = {
         },
         {
           "name": "Zoe Bourhis",
-          "perf": "10'06\"",
+          "perf": "10'06\"88",
           "date": "20 juin 2026",
           "place": "Saint etienne",
           "raw_date": "20.06.26",
@@ -2330,7 +2104,7 @@ const achievements = {
         },
         {
           "name": "Floriane Quesada",
-          "perf": "10'13\"",
+          "perf": "10'13\"41",
           "date": "20 juin 2026",
           "place": "Saint etienne",
           "raw_date": "20.06.26",
@@ -2345,7 +2119,7 @@ const achievements = {
         },
         {
           "name": "Maelle Fuchs",
-          "perf": "10'18\"",
+          "perf": "10'18\"76",
           "date": "24 mai 2026",
           "place": "Bruxelles (BEL)",
           "raw_date": "24.05.26",
@@ -2353,7 +2127,7 @@ const achievements = {
         },
         {
           "name": "Emilie Romanet",
-          "perf": "10'18\"",
+          "perf": "10'18\"96",
           "date": "24 mai 2026",
           "place": "Bruxelles (BEL)",
           "raw_date": "24.05.26",
@@ -2361,7 +2135,7 @@ const achievements = {
         },
         {
           "name": "Jeanne Chuquet",
-          "perf": "10'18\"",
+          "perf": "10'18\"98",
           "date": "29 mai 2026",
           "place": "Fontainebleau",
           "raw_date": "29.05.26",
@@ -2420,8 +2194,8 @@ const achievements = {
       ],
       "Poids": [
         {
-          "name": "Carine Bacchetta-mekam",
-          "perf": "16m71",
+          "name": "Carine Bacchetta-Mekam",
+          "perf": "16m71(RP)",
           "date": "15 mai 2026",
           "place": "Accra (GHA)",
           "raw_date": "15.05.26",
@@ -2429,7 +2203,7 @@ const achievements = {
         },
         {
           "name": "Naomie Wuta",
-          "perf": "16m15",
+          "perf": "16m15(RP)",
           "date": "12 juin 2026",
           "place": "Avignon",
           "raw_date": "12.06.26",
@@ -2446,7 +2220,7 @@ const achievements = {
       ],
       "Disque": [
         {
-          "name": "Melina Robert-michon",
+          "name": "Melina Robert-Michon",
           "perf": "65m96",
           "date": "9 avr 2026",
           "place": "Ramona (USA)",
@@ -2454,15 +2228,15 @@ const achievements = {
           "source": "FFA-610"
         },
         {
-          "name": "Amanda Ngandu-ntumba",
-          "perf": "64m29",
+          "name": "Amanda Ngandu-Ntumba",
+          "perf": "64m29(RP)",
           "date": "11 avr 2026",
           "place": "Ramona (USA)",
           "raw_date": "11.04.26",
           "source": "FFA-610"
         },
         {
-          "name": "Marie-josee Bovele-linaka",
+          "name": "Marie-Josee Bovele-Linaka",
           "perf": "59m01",
           "date": "16 mai 2026",
           "place": "Lincoln (USA)",
@@ -2479,7 +2253,7 @@ const achievements = {
         },
         {
           "name": "Lea Zomenio",
-          "perf": "54m20",
+          "perf": "54m20(RP)",
           "date": "6 juin 2026",
           "place": "Angers",
           "raw_date": "06.06.26",
@@ -2489,7 +2263,7 @@ const achievements = {
       "Marteau": [
         {
           "name": "Rose Loga",
-          "perf": "75m19",
+          "perf": "75m19(RP)",
           "date": "24 avr 2026",
           "place": "Nairobi (KEN)",
           "raw_date": "24.04.26",
@@ -2497,7 +2271,7 @@ const achievements = {
         },
         {
           "name": "Marie Rougetet",
-          "perf": "70m16",
+          "perf": "70m16(RP)",
           "date": "28 mai 2026",
           "place": "Lexington (USA)",
           "raw_date": "28.05.26",
@@ -2505,15 +2279,15 @@ const achievements = {
         },
         {
           "name": "Florella Freyche",
-          "perf": "69m57",
+          "perf": "69m57(RP)",
           "date": "17 mai 2026",
           "place": "Grenoble",
           "raw_date": "17.05.26",
           "source": "FFA-634"
         },
         {
-          "name": "Maelle Charles-godard",
-          "perf": "62m29",
+          "name": "Maelle Charles-Godard",
+          "perf": "62m29(RP)",
           "date": "20 juin 2026",
           "place": "Salon de provence",
           "raw_date": "20.06.26",
