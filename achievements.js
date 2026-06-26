@@ -685,7 +685,7 @@ const achievements = {
         },
         {
           "name": "Kays Flamand",
-          "perf": "7m31 (+0.0)(RP)",
+          "perf": "7.31",
           "date": "25 avr 2026",
           "place": "Fort de france",
           "raw_date": "25.04.26",
@@ -988,7 +988,7 @@ const achievements = {
         },
         {
           "name": "Alois Gellens",
-          "perf": "5m35(RP)",
+          "perf": "5.35",
           "date": "18 juin 2026",
           "place": "Talence",
           "raw_date": "18.06.26",
@@ -1098,7 +1098,7 @@ const achievements = {
         },
         {
           "name": "Heloise Mariette",
-          "perf": "1m82(RP)",
+          "perf": "1.82",
           "date": "30 mai 2026",
           "place": "Lomme",
           "raw_date": "30.05.26",
@@ -1108,7 +1108,7 @@ const achievements = {
       "Perche": [
         {
           "name": "Astrid Abeele",
-          "perf": "4m21(RP)",
+          "perf": "4.21",
           "date": "14 juin 2026",
           "place": "Tourcoing",
           "raw_date": "14.06.26",
