@@ -458,7 +458,7 @@ def format_seconds_for_display(seconds, event_name):
     if any(f in event_lower for f in field_events):
         m_val = int(seconds)
         cm_val = int(round((seconds - m_val) * 100))
-        return f"{m_val}m{cm_val:02d}"
+        return f"{m_val}.{cm_val:02d}"
         
     short_events = ["100m", "200m", "400m", "110mh", "100mh", "110m haies", "100m haies", "400mh", "400m haies", "100m/110m haies"]
     is_short = any((event_lower == se or event_lower.startswith(se + " ")) for se in short_events)
@@ -553,17 +553,19 @@ def merge_and_filter_athletes(wa_list, event_name, limit_to_check, champ, gender
         deduped.append(best)
     results_list = deduped
 
-    # Standardisation du format d'affichage des perfs chronométrées (M:SS ou H:MM:SS),
-    # pour que toutes les sources (WA "26:43", FFA "26'43''"...) s'affichent identiquement.
-    # Standardisation du format d'affichage des perfs chronométrées : [Hh][M]'SS"[CC],
-    # avec centièmes uniquement si la source en fournissait (ex: pas pour le 10km route/marathon).
-    if is_running:
-        for ath in results_list:
+    # Standardisation du format d'affichage : supprime les annotations (vent, records)
+    # et normalise vers un format uniforme pour toutes les sources (WA, FFA, Tilastopaja).
+    for ath in results_list:
+        perf_v = time_to_seconds(ath["perf"])
+        if perf_v is None:
+            continue
+        if is_running:
             has_cs = perf_has_centiseconds(ath["perf"])
-            perf_v = time_to_seconds(ath["perf"])
             formatted = format_running_perf(perf_v, has_cs)
-            if formatted:
-                ath["perf"] = formatted
+        else:
+            formatted = format_seconds_for_display(perf_v, event_name)
+        if formatted and formatted != "-":
+            ath["perf"] = formatted
 
     return results_list
 
