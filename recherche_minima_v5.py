@@ -333,11 +333,16 @@ def time_to_seconds(time_str):
         if '"' in time_str:
             parts = time_str.split('"')
             s = float(parts[0]) if parts[0] else 0
-            c = float(parts[1]) if len(parts) > 1 and parts[1] else 0
+            if len(parts) > 1 and parts[1]:
+                frac_str = parts[1]
+                # 1 chiffre → dixième (chrono manuel) ; 2 chiffres → centièmes (électronique)
+                c = float("0." + frac_str)
+            else:
+                c = 0
         elif time_str:
             s = float(time_str)
-                
-        return h * 3600 + m * 60 + s + c / 100.0
+
+        return h * 3600 + m * 60 + s + c
 
     except Exception:
         return None
@@ -385,12 +390,32 @@ def _is_fuzzy_duplicate(a, b):
     return len(common) >= 2
 
 def perf_has_centiseconds(perf_text):
-    """Détecte si le texte source d'une perf chronométrée contient des centièmes
-    (ex: '10.05', '1:43.21') par opposition aux formats sans décimales
-    (ex: '26:43', '26\'52\'\'', '2:05:58' — typiquement 10km route et marathon)."""
+    """Détecte si la perf contient des centièmes électroniques (exactement 2 chiffres
+    après le séparateur décimal ., , ou "). Retourne False pour les chronos manuels
+    (1 seul chiffre = dixième) et pour les perfs sans décimales (marathon, 10km route)."""
     if not perf_text:
         return False
-    return bool(re.search(r'\.\d', str(perf_text)))
+    perf = str(perf_text)
+    # 2 chiffres après . ou , : formats WA "10.06", "1:43.21" et FFA "1'44,80"
+    if re.search(r'[.,]\d{2}(?!\d)', perf):
+        return True
+    # 2 chiffres après " : format apostrophe "1'44\"80"
+    if re.search(r'"\d{2}(?!\d)', perf):
+        return True
+    return False
+
+def is_manual_timing(perf_text):
+    """Vrai si la perf est un chrono manuel (un seul chiffre de précision = dixième
+    de seconde). Les minima FFA de qualification internationale exigent un chronométrage
+    électronique ; les chronos manuels ne sont pas homologables."""
+    perf = str(perf_text).strip()
+    # 1 seul chiffre après . ou , : "10.6", "10,6", "1'44,8"
+    if re.search(r'[.,]\d(?!\d)', perf):
+        return True
+    # 1 seul chiffre après " : "10\"6", "1'43\"8"
+    if re.search(r'"\d(?!\d)', perf):
+        return True
+    return False
 
 def format_running_perf(seconds, has_centiseconds=True):
     """Reformate une durée (en secondes) au format standard du site pour les courses :
@@ -464,7 +489,11 @@ def merge_and_filter_athletes(wa_list, event_name, limit_to_check, champ, gender
         name_key = name_match_key(name)
         perf_v = time_to_seconds(ath["perf"])
         if perf_v is None: continue
-        
+
+        # Exclure les chronos manuels (dixième de seconde) — non homologables
+        if is_running and is_manual_timing(ath["perf"]):
+            continue
+
         # Filtrage par Minima
         if is_running:
             if perf_v > limit_to_check: continue
@@ -481,9 +510,18 @@ def merge_and_filter_athletes(wa_list, event_name, limit_to_check, champ, gender
         if name_key not in unique_athletes:
             unique_athletes[name_key] = ath
         else:
-            existing_perf_v = time_to_seconds(unique_athletes[name_key]["perf"])
+            existing = unique_athletes[name_key]
+            existing_perf_v = time_to_seconds(existing["perf"])
+            existing_has_cs = perf_has_centiseconds(existing["perf"])
+            new_has_cs = perf_has_centiseconds(ath["perf"])
             if is_running:
-                if perf_v < existing_perf_v: unique_athletes[name_key] = ath
+                # Si la différence < 1s, préférer l'entrée avec centièmes (plus précise)
+                if existing_has_cs and not new_has_cs and abs(perf_v - existing_perf_v) < 1.0:
+                    pass  # garder l'existant plus précis
+                elif new_has_cs and not existing_has_cs and abs(perf_v - existing_perf_v) < 1.0:
+                    unique_athletes[name_key] = ath  # nouvelle entrée plus précise
+                elif perf_v < existing_perf_v:
+                    unique_athletes[name_key] = ath
             else:
                 if perf_v > existing_perf_v: unique_athletes[name_key] = ath
                 
@@ -821,8 +859,7 @@ def fetch_ffa_event(ffa_code, gender, annee="2026"):
             if not name_text:
                 continue
 
-            perf_b = cols[1].find('b')
-            perf_text = perf_b.get_text(strip=True) if perf_b else cols[1].get_text(strip=True)
+            perf_text = cols[1].get_text(strip=True).replace("''", '"')
             if not perf_text:
                 continue
 
@@ -834,13 +871,27 @@ def fetch_ffa_event(ffa_code, gender, annee="2026"):
             date_display = (f"{parsed_date.day} {MOIS_FR_DISPLAY[parsed_date.month - 1]} {parsed_date.year}"
                             if parsed_date else date_dots)
 
+            # FFA donne "NOM Prénom" : NOM peut être composé (ex: "LE CLEZIO Corentin").
+            # On collecte tous les tokens entièrement en majuscules comme composants du NOM,
+            # puis les tokens suivants constituent le Prénom.
             parts = name_text.split()
-            if parts and parts[0].isupper() and len(parts) > 1:
-                nom = parts[0].capitalize()
-                prenoms = " ".join(w.capitalize() for w in parts[1:])
-                name_clean = f"{prenoms} {nom}"
+            nom_parts, prenom_parts = [], []
+            in_nom = True
+            for token in parts:
+                if in_nom and token.isupper():
+                    # Capitalise chaque partie d'un token composé (ex: SAMBA-MAYELA)
+                    nom_parts.append("-".join(p.capitalize() for p in token.split("-")))
+                else:
+                    in_nom = False
+                    prenom_parts.append("-".join(p.capitalize() for p in token.split("-")))
+            if nom_parts and prenom_parts:
+                name_clean = " ".join(prenom_parts) + " " + " ".join(nom_parts)
+            elif nom_parts:
+                name_clean = " ".join(nom_parts)
             else:
-                name_clean = " ".join(w.capitalize() for w in parts)
+                name_clean = " ".join(
+                    "-".join(p.capitalize() for p in w.split("-")) for w in parts
+                )
 
             athletes.append({
                 "name": name_clean,
