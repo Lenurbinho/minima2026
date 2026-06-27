@@ -50,9 +50,8 @@ const achievements = {
           "name": "Corentin Le Clezio",
           "perf": "1'44\"68",
           "date": "20 juin 2026",
-          "place": "Pontoise",
-          "raw_date": "20.06.26",
-          "source": "FFA-208"
+          "place": "Stade des Maradas, Cergy-Pontoise (FRA)",
+          "raw_date": "20 JUN 2026"
         }
       ],
       "1500m": [
@@ -83,6 +82,13 @@ const achievements = {
           "date": "13 juin 2026",
           "place": "Parc des Sports C. Ehrmann, Nice (FRA)",
           "raw_date": "13 JUN 2026"
+        },
+        {
+          "name": "Romain Mornet",
+          "perf": "3'32\"53",
+          "date": "26 juin 2026",
+          "place": "Sports Park Mladost, Zagreb (CRO)",
+          "raw_date": "26 JUN 2026"
         },
         {
           "name": "Titouan Le Grix",
@@ -450,6 +456,16 @@ const achievements = {
           "raw_date": "22 JUN 2026"
         }
       ],
+      "Hauteur": [
+        {
+          "name": "Fatoumata Balley",
+          "perf": "1.93",
+          "date": "24 juin 2026",
+          "place": "Zagreb (CRO)",
+          "raw_date": "24.06.26",
+          "source": "FFA-501"
+        }
+      ],
       "Perche": [
         {
           "name": "Berenice Petit",
@@ -708,9 +724,8 @@ const achievements = {
           "name": "Gabriel Morelli",
           "perf": "53\"36",
           "date": "20 juin 2026",
-          "place": "Pontoise",
-          "raw_date": "20.06.26",
-          "source": "FFA-341"
+          "place": "Stade des Maradas, Cergy-Pontoise (FRA)",
+          "raw_date": "20 JUN 2026"
         }
       ],
       "Perche": [
@@ -800,6 +815,14 @@ const achievements = {
         }
       ],
       "800m": [
+        {
+          "name": "Charlotte Dumas",
+          "perf": "2'00\"39",
+          "date": "26 juin 2026",
+          "place": "Zagreb (CRO)",
+          "raw_date": "26.06.26",
+          "source": "FFA-208"
+        },
         {
           "name": "Léa Eid",
           "perf": "2'04\"35",
