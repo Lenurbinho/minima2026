@@ -577,13 +577,6 @@ const achievements = {
           "date": "17 juin 2026",
           "place": "Stade Antonin Berliat, Bourgoin-Jallieu (FRA)",
           "raw_date": "17 JUN 2026"
-        },
-        {
-          "name": "Andrea Jolevot",
-          "perf": "10\"62",
-          "date": "23 mai 2026",
-          "place": "Stade Michel Lecointre, Nantes (FRA)",
-          "raw_date": "23 MAY 2026"
         }
       ],
       "200m": [
@@ -798,14 +791,6 @@ const achievements = {
           "date": "20 juin 2026",
           "place": "Stade Raphaël Pujazon, Ales (FRA)",
           "raw_date": "20 JUN 2026"
-        },
-        {
-          "name": "Kays Flamand",
-          "perf": "7.31",
-          "date": "25 avr 2026",
-          "place": "Fort de france",
-          "raw_date": "25.04.26",
-          "source": "FFA-503"
         }
       ],
       "Triple": [
@@ -946,9 +931,8 @@ const achievements = {
           "name": "Nayla Lachheb",
           "perf": "59\"85",
           "date": "28 juin 2026",
-          "place": "Troyes",
-          "raw_date": "28.06.26",
-          "source": "FFA-340"
+          "place": "Stade d'Athletisme Pierre Voillequin, Troyes (FRA)",
+          "raw_date": "28 JUN 2026"
         }
       ],
       "Perche": [
@@ -1030,9 +1014,8 @@ const achievements = {
           "name": "Alois Abraham",
           "perf": "3'35\"64",
           "date": "28 juin 2026",
-          "place": "Troyes",
-          "raw_date": "28.06.26",
-          "source": "FFA-215"
+          "place": "Stade d'Athletisme Pierre Voillequin, Troyes (FRA)",
+          "raw_date": "28 JUN 2026"
         }
       ],
       "3000m": [
