@@ -791,6 +791,14 @@ const achievements = {
           "date": "20 juin 2026",
           "place": "Stade Raphaël Pujazon, Ales (FRA)",
           "raw_date": "20 JUN 2026"
+        },
+        {
+          "name": "Kays Flamand",
+          "perf": "7.31",
+          "date": "25 avr 2026",
+          "place": "Fort de france",
+          "raw_date": "25.04.26",
+          "source": "FFA-503"
         }
       ],
       "Triple": [
@@ -800,6 +808,13 @@ const achievements = {
           "date": "13 juin 2026",
           "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
           "raw_date": "13 JUN 2026"
+        },
+        {
+          "name": "Elie Jurquet",
+          "perf": "15.40",
+          "date": "28 juin 2026",
+          "place": "Stade de Marville, St-Malo (FRA)",
+          "raw_date": "28 JUN 2026"
         }
       ],
       "Disque": [
