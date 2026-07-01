@@ -775,6 +775,14 @@ const achievements = {
           "place": "Caen",
           "raw_date": "27.06.26",
           "source": "FFA-502"
+        },
+        {
+          "name": "Alexis Preira",
+          "perf": "4.85",
+          "date": "30 juin 2026",
+          "place": "Saint michel sur org",
+          "raw_date": "30.06.26",
+          "source": "FFA-502"
         }
       ],
       "Longueur": [
@@ -1082,10 +1090,10 @@ const achievements = {
         },
         {
           "name": "Lucas Domergue",
-          "perf": "13\"49",
-          "date": "14 juin 2026",
-          "place": "Michael-Hoffmann-Stadion, Mannheim (GER)",
-          "raw_date": "14 JUN 2026"
+          "perf": "13\"44",
+          "date": "28 juin 2026",
+          "place": "Parc des Sports C. Ehrmann, Nice (FRA)",
+          "raw_date": "28 JUN 2026"
         },
         {
           "name": "Mael-bephassou Lannurien",
