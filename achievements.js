@@ -985,10 +985,10 @@ const achievements = {
         },
         {
           "name": "Isild Drouet",
-          "perf": "4.15",
-          "date": "30 mai 2026",
-          "place": "Stade de la Rudelière, Les Sables d'Olonne (FRA)",
-          "raw_date": "30 MAY 2026"
+          "perf": "4.25",
+          "date": "01 juil 2026",
+          "place": "Stade Jules Ladoumegue, La Roche-sur-Yon (FRA)",
+          "raw_date": "01 JUL 2026"
         }
       ],
       "Triple": [
