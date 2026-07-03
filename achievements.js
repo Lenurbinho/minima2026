@@ -296,10 +296,9 @@ const achievements = {
         {
           "name": "Thomas Gogois",
           "perf": "16.86",
-          "date": "1 juil 2026",
-          "place": "Saint denis",
-          "raw_date": "01.07.26",
-          "source": "FFA-504"
+          "date": "01 juil 2026",
+          "place": "Stade Annexe Stade de France, St-Denis (FRA)",
+          "raw_date": "01 JUL 2026"
         }
       ],
       "Disque": [
@@ -590,10 +589,10 @@ const achievements = {
       "200m": [
         {
           "name": "Dylan Telo",
-          "perf": "21\"19",
-          "date": "20 juin 2026",
-          "place": "Stade Henri Lux, St-Etienne (FRA)",
-          "raw_date": "20 JUN 2026"
+          "perf": "20\"93",
+          "date": "02 juil 2026",
+          "place": "Stade Pierre Duboeuf, Bron (FRA)",
+          "raw_date": "02 JUL 2026"
         }
       ],
       "400m": [
@@ -876,15 +875,6 @@ const achievements = {
       ]
     },
     "f": {
-      "200m": [
-        {
-          "name": "Melodie Peux",
-          "perf": "23\"99",
-          "date": "05 avr 2026",
-          "place": "Kirani James Athletic Stadium, St. George's (GRN)",
-          "raw_date": "05 APR 2026"
-        }
-      ],
       "800m": [
         {
           "name": "Léa Eid",
