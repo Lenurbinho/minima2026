@@ -48,10 +48,10 @@ const achievements = {
         },
         {
           "name": "Corentin Le Clezio",
-          "perf": "1'44\"68",
-          "date": "20 juin 2026",
-          "place": "Stade des Maradas, Cergy-Pontoise (FRA)",
-          "raw_date": "20 JUN 2026"
+          "perf": "1'44\"67",
+          "date": "03 juil 2026",
+          "place": "Stade Raymond Petit, Tomblaine (FRA)",
+          "raw_date": "03 JUL 2026"
         }
       ],
       "1500m": [
@@ -92,10 +92,10 @@ const achievements = {
         },
         {
           "name": "Romain Mornet",
-          "perf": "3'32\"53",
-          "date": "26 juin 2026",
-          "place": "Sports Park Mladost, Zagreb (CRO)",
-          "raw_date": "26 JUN 2026"
+          "perf": "3'32\"08",
+          "date": "03 juil 2026",
+          "place": "Stade Raymond Petit, Tomblaine (FRA)",
+          "raw_date": "03 JUL 2026"
         }
       ],
       "10000m": [
@@ -118,11 +118,32 @@ const achievements = {
       ],
       "110mH": [
         {
+          "name": "Just Kwaou-mathey",
+          "perf": "13\"21",
+          "date": "03 juil 2026",
+          "place": "Stade Raymond Petit, Tomblaine (FRA)",
+          "raw_date": "03 JUL 2026"
+        },
+        {
+          "name": "Theo Pedre",
+          "perf": "13\"25",
+          "date": "03 juil 2026",
+          "place": "Stade Raymond Petit, Tomblaine (FRA)",
+          "raw_date": "03 JUL 2026"
+        },
+        {
           "name": "Thomas Wilkes",
           "perf": "13\"27",
           "date": "28 juin 2026",
           "place": "Stade Charléty, Paris (FRA)",
           "raw_date": "28 JUN 2026"
+        },
+        {
+          "name": "Romain Lecoeur",
+          "perf": "13\"27",
+          "date": "03 juil 2026",
+          "place": "Stade Raymond Petit, Tomblaine (FRA)",
+          "raw_date": "03 JUL 2026"
         },
         {
           "name": "Erwann Cinna",
@@ -132,25 +153,11 @@ const achievements = {
           "raw_date": "19 JUN 2026"
         },
         {
-          "name": "Just Kwaou-mathey",
-          "perf": "13\"32",
-          "date": "28 juin 2026",
-          "place": "Stade Charléty, Paris (FRA)",
-          "raw_date": "28 JUN 2026"
-        },
-        {
           "name": "Aurel Manga",
           "perf": "13\"34",
           "date": "19 juin 2026",
           "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
           "raw_date": "19 JUN 2026"
-        },
-        {
-          "name": "Romain Lecoeur",
-          "perf": "13\"38",
-          "date": "29 mai 2026",
-          "place": "Zdzisław Krzyszkowiak Stadium, Bydgoszcz (POL)",
-          "raw_date": "29 MAY 2026"
         },
         {
           "name": "Raphaël Mohamed",
@@ -429,10 +436,10 @@ const achievements = {
         },
         {
           "name": "Adèle Gay",
-          "perf": "4'03\"13",
-          "date": "28 juin 2026",
-          "place": "Stade Charléty, Paris (FRA)",
-          "raw_date": "28 JUN 2026"
+          "perf": "4'01\"21",
+          "date": "03 juil 2026",
+          "place": "Stade Raymond Petit, Tomblaine (FRA)",
+          "raw_date": "03 JUL 2026"
         }
       ],
       "5000m": [
@@ -461,10 +468,10 @@ const achievements = {
         },
         {
           "name": "Laeticia Bapté",
-          "perf": "12\"66",
-          "date": "28 juin 2026",
-          "place": "Stade Charléty, Paris (FRA)",
-          "raw_date": "28 JUN 2026"
+          "perf": "12\"60",
+          "date": "03 juil 2026",
+          "place": "Stade Raymond Petit, Tomblaine (FRA)",
+          "raw_date": "03 JUL 2026"
         }
       ],
       "400mH": [
@@ -1026,17 +1033,15 @@ const achievements = {
           "name": "Milann Klemenic",
           "perf": "46\"65",
           "date": "27 juin 2026",
-          "place": "Talence",
-          "raw_date": "27.06.26",
-          "source": "FFA-140"
+          "place": "Stade Pierre Paul Bernard, Talence (FRA)",
+          "raw_date": "27 JUN 2026"
         },
         {
           "name": "Lucas Couderc",
           "perf": "46\"72",
           "date": "27 juin 2026",
-          "place": "Talence",
-          "raw_date": "27.06.26",
-          "source": "FFA-140"
+          "place": "Stade Pierre Paul Bernard, Talence (FRA)",
+          "raw_date": "27 JUN 2026"
         }
       ],
       "1500m": [
