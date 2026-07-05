@@ -41,10 +41,10 @@ const achievements = {
         },
         {
           "name": "Jordan Terrasse",
-          "perf": "1'44\"41",
-          "date": "19 juin 2026",
-          "place": "Paul-Greifzu-Stadion, Dessau (GER)",
-          "raw_date": "19 JUN 2026"
+          "perf": "1'44\"39",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
         },
         {
           "name": "Corentin Le Clezio",
@@ -199,18 +199,25 @@ const achievements = {
           "raw_date": "16 JUN 2026"
         },
         {
+          "name": "Luc Le Baron",
+          "perf": "8'17\"85",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
+        },
+        {
+          "name": "Louis Gilavert",
+          "perf": "8'17\"94",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
+        },
+        {
           "name": "Pierre Boudy",
           "perf": "8'18\"65",
           "date": "13 juin 2026",
           "place": "Parc des Sports C. Ehrmann, Nice (FRA)",
           "raw_date": "13 JUN 2026"
-        },
-        {
-          "name": "Luc Le Baron",
-          "perf": "8'19\"16",
-          "date": "03 juin 2026",
-          "place": "Paavo Nurmen Stadion, Turku (FIN)",
-          "raw_date": "03 JUN 2026"
         },
         {
           "name": "Djilali Bedrani",
@@ -486,10 +493,10 @@ const achievements = {
       "3000m Steeple": [
         {
           "name": "Clara Entresangle",
-          "perf": "9'23\"43",
-          "date": "03 juin 2026",
-          "place": "Paavo Nurmen Stadion, Turku (FIN)",
-          "raw_date": "03 JUN 2026"
+          "perf": "9'17\"88",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
         },
         {
           "name": "Flavie Renouard",
@@ -525,6 +532,13 @@ const achievements = {
           "date": "13 juin 2026",
           "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
           "raw_date": "13 JUN 2026"
+        },
+        {
+          "name": "Hilary Kpatcha",
+          "perf": "6.74",
+          "date": "04 juil 2026",
+          "place": "Hayward Field, Eugene, OR (USA)",
+          "raw_date": "04 JUL 2026"
         },
         {
           "name": "Yanis David",
@@ -884,11 +898,12 @@ const achievements = {
     "f": {
       "800m": [
         {
-          "name": "Léa Eid",
+          "name": "Lea Eid",
           "perf": "2'04\"35",
           "date": "30 mai 2026",
-          "place": "Carl-Kaufmann-Stadion, Karlsruhe (GER)",
-          "raw_date": "30 MAY 2026"
+          "place": "Karlsruhe (GER)",
+          "raw_date": "30.05.26",
+          "source": "FFA-208"
         },
         {
           "name": "Alice Penciu-Jurin",
@@ -902,10 +917,10 @@ const achievements = {
       "1500m": [
         {
           "name": "Alice Penciu-jurin",
-          "perf": "4'11\"42",
-          "date": "17 juin 2026",
-          "place": "Stade Jean Delbert, Montreuil (FRA)",
-          "raw_date": "17 JUN 2026"
+          "perf": "4'11\"41",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
         },
         {
           "name": "Léa Eid",
@@ -921,6 +936,13 @@ const achievements = {
           "place": "Laval",
           "raw_date": "12.06.26",
           "source": "FFA-215"
+        },
+        {
+          "name": "Pauline Daumas",
+          "perf": "4'23\"50",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
         }
       ],
       "3000m": [
@@ -974,18 +996,18 @@ const achievements = {
       ],
       "Perche": [
         {
+          "name": "Isild Drouet",
+          "perf": "4.45",
+          "date": "18 juin 2026",
+          "place": "Stade Pierre Paul Bernard, Talence (FRA)",
+          "raw_date": "18 JUN 2026"
+        },
+        {
           "name": "Julie Bourgis",
           "perf": "4.30",
           "date": "19 juin 2026",
           "place": "Stade Pierre Carous, Valenciennes (FRA)",
           "raw_date": "19 JUN 2026"
-        },
-        {
-          "name": "Isild Drouet",
-          "perf": "4.25",
-          "date": "01 juil 2026",
-          "place": "Stade Jules Ladoumegue, La Roche-sur-Yon (FRA)",
-          "raw_date": "01 JUL 2026"
         }
       ],
       "Triple": [
@@ -1060,6 +1082,34 @@ const achievements = {
           "date": "10 juin 2026",
           "place": "Stade Delort, Marseille (FRA)",
           "raw_date": "10 JUN 2026"
+        },
+        {
+          "name": "Nadim Mameche",
+          "perf": "8'00\"94",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
+        },
+        {
+          "name": "Romain Besnard",
+          "perf": "8'01\"17",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
+        },
+        {
+          "name": "Yoann Debroucker",
+          "perf": "8'01\"31",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
+        },
+        {
+          "name": "Paul Helmer",
+          "perf": "8'02\"40",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
         }
       ],
       "5000m": [
@@ -1127,10 +1177,10 @@ const achievements = {
       "3000m Steeple": [
         {
           "name": "Basile Astier",
-          "perf": "8'41\"14",
-          "date": "20 juin 2026",
-          "place": "Stade Henri Lux, St-Etienne (FRA)",
-          "raw_date": "20 JUN 2026"
+          "perf": "8'38\"26",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
         },
         {
           "name": "Mathis Dubois",
@@ -1138,6 +1188,13 @@ const achievements = {
           "date": "30 mai 2026",
           "place": "Carl-Kaufmann-Stadion, Karlsruhe (GER)",
           "raw_date": "30 MAY 2026"
+        },
+        {
+          "name": "Ewen Guerin",
+          "perf": "8'50\"98",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
         }
       ],
       "Perche": [
@@ -1155,6 +1212,16 @@ const achievements = {
           "place": "Talence",
           "raw_date": "18.06.26",
           "source": "FFA-502"
+        }
+      ],
+      "Longueur": [
+        {
+          "name": "Remi Mourie",
+          "perf": "7.71",
+          "date": "4 juil 2026",
+          "place": "Albi",
+          "raw_date": "04.07.26",
+          "source": "FFA-503"
         }
       ],
       "Decathlon": [
@@ -1216,6 +1283,22 @@ const achievements = {
           "date": "23 mai 2026",
           "place": "Boudewijnstadion, Bruxelles (BEL)",
           "raw_date": "23 MAY 2026"
+        }
+      ],
+      "5000m": [
+        {
+          "name": "Laly Porentru",
+          "perf": "15'53\"69",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
+        },
+        {
+          "name": "Lamia Mourabit",
+          "perf": "16'00\"29",
+          "date": "04 juil 2026",
+          "place": "Stade Raymond Troussier, Decines (FRA)",
+          "raw_date": "04 JUL 2026"
         }
       ],
       "100mH": [
