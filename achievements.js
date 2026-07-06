@@ -237,10 +237,11 @@ const achievements = {
         },
         {
           "name": "Thibaut Collet",
-          "perf": "5.88",
-          "date": "01 juil 2026",
-          "place": "Stade Asptt Grenoble, Montbonnot Saint Martin (FRA)",
-          "raw_date": "01 JUL 2026"
+          "perf": "5.91",
+          "date": "5 juil 2026",
+          "place": "Athenes (GRE)",
+          "raw_date": "05.07.26",
+          "source": "FFA-502"
         },
         {
           "name": "Anthony Ammirati",
@@ -619,10 +620,10 @@ const achievements = {
       "400m": [
         {
           "name": "Antoine Marx",
-          "perf": "48\"08",
-          "date": "17 juin 2026",
-          "place": "Talence",
-          "raw_date": "17.06.26",
+          "perf": "47\"84",
+          "date": "5 juil 2026",
+          "place": "Montgeron",
+          "raw_date": "05.07.26",
           "source": "FFA-140"
         }
       ],
@@ -769,10 +770,11 @@ const achievements = {
       "400mH": [
         {
           "name": "Judicael Sauvaget",
-          "perf": "52\"52",
-          "date": "14 juin 2026",
-          "place": "Stade Complexe Sportif Jean-Paul Chasseboeuf, Pacé (FRA)",
-          "raw_date": "14 JUN 2026"
+          "perf": "52\"36",
+          "date": "4 juil 2026",
+          "place": "Montgeron",
+          "raw_date": "04.07.26",
+          "source": "FFA-341"
         },
         {
           "name": "Jules Romanet",
@@ -782,18 +784,29 @@ const achievements = {
           "raw_date": "20 JUN 2026"
         },
         {
+          "name": "Gabriel Morelli",
+          "perf": "53\"07",
+          "date": "4 juil 2026",
+          "place": "Montgeron",
+          "raw_date": "04.07.26",
+          "source": "FFA-341"
+        },
+        {
           "name": "Lucien Coq",
           "perf": "53\"27",
           "date": "20 juin 2026",
           "place": "Stade L. Masson, Tarare (FRA)",
           "raw_date": "20 JUN 2026"
-        },
+        }
+      ],
+      "Hauteur": [
         {
-          "name": "Gabriel Morelli",
-          "perf": "53\"36",
-          "date": "20 juin 2026",
-          "place": "Stade des Maradas, Cergy-Pontoise (FRA)",
-          "raw_date": "20 JUN 2026"
+          "name": "Lonny Tilus",
+          "perf": "2.05",
+          "date": "5 juil 2026",
+          "place": "Montgeron",
+          "raw_date": "05.07.26",
+          "source": "FFA-501"
         }
       ],
       "Perche": [
@@ -806,6 +819,22 @@ const achievements = {
           "source": "FFA-502"
         },
         {
+          "name": "Valentin Kuch",
+          "perf": "4.90",
+          "date": "4 juil 2026",
+          "place": "Montgeron",
+          "raw_date": "04.07.26",
+          "source": "FFA-502"
+        },
+        {
+          "name": "Alexis Preira",
+          "perf": "4.90",
+          "date": "4 juil 2026",
+          "place": "Montgeron",
+          "raw_date": "04.07.26",
+          "source": "FFA-502"
+        },
+        {
           "name": "Hugo Cadot",
           "perf": "4.85",
           "date": "27 juin 2026",
@@ -814,11 +843,11 @@ const achievements = {
           "source": "FFA-502"
         },
         {
-          "name": "Alexis Preira",
+          "name": "Paolo Sirial",
           "perf": "4.85",
-          "date": "30 juin 2026",
-          "place": "Saint michel sur org",
-          "raw_date": "30.06.26",
+          "date": "4 juil 2026",
+          "place": "Montgeron",
+          "raw_date": "04.07.26",
           "source": "FFA-502"
         }
       ],
@@ -1038,6 +1067,14 @@ const achievements = {
           "source": "FFA-905"
         },
         {
+          "name": "Andreane Sainson",
+          "perf": "23'35\"79",
+          "date": "5 juil 2026",
+          "place": "Montgeron",
+          "raw_date": "05.07.26",
+          "source": "FFA-905"
+        },
+        {
           "name": "Eleonore Breney",
           "perf": "23'37\"65",
           "date": "23 mai 2026",
@@ -1195,6 +1232,16 @@ const achievements = {
           "date": "04 juil 2026",
           "place": "Stade Raymond Troussier, Decines (FRA)",
           "raw_date": "04 JUL 2026"
+        }
+      ],
+      "Hauteur": [
+        {
+          "name": "Leonard Nowoczyn",
+          "perf": "2.15",
+          "date": "5 juil 2026",
+          "place": "Lens",
+          "raw_date": "05.07.26",
+          "source": "FFA-501"
         }
       ],
       "Perche": [
