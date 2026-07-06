@@ -244,6 +244,13 @@ const achievements = {
           "source": "FFA-502"
         },
         {
+          "name": "Robin Emig",
+          "perf": "5.83",
+          "date": "04 juil 2026",
+          "place": "Stade de Vongy, Thonon-les-Bains (FRA)",
+          "raw_date": "04 JUL 2026"
+        },
+        {
           "name": "Anthony Ammirati",
           "perf": "5.82",
           "date": "13 juin 2026",
@@ -761,20 +768,19 @@ const achievements = {
         },
         {
           "name": "Pierre Ivanes",
-          "perf": "13\"79",
-          "date": "06 juin 2026",
-          "place": "Stade Roger Rochard, Evreux (FRA)",
-          "raw_date": "06 JUN 2026"
+          "perf": "13\"68",
+          "date": "05 juil 2026",
+          "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
+          "raw_date": "05 JUL 2026"
         }
       ],
       "400mH": [
         {
           "name": "Judicael Sauvaget",
           "perf": "52\"36",
-          "date": "4 juil 2026",
-          "place": "Montgeron",
-          "raw_date": "04.07.26",
-          "source": "FFA-341"
+          "date": "04 juil 2026",
+          "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
+          "raw_date": "04 JUL 2026"
         },
         {
           "name": "Jules Romanet",
@@ -786,10 +792,9 @@ const achievements = {
         {
           "name": "Gabriel Morelli",
           "perf": "53\"07",
-          "date": "4 juil 2026",
-          "place": "Montgeron",
-          "raw_date": "04.07.26",
-          "source": "FFA-341"
+          "date": "04 juil 2026",
+          "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
+          "raw_date": "04 JUL 2026"
         },
         {
           "name": "Lucien Coq",
@@ -800,6 +805,13 @@ const achievements = {
         }
       ],
       "Hauteur": [
+        {
+          "name": "Yannis Dombele",
+          "perf": "2.07",
+          "date": "05 juil 2026",
+          "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
+          "raw_date": "05 JUL 2026"
+        },
         {
           "name": "Lonny Tilus",
           "perf": "2.05",
@@ -1069,10 +1081,9 @@ const achievements = {
         {
           "name": "Andreane Sainson",
           "perf": "23'35\"79",
-          "date": "5 juil 2026",
-          "place": "Montgeron",
-          "raw_date": "05.07.26",
-          "source": "FFA-905"
+          "date": "04 juil 2026",
+          "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
+          "raw_date": "04 JUL 2026"
         },
         {
           "name": "Eleonore Breney",
@@ -1081,6 +1092,13 @@ const achievements = {
           "place": "Belfort",
           "raw_date": "23.05.26",
           "source": "FFA-905"
+        },
+        {
+          "name": "Eleonore Brenney",
+          "perf": "23'43\"93",
+          "date": "04 juil 2026",
+          "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
+          "raw_date": "04 JUL 2026"
         }
       ]
     }
@@ -1362,6 +1380,20 @@ const achievements = {
           "date": "14 mai 2026",
           "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)",
           "raw_date": "14 MAY 2026"
+        },
+        {
+          "name": "Auxane Kingue",
+          "perf": "13\"42",
+          "date": "05 juil 2026",
+          "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
+          "raw_date": "05 JUL 2026"
+        },
+        {
+          "name": "Lynne Ta Bi",
+          "perf": "13\"50",
+          "date": "05 juil 2026",
+          "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
+          "raw_date": "05 JUL 2026"
         }
       ],
       "400mH": [
@@ -1454,9 +1486,24 @@ const achievements = {
           "place": "Caen",
           "raw_date": "27.06.26",
           "source": "FFA-504"
+        },
+        {
+          "name": "Leane Alfred",
+          "perf": "13.31",
+          "date": "5 juil 2026",
+          "place": "Pontoise",
+          "raw_date": "05.07.26",
+          "source": "FFA-504"
         }
       ],
       "Heptathlon": [
+        {
+          "name": "Zola Ndouma-mona",
+          "perf": "5652",
+          "date": "05 juil 2026",
+          "place": "Stade Georges Carcassone, Aix-en-Provence (FRA)",
+          "raw_date": "05 JUL 2026"
+        },
         {
           "name": "Lalie Pouzancre-hoyer",
           "perf": "5581",
@@ -1465,11 +1512,11 @@ const achievements = {
           "raw_date": "15 MAY 2026"
         },
         {
-          "name": "Zola Ndouma-mona",
-          "perf": "5521",
-          "date": "15 mai 2026",
-          "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)",
-          "raw_date": "15 MAY 2026"
+          "name": "Heloise Mariette",
+          "perf": "5463",
+          "date": "05 juil 2026",
+          "place": "Stade Georges Carcassone, Aix-en-Provence (FRA)",
+          "raw_date": "05 JUL 2026"
         }
       ]
     }
