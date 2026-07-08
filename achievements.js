@@ -1256,10 +1256,9 @@ const achievements = {
         {
           "name": "Leonard Nowoczyn",
           "perf": "2.15",
-          "date": "5 juil 2026",
-          "place": "Lens",
-          "raw_date": "05.07.26",
-          "source": "FFA-501"
+          "date": "05 juil 2026",
+          "place": "Stade Léo Lagrange, Lens (FRA)",
+          "raw_date": "05 JUL 2026"
         }
       ],
       "Perche": [
@@ -1283,10 +1282,9 @@ const achievements = {
         {
           "name": "Remi Mourie",
           "perf": "7.71",
-          "date": "4 juil 2026",
-          "place": "Albi",
-          "raw_date": "04.07.26",
-          "source": "FFA-503"
+          "date": "04 juil 2026",
+          "place": "Stadium Municipal, Albi (FRA)",
+          "raw_date": "04 JUL 2026"
         }
       ],
       "Decathlon": [
