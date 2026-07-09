@@ -238,10 +238,9 @@ const achievements = {
         {
           "name": "Thibaut Collet",
           "perf": "5.91",
-          "date": "5 juil 2026",
-          "place": "Athenes (GRE)",
-          "raw_date": "05.07.26",
-          "source": "FFA-502"
+          "date": "05 juil 2026",
+          "place": "Pl. Panathinaikou Stadiou, Athina (GRE)",
+          "raw_date": "05 JUL 2026"
         },
         {
           "name": "Robin Emig",
@@ -439,6 +438,13 @@ const achievements = {
           "date": "17 juin 2026",
           "place": "Stade Jean Delbert, Montreuil (FRA)",
           "raw_date": "17 JUN 2026"
+        },
+        {
+          "name": "Léna Kandissounon",
+          "perf": "1'59\"57",
+          "date": "08 juil 2026",
+          "place": "Stadio G. Teghil, Lignano Sabbiadoro (ITA)",
+          "raw_date": "08 JUL 2026"
         }
       ],
       "1500m": [
@@ -981,9 +987,10 @@ const achievements = {
         {
           "name": "Pauline Daumas",
           "perf": "4'23\"50",
-          "date": "04 juil 2026",
-          "place": "Stade Raymond Troussier, Decines (FRA)",
-          "raw_date": "04 JUL 2026"
+          "date": "4 juil 2026",
+          "place": "Decines charpieu",
+          "raw_date": "04.07.26",
+          "source": "FFA-215"
         }
       ],
       "3000m": [
@@ -1446,10 +1453,10 @@ const achievements = {
         },
         {
           "name": "Astrid Abeele",
-          "perf": "4.21",
-          "date": "14 juin 2026",
-          "place": "Tourcoing",
-          "raw_date": "14.06.26",
+          "perf": "4.22",
+          "date": "8 juil 2026",
+          "place": "Arras",
+          "raw_date": "08.07.26",
           "source": "FFA-502"
         }
       ],
