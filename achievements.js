@@ -1454,10 +1454,9 @@ const achievements = {
         {
           "name": "Astrid Abeele",
           "perf": "4.22",
-          "date": "8 juil 2026",
-          "place": "Arras",
-          "raw_date": "08.07.26",
-          "source": "FFA-502"
+          "date": "08 juil 2026",
+          "place": "Stade Degouve, Arras (FRA)",
+          "raw_date": "08 JUL 2026"
         }
       ],
       "Longueur": [
