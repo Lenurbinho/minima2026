@@ -11,10 +11,10 @@ const achievements = {
         },
         {
           "name": "Muhammad Abdallah Kounta",
-          "perf": "44\"86",
-          "date": "17 juin 2026",
-          "place": "Stade Jean Delbert, Montreuil (FRA)",
-          "raw_date": "17 JUN 2026"
+          "perf": "44\"57",
+          "date": "10 juil 2026",
+          "place": "Stade Louis II, Monaco (MON)",
+          "raw_date": "10 JUL 2026"
         }
       ],
       "800m": [
