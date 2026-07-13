@@ -1294,6 +1294,16 @@ const achievements = {
           "raw_date": "04 JUL 2026"
         }
       ],
+      "Triple": [
+        {
+          "name": "Meddhy Varnere",
+          "perf": "15.87",
+          "date": "12 juil 2026",
+          "place": "Blois",
+          "raw_date": "12.07.26",
+          "source": "FFA-504"
+        }
+      ],
       "Decathlon": [
         {
           "name": "Mael-bephassou Lannurien",
