@@ -1038,8 +1038,9 @@ const achievements = {
           "name": "Nayla Lachheb",
           "perf": "59\"85",
           "date": "28 juin 2026",
-          "place": "Stade d'Athletisme Pierre Voillequin, Troyes (FRA)",
-          "raw_date": "28 JUN 2026"
+          "place": "Troyes",
+          "raw_date": "28.06.26",
+          "source": "FFA-340"
         }
       ],
       "Perche": [
@@ -1299,9 +1300,8 @@ const achievements = {
           "name": "Meddhy Varnere",
           "perf": "15.87",
           "date": "12 juil 2026",
-          "place": "Blois",
-          "raw_date": "12.07.26",
-          "source": "FFA-504"
+          "place": "Stade Jean Leroi, Blois (FRA)",
+          "raw_date": "12 JUL 2026"
         }
       ],
       "Decathlon": [
