@@ -34,10 +34,11 @@ const achievements = {
         },
         {
           "name": "Yanis Meziane",
-          "perf": "1'44\"17",
-          "date": "16 mai 2026",
-          "place": "China Textile City Sports Centre, Shaoxing/Keqiao (CHN)",
-          "raw_date": "16 MAY 2026"
+          "perf": "1'43\"96",
+          "date": "14 juil 2026",
+          "place": "Budapest (HUN)",
+          "raw_date": "14.07.26",
+          "source": "FFA-208"
         },
         {
           "name": "Jordan Terrasse",
@@ -1399,13 +1400,6 @@ const achievements = {
         {
           "name": "Auxane Kingue",
           "perf": "13\"42",
-          "date": "05 juil 2026",
-          "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
-          "raw_date": "05 JUL 2026"
-        },
-        {
-          "name": "Lynne Ta Bi",
-          "perf": "13\"50",
           "date": "05 juil 2026",
           "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
           "raw_date": "05 JUL 2026"
