@@ -499,10 +499,10 @@ const achievements = {
       "400mH": [
         {
           "name": "Louise Maraval",
-          "perf": "54\"80",
-          "date": "14 juin 2026",
-          "place": "Sollentunavallen, Sollentuna (SWE)",
-          "raw_date": "14 JUN 2026"
+          "perf": "54\"05",
+          "date": "16 juil 2026",
+          "place": "Estadio Vallehermoso, Madrid (ESP)",
+          "raw_date": "16 JUL 2026"
         }
       ],
       "3000m Steeple": [
