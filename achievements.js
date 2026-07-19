@@ -515,10 +515,10 @@ const achievements = {
         },
         {
           "name": "Flavie Renouard",
-          "perf": "9'26\"63",
-          "date": "22 juin 2026",
-          "place": "Østerbro Stadium, Copenhagen (DEN)",
-          "raw_date": "22 JUN 2026"
+          "perf": "9'21\"79",
+          "date": "18 juil 2026",
+          "place": "Stadion De Veen, Heusden-Zolder (BEL)",
+          "raw_date": "18 JUL 2026"
         }
       ],
       "Hauteur": [
