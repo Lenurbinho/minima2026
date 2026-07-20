@@ -1004,18 +1004,18 @@ const achievements = {
       ],
       "Perche": [
         {
-          "name": "Isild Drouet",
-          "perf": "4.45",
-          "date": "18 juin 2026",
-          "place": "Stade Pierre Paul Bernard, Talence (FRA)",
-          "raw_date": "18 JUN 2026"
-        },
-        {
           "name": "Julie Bourgis",
           "perf": "4.30",
           "date": "19 juin 2026",
           "place": "Stade Pierre Carous, Valenciennes (FRA)",
           "raw_date": "19 JUN 2026"
+        },
+        {
+          "name": "Isild Drouet",
+          "perf": "4.25",
+          "date": "18 juin 2026",
+          "place": "Stade Pierre Paul Bernard, Talence (FRA)",
+          "raw_date": "18 JUN 2026"
         }
       ],
       "Triple": [
