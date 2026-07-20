@@ -279,18 +279,18 @@ const achievements = {
           "raw_date": "31 MAY 2026"
         },
         {
+          "name": "Ismaila Sawaneh",
+          "perf": "5.72",
+          "date": "18 juil 2026",
+          "place": "Stade Charléty, Paris (FRA)",
+          "raw_date": "18 JUL 2026"
+        },
+        {
           "name": "Renaud Lavillenie",
           "perf": "5.70",
           "date": "07 juin 2026",
           "place": "Olympiastadion, Stockholm (SWE)",
           "raw_date": "07 JUN 2026"
-        },
-        {
-          "name": "Ismaila Sawaneh",
-          "perf": "5.70",
-          "date": "10 juin 2026",
-          "place": "Hayward Field, Eugene, OR (USA)",
-          "raw_date": "10 JUN 2026"
         },
         {
           "name": "Matthias Orban",
@@ -631,16 +631,6 @@ const achievements = {
           "raw_date": "02 JUL 2026"
         }
       ],
-      "400m": [
-        {
-          "name": "Antoine Marx",
-          "perf": "47\"84",
-          "date": "5 juil 2026",
-          "place": "Montgeron",
-          "raw_date": "05.07.26",
-          "source": "FFA-140"
-        }
-      ],
       "800m": [
         {
           "name": "Axel Mougel-Depoutot",
@@ -664,14 +654,6 @@ const achievements = {
           "date": "20 juin 2026",
           "place": "Saint etienne",
           "raw_date": "20.06.26",
-          "source": "FFA-208"
-        },
-        {
-          "name": "Imrane Aissaoui",
-          "perf": "1'51\"37",
-          "date": "1 juil 2026",
-          "place": "Aulnay sous bois",
-          "raw_date": "01.07.26",
           "source": "FFA-208"
         },
         {
@@ -748,14 +730,6 @@ const achievements = {
           "date": "06 juin 2026",
           "place": "Putbosstadion, Oordegem (BEL)",
           "raw_date": "06 JUN 2026"
-        },
-        {
-          "name": "Malo Kerhamon",
-          "perf": "8'16\"64",
-          "date": "30 mai 2026",
-          "place": "Les sables d'olonne",
-          "raw_date": "30.05.26",
-          "source": "FFA-230"
         }
       ],
       "110mH": [
@@ -830,14 +804,6 @@ const achievements = {
       ],
       "Perche": [
         {
-          "name": "Axel Faye",
-          "perf": "5.00",
-          "date": "20 juin 2026",
-          "place": "Saint etienne",
-          "raw_date": "20.06.26",
-          "source": "FFA-502"
-        },
-        {
           "name": "Valentin Kuch",
           "perf": "4.90",
           "date": "4 juil 2026",
@@ -859,14 +825,6 @@ const achievements = {
           "date": "27 juin 2026",
           "place": "Caen",
           "raw_date": "27.06.26",
-          "source": "FFA-502"
-        },
-        {
-          "name": "Paolo Sirial",
-          "perf": "4.85",
-          "date": "4 juil 2026",
-          "place": "Montgeron",
-          "raw_date": "04.07.26",
           "source": "FFA-502"
         }
       ],
@@ -1095,14 +1053,6 @@ const achievements = {
           "raw_date": "04 JUL 2026"
         },
         {
-          "name": "Eleonore Breney",
-          "perf": "23'37\"65",
-          "date": "23 mai 2026",
-          "place": "Belfort",
-          "raw_date": "23.05.26",
-          "source": "FFA-905"
-        },
-        {
           "name": "Eleonore Brenney",
           "perf": "23'43\"93",
           "date": "04 juil 2026",
@@ -1117,17 +1067,17 @@ const achievements = {
       "400m": [
         {
           "name": "Milann Klemenic",
-          "perf": "46\"65",
-          "date": "27 juin 2026",
-          "place": "Stade Pierre Paul Bernard, Talence (FRA)",
-          "raw_date": "27 JUN 2026"
+          "perf": "46\"03",
+          "date": "17 juil 2026",
+          "place": "Stade Charléty, Paris (FRA)",
+          "raw_date": "17 JUL 2026"
         },
         {
           "name": "Lucas Couderc",
-          "perf": "46\"72",
-          "date": "27 juin 2026",
-          "place": "Stade Pierre Paul Bernard, Talence (FRA)",
-          "raw_date": "27 JUN 2026"
+          "perf": "46\"24",
+          "date": "17 juil 2026",
+          "place": "Stade Charléty, Paris (FRA)",
+          "raw_date": "17 JUL 2026"
         }
       ],
       "1500m": [
@@ -1209,10 +1159,10 @@ const achievements = {
       "110mH": [
         {
           "name": "Ewenn Vernack",
-          "perf": "13\"35",
-          "date": "14 juin 2026",
-          "place": "Michael-Hoffmann-Stadion, Mannheim (GER)",
-          "raw_date": "14 JUN 2026"
+          "perf": "13\"26",
+          "date": "17 juil 2026",
+          "place": "Stade Charléty, Paris (FRA)",
+          "raw_date": "17 JUL 2026"
         },
         {
           "name": "Lucas Domergue",
@@ -1236,6 +1186,13 @@ const achievements = {
           "date": "13 juin 2026",
           "place": "Michael-Hoffmann-Stadion, Mannheim (GER)",
           "raw_date": "13 JUN 2026"
+        },
+        {
+          "name": "Travis Collet",
+          "perf": "51\"09",
+          "date": "18 juil 2026",
+          "place": "Stade Charléty, Paris (FRA)",
+          "raw_date": "18 JUL 2026"
         }
       ],
       "3000m Steeple": [
@@ -1264,10 +1221,10 @@ const achievements = {
       "Hauteur": [
         {
           "name": "Leonard Nowoczyn",
-          "perf": "2.15",
-          "date": "05 juil 2026",
-          "place": "Stade Léo Lagrange, Lens (FRA)",
-          "raw_date": "05 JUL 2026"
+          "perf": "2.18",
+          "date": "18 juil 2026",
+          "place": "Stade Charléty, Paris (FRA)",
+          "raw_date": "18 JUL 2026"
         }
       ],
       "Perche": [
@@ -1280,10 +1237,10 @@ const achievements = {
         },
         {
           "name": "Alois Gellens",
-          "perf": "5.35",
-          "date": "18 juin 2026",
-          "place": "Talence",
-          "raw_date": "18.06.26",
+          "perf": "5.40",
+          "date": "17 juil 2026",
+          "place": "Paris",
+          "raw_date": "17.07.26",
           "source": "FFA-502"
         }
       ],
@@ -1334,15 +1291,15 @@ const achievements = {
     "f": {
       "200m": [
         {
-          "name": "Beatrice Tassin",
-          "perf": "23\"48",
-          "date": "25 mai 2026",
-          "place": "Stade Annexe Stade de France, St-Denis (FRA)",
-          "raw_date": "25 MAY 2026"
+          "name": "Rose Djagbre",
+          "perf": "23\"43",
+          "date": "17 juil 2026",
+          "place": "Stade Charléty, Paris (FRA)",
+          "raw_date": "17 JUL 2026"
         },
         {
-          "name": "Rose Djagbre",
-          "perf": "23\"62",
+          "name": "Beatrice Tassin",
+          "perf": "23\"48",
           "date": "25 mai 2026",
           "place": "Stade Annexe Stade de France, St-Denis (FRA)",
           "raw_date": "25 MAY 2026"
@@ -1385,10 +1342,10 @@ const achievements = {
       "100mH": [
         {
           "name": "Lenny Pawlowicz",
-          "perf": "13\"33",
-          "date": "29 mai 2026",
-          "place": "Stade Philippe Mahut, Fontainebleau (FRA)",
-          "raw_date": "29 MAY 2026"
+          "perf": "13\"32",
+          "date": "17 juil 2026",
+          "place": "Stade Charléty, Paris (FRA)",
+          "raw_date": "17 JUL 2026"
         },
         {
           "name": "Zola Ndouma-mona",
@@ -1450,17 +1407,17 @@ const achievements = {
       "Perche": [
         {
           "name": "Moana Peyrard",
-          "perf": "4.35",
-          "date": "06 juin 2026",
-          "place": "Stade Gillardeaux, Avignon (FRA)",
-          "raw_date": "06 JUN 2026"
+          "perf": "4.46",
+          "date": "17 juil 2026",
+          "place": "Stade Charléty, Paris (FRA)",
+          "raw_date": "17 JUL 2026"
         },
         {
           "name": "Astrid Abeele",
-          "perf": "4.22",
-          "date": "08 juil 2026",
-          "place": "Stade Degouve, Arras (FRA)",
-          "raw_date": "08 JUL 2026"
+          "perf": "4.25",
+          "date": "17 juil 2026",
+          "place": "Stade Charléty, Paris (FRA)",
+          "raw_date": "17 JUL 2026"
         }
       ],
       "Longueur": [
@@ -1525,6 +1482,15 @@ const achievements = {
           "date": "05 juil 2026",
           "place": "Stade Georges Carcassone, Aix-en-Provence (FRA)",
           "raw_date": "05 JUL 2026"
+        }
+      ],
+      "5000m Marche": [
+        {
+          "name": "Chloe Le Roch",
+          "perf": "21'41\"80",
+          "date": "19 juil 2026",
+          "place": "Stade Charléty, Paris (FRA)",
+          "raw_date": "19 JUL 2026"
         }
       ]
     }
