@@ -792,23 +792,39 @@ const achievements = {
           "date": "05 juil 2026",
           "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
           "raw_date": "05 JUL 2026"
+        },
+        {
+          "name": "Lonny Tilus",
+          "perf": "2.05",
+          "date": "5 juil 2026",
+          "place": "Montgeron",
+          "raw_date": "05.07.26",
+          "source": "FFA-501"
         }
       ],
       "Perche": [
+        {
+          "name": "Valentin Kuch",
+          "perf": "4.90",
+          "date": "4 juil 2026",
+          "place": "Montgeron",
+          "raw_date": "04.07.26",
+          "source": "FFA-502"
+        },
+        {
+          "name": "Alexis Preira",
+          "perf": "4.90",
+          "date": "4 juil 2026",
+          "place": "Montgeron",
+          "raw_date": "04.07.26",
+          "source": "FFA-502"
+        },
         {
           "name": "Hugo Cadot",
           "perf": "4.85",
           "date": "27 juin 2026",
           "place": "Caen",
           "raw_date": "27.06.26",
-          "source": "FFA-502"
-        },
-        {
-          "name": "Alexis Preira",
-          "perf": "4.85",
-          "date": "30 juin 2026",
-          "place": "Saint michel sur org",
-          "raw_date": "30.06.26",
           "source": "FFA-502"
         }
       ],
