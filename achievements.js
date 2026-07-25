@@ -398,10 +398,11 @@ const achievements = {
       "400m": [
         {
           "name": "Isabelle Black",
-          "perf": "51\"15",
-          "date": "28 juin 2026",
-          "place": "Stade Charléty, Paris (FRA)",
-          "raw_date": "28 JUN 2026"
+          "perf": "50\"47",
+          "date": "24 juil 2026",
+          "place": "Albi",
+          "raw_date": "24.07.26",
+          "source": "FFA-140"
         }
       ],
       "800m": [
@@ -519,6 +520,14 @@ const achievements = {
           "date": "18 juil 2026",
           "place": "Stadion De Veen, Heusden-Zolder (BEL)",
           "raw_date": "18 JUL 2026"
+        },
+        {
+          "name": "Alice Finot",
+          "perf": "9'26\"74",
+          "date": "24 juil 2026",
+          "place": "Albi",
+          "raw_date": "24.07.26",
+          "source": "FFA-431"
         }
       ],
       "Hauteur": [
@@ -542,18 +551,27 @@ const achievements = {
       ],
       "Longueur": [
         {
+          "name": "Hilary Kpatcha",
+          "perf": "6.98",
+          "date": "24 juil 2026",
+          "place": "Albi",
+          "raw_date": "24.07.26",
+          "source": "FFA-503"
+        },
+        {
+          "name": "Yanis Esmeralda David",
+          "perf": "6.86",
+          "date": "24 juil 2026",
+          "place": "Albi",
+          "raw_date": "24.07.26",
+          "source": "FFA-503"
+        },
+        {
           "name": "Rogilia-chriss Bissemo",
           "perf": "6.80",
           "date": "13 juin 2026",
           "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
           "raw_date": "13 JUN 2026"
-        },
-        {
-          "name": "Hilary Kpatcha",
-          "perf": "6.74",
-          "date": "04 juil 2026",
-          "place": "Hayward Field, Eugene, OR (USA)",
-          "raw_date": "04 JUL 2026"
         },
         {
           "name": "Yanis David",
@@ -583,11 +601,12 @@ const achievements = {
       ],
       "Javelot": [
         {
-          "name": "Alizée Minard",
-          "perf": "61.51",
-          "date": "28 juin 2026",
-          "place": "Stade Charléty, Paris (FRA)",
-          "raw_date": "28 JUN 2026"
+          "name": "Alizee Minard",
+          "perf": "61.69",
+          "date": "24 juil 2026",
+          "place": "Albi",
+          "raw_date": "24.07.26",
+          "source": "FFA-660"
         }
       ],
       "20km Marche": [
