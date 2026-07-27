@@ -4,24 +4,24 @@ const achievements = {
       "400m": [
         {
           "name": "Samuel Vessat",
-          "perf": "44\"47",
-          "date": "12 juin 2026",
-          "place": "Hayward Field, Eugene, OR (USA)",
-          "raw_date": "12 JUN 2026"
+          "perf": "44\"24",
+          "date": "26 juil 2026",
+          "place": "Stadium Municipal, Albi (FRA)",
+          "raw_date": "26 JUL 2026"
         },
         {
           "name": "Muhammad Abdallah Kounta",
-          "perf": "44\"57",
-          "date": "10 juil 2026",
-          "place": "Stade Louis II, Monaco (MON)",
-          "raw_date": "10 JUL 2026"
+          "perf": "44\"55",
+          "date": "26 juil 2026",
+          "place": "Stadium Municipal, Albi (FRA)",
+          "raw_date": "26 JUL 2026"
         },
         {
           "name": "Yann Spillmann",
-          "perf": "45\"06",
-          "date": "25 juil 2026",
+          "perf": "44\"92",
+          "date": "26 juil 2026",
           "place": "Stadium Municipal, Albi (FRA)",
-          "raw_date": "25 JUL 2026"
+          "raw_date": "26 JUL 2026"
         }
       ],
       "800m": [
@@ -272,18 +272,18 @@ const achievements = {
           "raw_date": "13 JUN 2026"
         },
         {
+          "name": "Mathieu Collet",
+          "perf": "5.82",
+          "date": "26 juil 2026",
+          "place": "Stadium Municipal, Albi (FRA)",
+          "raw_date": "26 JUL 2026"
+        },
+        {
           "name": "Ethan Cormont",
           "perf": "5.75",
           "date": "24 mai 2026",
           "place": "Centrum Animacji Kultury, Duszniki (POL)",
           "raw_date": "24 MAY 2026"
-        },
-        {
-          "name": "Mathieu Collet",
-          "perf": "5.72",
-          "date": "31 mai 2026",
-          "place": "Market square, Białystok (POL)",
-          "raw_date": "31 MAY 2026"
         },
         {
           "name": "Ismaila Sawaneh",
@@ -333,10 +333,10 @@ const achievements = {
         },
         {
           "name": "Thomas Gogois",
-          "perf": "16.86",
-          "date": "01 juil 2026",
-          "place": "Stade Annexe Stade de France, St-Denis (FRA)",
-          "raw_date": "01 JUL 2026"
+          "perf": "17.02",
+          "date": "26 juil 2026",
+          "place": "Stadium Municipal, Albi (FRA)",
+          "raw_date": "26 JUL 2026"
         }
       ],
       "Disque": [
@@ -519,6 +519,13 @@ const achievements = {
           "date": "16 juil 2026",
           "place": "Estadio Vallehermoso, Madrid (ESP)",
           "raw_date": "16 JUL 2026"
+        },
+        {
+          "name": "Méta Tumba",
+          "perf": "55\"22",
+          "date": "26 juil 2026",
+          "place": "Stadium Municipal, Albi (FRA)",
+          "raw_date": "26 JUL 2026"
         }
       ],
       "3000m Steeple": [
