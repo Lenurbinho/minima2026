@@ -1244,8 +1244,9 @@ const achievements = {
           "name": "Mathis Dubois",
           "perf": "8'49\"31",
           "date": "30 mai 2026",
-          "place": "Carl-Kaufmann-Stadion, Karlsruhe (GER)",
-          "raw_date": "30 MAY 2026"
+          "place": "Karlsruhe (GER)",
+          "raw_date": "30.05.26",
+          "source": "FFA-430"
         },
         {
           "name": "Ewen Guerin",
