@@ -43,9 +43,8 @@ const achievements = {
           "name": "Yanis Meziane",
           "perf": "1'43\"96",
           "date": "14 juil 2026",
-          "place": "Budapest (HUN)",
-          "raw_date": "14.07.26",
-          "source": "FFA-208"
+          "place": "Nemzeti Atlétikai Központ, Budapest (HUN)",
+          "raw_date": "14 JUL 2026"
         },
         {
           "name": "Jordan Terrasse",
@@ -117,7 +116,7 @@ const achievements = {
       ],
       "Marathon": [
         {
-          "name": "Emmanuel Roudolff",
+          "name": "Emmanuel Roudolff Levisse",
           "perf": "2h05'58\"",
           "date": "12 avr 2026",
           "place": "Paris (FRA)",
