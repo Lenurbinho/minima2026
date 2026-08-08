@@ -43,8 +43,9 @@ const achievements = {
           "name": "Yanis Meziane",
           "perf": "1'43\"96",
           "date": "14 juil 2026",
-          "place": "Nemzeti Atlétikai Központ, Budapest (HUN)",
-          "raw_date": "14 JUL 2026"
+          "place": "Budapest (HUN)",
+          "raw_date": "14.07.26",
+          "source": "FFA-208"
         },
         {
           "name": "Jordan Terrasse",
@@ -551,14 +552,6 @@ const achievements = {
         }
       ],
       "Hauteur": [
-        {
-          "name": "Fatoumata Balley",
-          "perf": "1.93",
-          "date": "24 juin 2026",
-          "place": "Zagreb (CRO)",
-          "raw_date": "24.06.26",
-          "source": "FFA-501"
-        },
         {
           "name": "Solène Gicquel",
           "perf": "1.92",
