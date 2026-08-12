@@ -1358,8 +1358,9 @@ const achievements = {
           "name": "Anaise Meier",
           "perf": "2'02\"97",
           "date": "23 mai 2026",
-          "place": "Boudewijnstadion, Bruxelles (BEL)",
-          "raw_date": "23 MAY 2026"
+          "place": "Bruxelles (BEL)",
+          "raw_date": "23.05.26",
+          "source": "FFA-208"
         }
       ],
       "5000m": [
