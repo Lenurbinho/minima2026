@@ -1393,13 +1393,6 @@ const achievements = {
           "date": "14 mai 2026",
           "place": "Univ. of Arizona Roy P. Drachman Stadium, Tucson, AZ (USA)",
           "raw_date": "14 MAY 2026"
-        },
-        {
-          "name": "Auxane Kingue",
-          "perf": "13\"42",
-          "date": "05 juil 2026",
-          "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
-          "raw_date": "05 JUL 2026"
         }
       ],
       "400mH": [
