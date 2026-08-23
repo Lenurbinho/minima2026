@@ -43,8 +43,9 @@ const achievements = {
           "name": "Yanis Meziane",
           "perf": "1'43\"96",
           "date": "14 juil 2026",
-          "place": "Nemzeti Atlétikai Központ, Budapest (HUN)",
-          "raw_date": "14 JUL 2026"
+          "place": "Budapest (HUN)",
+          "raw_date": "14.07.26",
+          "source": "FFA-208"
         },
         {
           "name": "Jordan Terrasse",
