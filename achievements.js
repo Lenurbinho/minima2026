@@ -877,8 +877,9 @@ const achievements = {
           "name": "Nathan Pertays",
           "perf": "7.44",
           "date": "20 juin 2026",
-          "place": "Stade Raphaël Pujazon, Ales (FRA)",
-          "raw_date": "20 JUN 2026"
+          "place": "Ales",
+          "raw_date": "20.06.26",
+          "source": "FFA-503"
         },
         {
           "name": "Kays Flamand",
