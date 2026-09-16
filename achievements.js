@@ -6,22 +6,17 @@ const achievements = {
           "name": "Samuel Vessat",
           "perf": "44\"24",
           "date": "26 juil 2026",
-          "place": "Stadium Municipal, Albi (FRA)",
-          "raw_date": "26 JUL 2026"
-        },
-        {
-          "name": "Muhammad Abdallah Kounta",
-          "perf": "44\"55",
-          "date": "26 juil 2026",
-          "place": "Stadium Municipal, Albi (FRA)",
-          "raw_date": "26 JUL 2026"
+          "place": "Albi",
+          "raw_date": "26.07.26",
+          "source": "FFA-140"
         },
         {
           "name": "Yann Spillmann",
           "perf": "44\"92",
           "date": "26 juil 2026",
-          "place": "Stadium Municipal, Albi (FRA)",
-          "raw_date": "26 JUL 2026"
+          "place": "Albi",
+          "raw_date": "26.07.26",
+          "source": "FFA-140"
         }
       ],
       "800m": [
