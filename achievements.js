@@ -1482,9 +1482,8 @@ const achievements = {
           "name": "Solveig Zola",
           "perf": "13.40",
           "date": "27 juin 2026",
-          "place": "Caen",
-          "raw_date": "27.06.26",
-          "source": "FFA-504"
+          "place": "Stade Helitas, Caen (FRA)",
+          "raw_date": "27 JUN 2026"
         },
         {
           "name": "Leane Alfred",
