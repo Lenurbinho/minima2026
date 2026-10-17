@@ -797,6 +797,13 @@ const achievements = {
           "date": "05 juil 2026",
           "place": "Stade Pierre de Coubertin, Montgeron (FRA)",
           "raw_date": "05 JUL 2026"
+        },
+        {
+          "name": "Raphael Debaisieux",
+          "perf": "13\"75",
+          "date": "27 juin 2026",
+          "place": "Stade Helitas, Caen (FRA)",
+          "raw_date": "27 JUN 2026"
         }
       ],
       "400mH": [
