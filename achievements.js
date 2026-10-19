@@ -1037,16 +1037,6 @@ const achievements = {
           "raw_date": "19 JUN 2026"
         }
       ],
-      "400mH": [
-        {
-          "name": "Nayla Lachheb",
-          "perf": "59\"85",
-          "date": "28 juin 2026",
-          "place": "Troyes",
-          "raw_date": "28.06.26",
-          "source": "FFA-340"
-        }
-      ],
       "Perche": [
         {
           "name": "Julie Bourgis",
