@@ -904,13 +904,6 @@ const achievements = {
           "date": "13 juin 2026",
           "place": "Stade Christian Plaziat, Pierre-Bénite (FRA)",
           "raw_date": "13 JUN 2026"
-        },
-        {
-          "name": "Elie Jurquet",
-          "perf": "15.40",
-          "date": "28 juin 2026",
-          "place": "Stade de Marville, St-Malo (FRA)",
-          "raw_date": "28 JUN 2026"
         }
       ],
       "Disque": [
