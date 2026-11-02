@@ -43,9 +43,8 @@ const achievements = {
           "name": "Yanis Meziane",
           "perf": "1'43\"96",
           "date": "14 juil 2026",
-          "place": "Budapest (HUN)",
-          "raw_date": "14.07.26",
-          "source": "FFA-208"
+          "place": "Nemzeti Atlétikai Központ, Budapest (HUN)",
+          "raw_date": "14 JUL 2026"
         },
         {
           "name": "Jordan Terrasse",
@@ -940,6 +939,24 @@ const achievements = {
       ]
     },
     "f": {
+      "800m": [
+        {
+          "name": "Lea Eid",
+          "perf": "2'04\"35",
+          "date": "30 mai 2026",
+          "place": "Karlsruhe (GER)",
+          "raw_date": "30.05.26",
+          "source": "FFA-208"
+        },
+        {
+          "name": "Alice Penciu-Jurin",
+          "perf": "2'06\"27",
+          "date": "20 juin 2026",
+          "place": "Ciney (BEL)",
+          "raw_date": "20.06.26",
+          "source": "FFA-208"
+        }
+      ],
       "1500m": [
         {
           "name": "Alice Penciu-jurin",
@@ -993,6 +1010,14 @@ const achievements = {
           "date": "17 juin 2026",
           "place": "Stade Adolphe Cheron, St-Maur (FRA)",
           "raw_date": "17 JUN 2026"
+        },
+        {
+          "name": "Rose Simonneau-Violleau",
+          "perf": "9'34\"39",
+          "date": "27 mai 2026",
+          "place": "Niort",
+          "raw_date": "27.05.26",
+          "source": "FFA-230"
         }
       ],
       "100mH": [
@@ -1002,6 +1027,16 @@ const achievements = {
           "date": "19 juin 2026",
           "place": "Stade Georges Carcassone, Aix-en-Provence (FRA)",
           "raw_date": "19 JUN 2026"
+        }
+      ],
+      "400mH": [
+        {
+          "name": "Nayla Lachheb",
+          "perf": "59\"85",
+          "date": "28 juin 2026",
+          "place": "Troyes",
+          "raw_date": "28.06.26",
+          "source": "FFA-340"
         }
       ],
       "Perche": [
