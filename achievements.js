@@ -1065,15 +1065,6 @@ const achievements = {
           "raw_date": "13 JUN 2026"
         }
       ],
-      "Marteau": [
-        {
-          "name": "Loan Rodride",
-          "perf": "65.06",
-          "date": "30 mai 2026",
-          "place": "Terrain de Sport, Volgelsheim (FRA)",
-          "raw_date": "30 MAY 2026"
-        }
-      ],
       "5000m Marche": [
         {
           "name": "Daphne Gateau-Fernez",
@@ -1443,15 +1434,17 @@ const achievements = {
           "name": "Moana Peyrard",
           "perf": "4.46",
           "date": "17 juil 2026",
-          "place": "Stade Charléty, Paris (FRA)",
-          "raw_date": "17 JUL 2026"
+          "place": "Paris",
+          "raw_date": "17.07.26",
+          "source": "FFA-502"
         },
         {
           "name": "Astrid Abeele",
           "perf": "4.25",
           "date": "17 juil 2026",
-          "place": "Stade Charléty, Paris (FRA)",
-          "raw_date": "17 JUL 2026"
+          "place": "Paris",
+          "raw_date": "17.07.26",
+          "source": "FFA-502"
         }
       ],
       "Longueur": [
