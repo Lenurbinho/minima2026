@@ -373,6 +373,24 @@ const achievements = {
           "raw_date": "07 JUN 2026"
         }
       ],
+      "20km Marche": [
+        {
+          "name": "Aurelien Quinion",
+          "perf": "1h18'49\"",
+          "date": "20 sep 2025",
+          "place": "Tokyo (JPN)",
+          "raw_date": "20.09.25",
+          "source": "FFA-971"
+        },
+        {
+          "name": "Gabriel Bordier",
+          "perf": "1h19'23\"",
+          "date": "20 sep 2025",
+          "place": "Tokyo (JPN)",
+          "raw_date": "20.09.25",
+          "source": "FFA-971"
+        }
+      ],
       "Semi-marathon Marche": [
         {
           "name": "Aurélien Quinion",
@@ -534,6 +552,14 @@ const achievements = {
         }
       ],
       "Hauteur": [
+        {
+          "name": "Fatoumata Balley",
+          "perf": "1.93",
+          "date": "24 juin 2026",
+          "place": "Zagreb (CRO)",
+          "raw_date": "24.06.26",
+          "source": "FFA-501"
+        },
         {
           "name": "Solène Gicquel",
           "perf": "1.92",
@@ -1402,14 +1428,6 @@ const achievements = {
           "date": "17 mai 2026",
           "place": "Stade Jean Delbert, Montreuil (FRA)",
           "raw_date": "17 MAY 2026"
-        },
-        {
-          "name": "Heloise Mariette",
-          "perf": "1.82",
-          "date": "30 mai 2026",
-          "place": "Lomme",
-          "raw_date": "30.05.26",
-          "source": "FFA-501"
         }
       ],
       "Perche": [
