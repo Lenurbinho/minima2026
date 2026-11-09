@@ -1428,6 +1428,14 @@ const achievements = {
           "date": "17 mai 2026",
           "place": "Stade Jean Delbert, Montreuil (FRA)",
           "raw_date": "17 MAY 2026"
+        },
+        {
+          "name": "Heloise Mariette",
+          "perf": "1.82",
+          "date": "30 mai 2026",
+          "place": "Lomme",
+          "raw_date": "30.05.26",
+          "source": "FFA-501"
         }
       ],
       "Perche": [
