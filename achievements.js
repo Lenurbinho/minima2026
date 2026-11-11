@@ -553,14 +553,6 @@ const achievements = {
       ],
       "Hauteur": [
         {
-          "name": "Fatoumata Balley",
-          "perf": "1.93",
-          "date": "24 juin 2026",
-          "place": "Zagreb (CRO)",
-          "raw_date": "24.06.26",
-          "source": "FFA-501"
-        },
-        {
           "name": "Solène Gicquel",
           "perf": "1.92",
           "date": "25 juil 2026",
@@ -940,6 +932,24 @@ const achievements = {
       ]
     },
     "f": {
+      "800m": [
+        {
+          "name": "Lea Eid",
+          "perf": "2'04\"35",
+          "date": "30 mai 2026",
+          "place": "Karlsruhe (GER)",
+          "raw_date": "30.05.26",
+          "source": "FFA-208"
+        },
+        {
+          "name": "Alice Penciu-Jurin",
+          "perf": "2'06\"27",
+          "date": "20 juin 2026",
+          "place": "Ciney (BEL)",
+          "raw_date": "20.06.26",
+          "source": "FFA-208"
+        }
+      ],
       "1500m": [
         {
           "name": "Alice Penciu-jurin",
@@ -954,6 +964,22 @@ const achievements = {
           "date": "06 juin 2026",
           "place": "Stade d'Athlétisme Hautepierre, Strasbourg (FRA)",
           "raw_date": "06 JUN 2026"
+        },
+        {
+          "name": "Celeste Lardon",
+          "perf": "4'21\"24",
+          "date": "12 juin 2026",
+          "place": "Laval",
+          "raw_date": "12.06.26",
+          "source": "FFA-215"
+        },
+        {
+          "name": "Pauline Daumas",
+          "perf": "4'23\"50",
+          "date": "4 juil 2026",
+          "place": "Decines charpieu",
+          "raw_date": "04.07.26",
+          "source": "FFA-215"
         }
       ],
       "3000m": [
@@ -977,6 +1003,14 @@ const achievements = {
           "date": "17 juin 2026",
           "place": "Stade Adolphe Cheron, St-Maur (FRA)",
           "raw_date": "17 JUN 2026"
+        },
+        {
+          "name": "Rose Simonneau-Violleau",
+          "perf": "9'34\"39",
+          "date": "27 mai 2026",
+          "place": "Niort",
+          "raw_date": "27.05.26",
+          "source": "FFA-230"
         }
       ],
       "100mH": [
