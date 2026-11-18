@@ -634,6 +634,16 @@ const achievements = {
           "raw_date": "24 JUL 2026"
         }
       ],
+      "20km Marche": [
+        {
+          "name": "Pauline Stey",
+          "perf": "1h28'52\"",
+          "date": "20 sep 2025",
+          "place": "Tokyo (JPN)",
+          "raw_date": "20.09.25",
+          "source": "FFA-971"
+        }
+      ],
       "Semi-marathon Marche": [
         {
           "name": "Pauline Stey",
