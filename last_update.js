@@ -1,1 +1,1 @@
-const lastUpdate = "19/11/2026 à 16:33";
+const lastUpdate = "20/11/2026 à 16:08";
